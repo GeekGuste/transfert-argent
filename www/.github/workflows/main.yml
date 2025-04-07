@@ -1,0 +1,55 @@
+name: Build and deploy
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# On configure l'environnement des outils qui seront utilisés lors de l'execution de notre tâche
+env:
+  NODE_VERSION: 20.x
+
+jobs:
+  build:
+    name: Build ⛏
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Project - Install dependencies
+        run: npm install @angular/cli@17 -d ./www
+
+      - name: Project - Install primeng
+        run: npm install primeng -d ./www
+
+      - name: Project - Build
+        working-directory: ./www
+        run: npm run build
+
+      - name: copy htaccess
+        working-directory: ./www
+        run: cp .htaccess dist/www/browser/
+        
+      - name: Archive production artifact
+        uses: actions/upload-artifact@main
+        with:
+          name: deploiement
+          path: ./www/dist/www/browser
+  deploy:
+    name: Deploy 🚀
+    needs: build
+    runs-on: ubuntu-latest
+    steps: 
+      - name: Checkout repository
+        uses: actions/checkout@main
+      - name: Download artifact
+        uses: actions/download-artifact@main
+        with: 
+          name: deploiement
+          path: ${{ vars.WORK_DIR }}
+      - name: Sync files to hosting
+        uses: SamKirkland/FTP-Deploy-Action@4.0.0
+        with: 
+          server: ${{ secrets.ftp_host }}
+          username: ${{ secrets.ftp_usr }}
+          password: ${{ secrets.ftp_password }}
