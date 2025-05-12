@@ -111,10 +111,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "rizz:build:production"
+              "buildTarget": "www:build:production"
             },
             "development": {
-              "buildTarget": "rizz:build:development"
+              "buildTarget": "www:build:development"
             }
           },
           "defaultConfiguration": "development"
