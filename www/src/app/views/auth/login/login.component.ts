@@ -1,3 +1,4 @@
+import { AuthService } from '@/app/core/service/ws/auth/auth.service'
 import { login } from '@/app/store/authentication/authentication.actions'
 import { Component, OnInit, inject } from '@angular/core'
 import {
@@ -7,7 +8,7 @@ import {
   UntypedFormGroup,
   Validators,
 } from '@angular/forms'
-import { RouterLink } from '@angular/router'
+import { Router, RouterLink } from '@angular/router'
 import { Store } from '@ngrx/store'
 
 @Component({
@@ -20,10 +21,16 @@ import { Store } from '@ngrx/store'
 export class LoginComponent implements OnInit {
   signInForm!: UntypedFormGroup
   submitted: boolean = false
-
+  loading = false;
+  hasWrongCredentials = false;
   public fb = inject(UntypedFormBuilder)
   public store = inject(Store)
 
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ){
+  }
   ngOnInit(): void {
     this.signInForm = this.fb.group({
       email: ['user@demo.com', [Validators.required, Validators.email]],
@@ -35,14 +42,29 @@ export class LoginComponent implements OnInit {
     return this.signInForm.controls
   }
 
-  login() {
-    this.submitted = true
-    if (this.signInForm.valid) {
-      const email = this.formValues['email'].value
-      const password = this.formValues['password'].value
+  // login() {
+  //   this.submitted = true
+  //   if (this.signInForm.valid) {
+  //     const email = this.formValues['email'].value
+  //     const password = this.formValues['password'].value
 
-      // Login Api
-      this.store.dispatch(login({ email: email, password: password }))
-    }
+  //     // Login Api
+  //     this.store.dispatch(login({ email: email, password: password }))
+  //   }
+  // }
+
+   login(){
+    console.log(this.signInForm.value);
+    this.loading = true
+    this.authService.login(this.signInForm.value).subscribe(
+      response => {
+        this.router.navigateByUrl('admin');
+       },
+      err => {
+        console.log('er',err);
+        this.loading = false;
+        this.hasWrongCredentials = true;
+      }
+    )
   }
 }

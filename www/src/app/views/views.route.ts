@@ -60,4 +60,12 @@ export const VIEW_ROUTES: Route[] = [
     loadChildren: () =>
       import('./pages/pages.route').then((mod) => mod.PAGES_ROUTES),
   },
+
+
+  //spécific pages
+   {
+    path: 'users',
+    loadChildren: () =>
+      import('./users/users.route').then((mod) => mod.USERS_ROUTES),
+  },
 ]
