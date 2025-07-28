@@ -31,26 +31,26 @@ export class AuthService {
     const body = {
       access_token : JSON.parse(localStorage.getItem('access_token') || 'null')
     }
-    return this.httpClient.post(this.endpoint + '/auth/get', body);
+    return this.httpClient.get(this.endpoint + '/users/me');
   }
 
   login(login: any) {
-    return this.httpClient.post(this.endpoint + '/login', login).pipe(
+    return this.httpClient.post(this.endpoint + '/users/login', login).pipe(
       map((loginResponse: any) => {
         localStorage.setItem(
           'access_token',
-          JSON.stringify(loginResponse.access_token)
+          JSON.stringify(loginResponse.accessToken)
         );
         localStorage.setItem(
-          'token_type',
-          JSON.stringify(loginResponse.token_type)
+          'refreshToken',
+          JSON.stringify(loginResponse.refreshToken)
         );
       })
     );
   }
 
   register(register: any) {
-    return this.httpClient.post(this.endpoint + '/register', register).pipe(
+    return this.httpClient.post(this.endpoint + '/users/register', register).pipe(
       map((loginResponse: any) => {
         localStorage.setItem(
           'access_token',
@@ -76,6 +76,7 @@ export class AuthService {
     localStorage.removeItem('currentUser');
     localStorage.removeItem('access_token');
     localStorage.removeItem('token_type');
+    localStorage.removeItem('refreshToken');
     //this.currentUserSubject.next();
   }
 

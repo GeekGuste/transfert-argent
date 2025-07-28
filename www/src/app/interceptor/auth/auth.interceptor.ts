@@ -1,3 +1,4 @@
+import { environment } from '@/environments/environment';
 import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -6,13 +7,16 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   function isRouteInArray(array: any[], url: any, method: any) {
     return array.some(item => item.url === url && item.method === method);
 }
-  const endpoint = "environment.endpoint";
+  const endpoint = environment.endpoint;
   const urlsToNotUse = [
-    { url: endpoint + '/login', method: 'POST' },
-    { url: endpoint + '/register', method: 'POST'  },
+    { url: endpoint + '/users/login', method: 'POST' },
+    { url: endpoint + '/users/register', method: 'POST'  },
     { url: endpoint + '/forgot-password', method: 'POST'  },
     { url: endpoint + '/reset-password', method: 'PUT'  },
   ];
+  console.log(req.url);
+  console.log(isRouteInArray(urlsToNotUse,req.url,req.method));
+  console.log(urlsToNotUse,req.url);
   if (isRouteInArray(urlsToNotUse,req.url,req.method)) {
   } else {
     req = req.clone({

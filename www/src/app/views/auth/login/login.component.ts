@@ -58,10 +58,10 @@ export class LoginComponent implements OnInit {
     this.loading = true
     this.authService.login(this.signInForm.value).subscribe(
       response => {
-        this.router.navigateByUrl('admin');
+        this.router.navigateByUrl('users');
        },
       err => {
-        console.log('er',err);
+        //console.log('er',err);
         this.loading = false;
         this.hasWrongCredentials = true;
       }

@@ -4,6 +4,11 @@ import { ListUserComponent } from './list-user/list-user.component'
 
 
 export const USERS_ROUTES: Route[] = [
+    {
+    path: '',
+    redirectTo:'list',
+    pathMatch:'full'
+  },
   {
     path: 'add',
     component: AddUserComponent,
@@ -14,4 +19,11 @@ export const USERS_ROUTES: Route[] = [
     component: ListUserComponent,
     data: { title: 'User List' },
   },
+
+    {
+    path: '**',
+    redirectTo:'list',
+    pathMatch:'full'
+  },
+
 ]

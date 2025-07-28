@@ -20,10 +20,12 @@ import {
   provideHttpClient,
   withFetch,
   withInterceptorsFromDi,
+  withInterceptors
 } from '@angular/common/http'
 import { FakeBackendProvider } from './core/helpers/fake-backend'
 import { CalendarEffects } from './store/calendar/calendar.effects'
 import { KanbanEffects } from './store/kanban/kanban.effects'
+import { authInterceptor } from './interceptor/auth/auth.interceptor'
 
 // scroll
 const scrollConfig: InMemoryScrollingOptions = {
@@ -49,6 +51,7 @@ export const appConfig: ApplicationConfig = {
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
     provideEffects(CalendarEffects),
     provideEffects(AuthenticationEffects,KanbanEffects),
-    provideHttpClient(withFetch(), withInterceptorsFromDi()),
+    // provideHttpClient(withFetch(), withInterceptorsFromDi()),
+    provideHttpClient(withInterceptors([authInterceptor]))
   ],
 }

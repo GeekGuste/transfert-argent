@@ -3,10 +3,12 @@ import { LockScreenComponent } from './lock-screen/lock-screen.component'
 import { LoginComponent } from './login/login.component'
 import { RegisterComponent } from './register/register.component'
 import { RecoverPwComponent } from './recover-pw/recover-pw.component'
+import { connectedGuard } from '@/app/core/guard/auth/connected.guard'
 
 export const AUTH_ROUTES: Route[] = [
   {
     path: 'log-in',
+    canActivate:[connectedGuard],
     component: LoginComponent,
     data: { title: 'Login' },
   },

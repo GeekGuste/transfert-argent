@@ -14,21 +14,21 @@ export class UserService {
   ) { }
 
   getUsers(){
-      return this.httpClient.get(this.endpoint+'/user');
+      return this.httpClient.get(this.endpoint+'/users');
   }
 
   getUser(user:any){
-    return this.httpClient.get(this.endpoint+'/user/'+user.key);
+    return this.httpClient.get(this.endpoint+'/users/'+user.key);
 }
 
   createUser(userForm:any){
-    return this.httpClient.post(this.endpoint+'/user/invite',userForm);
+    return this.httpClient.post(this.endpoint+'/users/invite',userForm);
   }
 
   updateUser(userForm:any){
-    return this.httpClient.put(this.endpoint+'/user/update',userForm);
+    return this.httpClient.put(this.endpoint+'/users/update',userForm);
   }
   deleteUser(userForm:any){
-    return this.httpClient.delete(this.endpoint+'/user/delete',userForm);
+    return this.httpClient.delete(this.endpoint+'/users/delete',userForm);
   }
 }
