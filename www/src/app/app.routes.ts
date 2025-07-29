@@ -21,11 +21,11 @@ export const routes: Routes = [
     loadChildren: () =>
       import('./views/auth/auth.route').then((mod) => mod.AUTH_ROUTES),
   },
-  // {
-  //   path: 'not-found',
-  //   component: Error404Component,
-  //   data: { title: '404 - Error' },
-  // },
+  {
+    path: '**',
+    component: Error404Component,
+    data: { title: '404 - Error' },
+  },
   // {
   //   path: 'error-500',
   //   component: Error500Component,
