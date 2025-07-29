@@ -14,7 +14,7 @@ export class UserService {
   ) { }
 
   getUsers(){
-      return this.httpClient.get(this.endpoint+'/users');
+      return this.httpClient.get(this.endpoint+'/users/users');
   }
 
   getUser(user:any){

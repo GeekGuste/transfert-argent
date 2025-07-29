@@ -8,7 +8,8 @@ export const MENU_ITEMS: MenuItem[] = [
   },
   {
     key: 'dashboards',
-    icon: 'iconoir-home-simple',
+    // icon: 'iconoir-home-simple',
+    icon: 'iconoir-user',
     label: 'Users',
     collapsed: false,
     subMenu: [

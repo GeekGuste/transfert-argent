@@ -1,8 +1,10 @@
 import { Route } from '@angular/router'
+import { authGuard } from '../core/guard/auth/auth.guard'
 
 export const VIEW_ROUTES: Route[] = [
   {
     path: 'dashboard',
+    canActivate: [authGuard],
     loadChildren: () =>
       import('./dashboards/dashboards.route').then(
         (mod) => mod.DASHBOARD_ROUTES
@@ -10,15 +12,18 @@ export const VIEW_ROUTES: Route[] = [
   },
   {
     path: 'apps',
+    canActivate: [authGuard],
     loadChildren: () =>
       import('./applications/apps.route').then((mod) => mod.APPS_ROUTES),
   },
   {
     path: 'ui',
+    canActivate: [authGuard],
     loadChildren: () => import('./ui/ui.route').then((mod) => mod.UI_ROUTES),
   },
   {
     path: 'advanced',
+    canActivate: [authGuard],
     loadChildren: () =>
       import('./advance_ui/advance-ui.route').then(
         (mod) => mod.ADVANCED_ROUTES
@@ -26,11 +31,13 @@ export const VIEW_ROUTES: Route[] = [
   },
   {
     path: 'forms',
+    canActivate: [authGuard],
     loadChildren: () =>
       import('./forms/forms.route').then((mod) => mod.FORMS_ROUTES),
   },
   {
     path: 'charts',
+    canActivate: [authGuard],
     loadChildren: () =>
       import('./charts/charts.route').then((mod) => mod.CHARTS_ROUTES),
   },
@@ -65,6 +72,7 @@ export const VIEW_ROUTES: Route[] = [
   //spécific pages
    {
     path: 'users',
+    canActivate: [authGuard],
     loadChildren: () =>
       import('./users/users.route').then((mod) => mod.USERS_ROUTES),
   },

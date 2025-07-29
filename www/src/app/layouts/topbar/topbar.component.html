@@ -240,11 +240,11 @@
               ><i class="las la-user fs-18 me-1 align-text-bottom"></i>
               Profile</a
             >
-            <a class="dropdown-item" routerLink="/apps/ecommerce/orders"
+            <!-- <a class="dropdown-item" routerLink="/apps/ecommerce/orders"
               ><i class="las la-wallet fs-18 me-1 align-text-bottom"></i>
               Earning</a
-            >
-            <small class="text-muted px-2 py-1 d-block">Settings</small>
+            > -->
+            <!-- <small class="text-muted px-2 py-1 d-block">Settings</small>
             <a class="dropdown-item" routerLink="/pages/profile"
               ><i class="las la-cog fs-18 me-1 align-text-bottom"></i>Account
               Settings</a
@@ -254,7 +254,7 @@
               routerLink="/auth/lock-screen"
               target="_blank"
               ><i class="las la-lock fs-18 me-1 align-text-bottom"></i> Lock</a
-            >
+            > -->
             <a class="dropdown-item" routerLink="/pages/faqs"
               ><i
                 class="las la-question-circle fs-18 me-1 align-text-bottom"
@@ -262,7 +262,7 @@
               Help Center</a
             >
             <div class="dropdown-divider mb-0"></div>
-            <a class="dropdown-item text-danger" routerLink="/auth/log-in"
+            <a class="dropdown-item text-danger" (click)="logout()"
               ><i class="las la-power-off fs-18 me-1 align-text-bottom"></i>
               Logout</a
             >
