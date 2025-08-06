@@ -28,7 +28,16 @@ export class UserService {
   updateUser(userForm:any){
     return this.httpClient.put(this.endpoint+'/users/update',userForm);
   }
-  deleteUser(userForm:any){
-    return this.httpClient.delete(this.endpoint+'/users/delete',userForm);
+
+  deleteUser(user:any){
+    return this.httpClient.delete(this.endpoint+'/users/delete',user);
+  }
+
+   deactivateUser(user:any){
+    return this.httpClient.post(this.endpoint+'/users/users/' + user.id + '/disable',user);
+  }
+
+   activateUser(user:any){
+    return this.httpClient.post(this.endpoint+'/users/users/' + user.id + '/enable',user);
   }
 }

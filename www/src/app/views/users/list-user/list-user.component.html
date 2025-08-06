@@ -1,12 +1,12 @@
 <!--end row-->
 
 <div class="row justify-content-center">
-  <div class="col-md-6 col-lg-6">
+  <div class="col-md-8 col-lg-8">
     <div class="card">
       <div class="card-header">
         <div class="row align-items-center">
           <div class="col">
-            <h4 class="card-title">Striped Rows</h4>
+            <h4 class="card-title">Liste des utilisateurs</h4>
           </div>
           <!--end col-->
         </div>
@@ -25,86 +25,38 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
+              <ng-container *ngIf="users!==[]">
+                   <tr *ngFor="let user of users">
                 <td>
                   <img
                     src="assets/images/users/avatar-3.jpg"
                     alt=""
                     class="rounded-circle thumb-md me-1 d-inline"
                   />
-                  Aaron Poulin
+                  {{ user.firstName }}
                 </td>
-                <td>Aaron&#64;example.com</td>
-                <td>+21 21547896</td>
+                <td>{{ user.userName }}</td>
+                <td>Pas encore Attribué</td>
                 <td class="text-end">
-                  <a href="javascript:void(0);" class="me-0.5"
+                  <a href="javascript:void(0);" (click)="editUser(user)" class="me-0.5"
                     ><i class="las la-pen text-secondary font-16"></i
                   ></a>
-                  <a href="javascript:void(0);"
+                   <a href="javascript:void(0);" (click)="deactivateUser(user)"
+                    ><i class="las la-lock text-secondary font-16"></i
+                  ></a>
+                   <a href="javascript:void(0);" (click)="activateUser(user)"
+                    ><i class="las la-unlock text-secondary font-16"></i
+                  ></a>
+                  <a href="javascript:void(0);" (click)="deleteUser(user)"
                     ><i class="las la-trash-alt text-secondary font-16"></i
                   ></a>
-                </td>
+                   <ng-container *ngIf="(loading && currentUser!==null && currentUser.userName === user.userName)">
+                      <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    </ng-container>
+                  </td>
               </tr>
-              <tr>
-                <td>
-                  <img
-                    src="assets/images/users/avatar-4.jpg"
-                    alt=""
-                    class="rounded-circle thumb-md me-1 d-inline"
-                  />
-                  Richard Ali
-                </td>
-                <td>Richard&#64;example.com</td>
-                <td>+41 21547896</td>
-                <td class="text-end">
-                  <a href="javascript:void(0);" class="me-0.5"
-                    ><i class="las la-pen text-secondary font-16"></i
-                  ></a>
-                  <a href="javascript:void(0);"
-                    ><i class="las la-trash-alt text-secondary font-16"></i
-                  ></a>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <img
-                    src="assets/images/users/avatar-5.jpg"
-                    alt=""
-                    class="rounded-circle thumb-md me-1 d-inline"
-                  />
-                  Juan Clark
-                </td>
-                <td>Juan&#64;example.com</td>
-                <td>+65 21547896</td>
-                <td class="text-end">
-                  <a href="javascript:void(0);" class="me-0.5"
-                    ><i class="las la-pen text-secondary font-16"></i
-                  ></a>
-                  <a href="javascript:void(0);"
-                    ><i class="las la-trash-alt text-secondary font-16"></i
-                  ></a>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <img
-                    src="assets/images/users/avatar-6.jpg"
-                    alt=""
-                    class="rounded-circle thumb-md me-1 d-inline"
-                  />
-                  Albert Hull
-                </td>
-                <td>Albert&#64;example.com</td>
-                <td>+88 21547896</td>
-                <td class="text-end">
-                  <a href="javascript:void(0);" class="me-0.5"
-                    ><i class="las la-pen text-secondary font-16"></i
-                  ></a>
-                  <a href="javascript:void(0);"
-                    ><i class="las la-trash-alt text-secondary font-16"></i
-                  ></a>
-                </td>
-              </tr>
+              </ng-container>
+
             </tbody>
           </table>
           <!--end /table-->
