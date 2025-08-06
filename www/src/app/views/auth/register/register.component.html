@@ -5,6 +5,7 @@
         <div class="row">
           <div class="col-lg-4 mx-auto">
             <div class="card">
+              <!-- Header -->
               <div class="card-body p-0 bg-black auth-header-box rounded-top">
                 <div class="text-center p-3">
                   <a routerLink="/" class="logo logo-admin">
@@ -19,186 +20,162 @@
                     Create an account
                   </h4>
                   <p class="text-muted fw-medium mb-0">
-                    Enter your detail to Create your account today.
+                    Enter your details to create your account today.
                   </p>
                 </div>
               </div>
+
+              <!-- Form -->
               <div class="card-body pt-0">
-                <form
-                  class="my-4"
-                  action="index.html"
-                  [formGroup]="signupForm"
-                  (ngSubmit)="onSubmit()"
-                >
+                <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" class="my-4">
                   <div class="form-group mb-2">
-                    <label class="form-label" for="username">Username</label>
+                    <label class="form-label" for="firstName">First Name</label>
                     <input
                       type="text"
-                      formControlName="username"
-                      [ngClass]="{
-                        'is-invalid': submitted && form['username'].errors,
-                      }"
                       class="form-control"
-                      id="username"
-                      name="username"
-                      placeholder="Enter username"
+                      id="firstName"
+                      formControlName="firstName"
+                      placeholder="Enter first name"
+                      [ngClass]="{ 'is-invalid': submitted && form['firstName'].errors }"
+                      [disabled]="loading"
                     />
-                    <div class="invalid-feedback">
-                      Please enter your username
-                    </div>
+                    <div class="invalid-feedback">Please enter your first name</div>
                   </div>
-                  <!--end form-group-->
+                  <div class="form-group mb-2">
+                    <label class="form-label" for="lastName">Last Name</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="lastName"
+                      formControlName="lastName"
+                      placeholder="Enter last name"
+                      [ngClass]="{ 'is-invalid': submitted && form['lastName'].errors }"
+                      [disabled]="loading"
+                    />
+                    <div class="invalid-feedback">Please enter your last name</div>
+                  </div>
 
                   <div class="form-group mb-2">
                     <label class="form-label" for="useremail">Email</label>
                     <input
                       type="email"
+                      class="form-control"
+                      id="email"
                       formControlName="email"
-                      [ngClass]="{
-                        'is-invalid': submitted && form['email'].errors,
-                      }"
-                      class="form-control"
-                      id="useremail"
-                      name="user email"
                       placeholder="Enter email"
+                      [ngClass]="{ 'is-invalid': submitted && form['email'].errors }"
+                      [disabled]="loading"
                     />
-                    <div class="invalid-feedback">Please enter your email</div>
+                    <div class="invalid-feedback">Please enter a valid email</div>
                   </div>
-                  <!--end form-group-->
 
                   <div class="form-group mb-2 position-relative">
-                    <label class="form-label" for="userpassword"
-                      >Password</label
-                    >
+                    <label class="form-label" for="userpassword">Password</label>
                     <input
-                      type="password"
-                      class="form-control"
-                      formControlName="password"
                       [type]="fieldTextType ? 'text' : 'password'"
-                      [ngClass]="{
-                        'is-invalid': submitted && form['password'].errors,
-                      }"
-                      name="password"
+                      class="form-control"
                       id="userpassword"
+                      formControlName="password"
                       placeholder="Enter password"
+                      [ngClass]="{ 'is-invalid': submitted && form['password'].errors }"
+                      [disabled]="loading"
                     />
-                    @if (
-                      (signupForm.get('confirmpwd')?.touched &&
-                        signupForm.errors?.['notSame']) ||
-                      (!submitted && form['password'].errors)
-                    ) {
-                      <span
-                        class="position-absolute top-50 text-muted end-0 translate-middle-y p-0 mt-2"
-                      >
-                        <i
-                          class="fakepasswordicon fas fa-eye-slash cursor-pointer p-2"
-                          [ngClass]="{ 'fa-eye': fieldTextType }"
-                          (click)="changetype()"
-                        ></i>
-                      </span>
-                    }
-                    <div class="invalid-feedback">
-                      Please enter your password
-                    </div>
+                    <span
+                      class="position-absolute top-50 text-muted end-0 translate-middle-y p-0 mt-2"
+                      (click)="togglePassword()"
+                    >
+                      <i
+                        class="fakepasswordicon fas"
+                        [ngClass]="{
+                          'fa-eye': !fieldTextType,
+                          'fa-eye-slash': fieldTextType
+                        }"
+                      ></i>
+                    </span>
+                    <div class="invalid-feedback">Please enter your password</div>
                   </div>
 
                   <div class="form-group mb-2 position-relative">
-                    <label class="form-label" for="Confirmpassword"
-                      >ConfirmPassword</label
-                    >
+                    <label class="form-label" for="Confirmpassword">Confirm Password</label>
                     <input
                       [type]="fieldTextType1 ? 'text' : 'password'"
+                      class="form-control"
+                      id="Confirmpassword"
                       formControlName="confirmpwd"
+                      placeholder="Confirm password"
                       [ngClass]="{
                         'is-invalid':
-                          signupForm.get('confirmpwd')?.touched &&
-                          signupForm.errors?.['notSame'],
+                          submitted &&
+                          (form['confirmpwd'].errors || signupForm.errors?.['notSame'])
                       }"
-                      type="password"
-                      class="form-control"
-                      name="password"
-                      id="Confirmpassword"
-                      placeholder="Enter Confirm password"
+                      [disabled]="loading"
                     />
-                    @if (!submitted && form['confirmpwd'].errors) {
-                      <span
-                        class="position-absolute top-50 end-0 text-muted translate-middle-y p-0 mt-2"
-                      >
-                        <i
-                          class="fakepasswordicon fas fa-eye-slash cursor-pointer p-2"
-                          [ngClass]="{ 'fa-eye': fieldTextType1 }"
-                          (click)="fieldTextType1 = !fieldTextType1"
-                        ></i>
-                      </span>
-                    }
+                    <span
+                      class="position-absolute top-50 end-0 text-muted translate-middle-y p-0 mt-2"
+                      (click)="toggleConfirmPassword()"
+                    >
+                      <i
+                        class="fakepasswordicon fas"
+                        [ngClass]="{
+                          'fa-eye': !fieldTextType1,
+                          'fa-eye-slash': fieldTextType1
+                        }"
+                      ></i>
+                    </span>
                     <div class="invalid-feedback">
-                      New password and confirm password doesn't match
+                      New password and confirm password don't match
                     </div>
                   </div>
-                  <!--end form-group-->
 
                   <div class="form-group mb-2">
-                    <label class="form-label" for="mobileNo"
-                      >Mobile Number</label
-                    >
+                    <label class="form-label" for="mobileNo">Mobile Number</label>
                     <input
                       type="text"
-                      formControlName="number"
-                      [ngClass]="{
-                        'is-invalid': submitted && form['number'].errors,
-                      }"
                       class="form-control"
                       id="mobileNo"
-                      name="mobile number"
-                      placeholder="Enter Mobile Number"
+                      formControlName="number"
+                      placeholder="Enter mobile number"
+                      [ngClass]="{ 'is-invalid': submitted && form['number'].errors }"
+                      [disabled]="loading"
                     />
                     <div class="invalid-feedback">
-                      Please enter your mobile number
+                      Please enter a valid mobile number
                     </div>
                   </div>
-                  <!--end form-group-->
 
                   <div class="form-group row mt-3">
                     <div class="col-12">
                       <div class="form-check form-switch form-switch-success">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          id="customSwitchSuccess"
-                        />
-                        <label
-                          class="form-check-label"
-                          for="customSwitchSuccess"
-                          >By registering you agree to the Rizz
-                          <a href="javascript:void(0);" class="text-primary"
-                            >Terms of Use</a
-                          ></label
-                        >
+                        <input class="form-check-input" type="checkbox" id="customSwitchSuccess" />
+                        <label class="form-check-label" for="customSwitchSuccess">
+                          By registering you agree to the Rizz
+                          <a href="javascript:void(0);" class="text-primary">Terms of Use</a>
+                        </label>
                       </div>
                     </div>
-                    <!--end col-->
                   </div>
-                  <!--end form-group-->
 
                   <div class="form-group mb-0 row">
                     <div class="col-12">
                       <div class="d-grid mt-3">
-                        <button class="btn btn-primary" type="submit">
-                          Register <i class="fas fa-sign-in-alt ms-1"></i>
+                        <button class="btn btn-primary" type="submit" [disabled]="loading">
+                          <ng-container *ngIf="!loading">
+                            Register <i class="fas fa-sign-in-alt ms-1"></i>
+                          </ng-container>
+                          <ng-container *ngIf="loading">
+                            <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                            Registering...
+                          </ng-container>
                         </button>
                       </div>
                     </div>
-                    <!--end col-->
                   </div>
-                  <!--end form-group-->
                 </form>
-                <!--end form-->
-                <div class="text-center">
+
+                <div class="text-center mt-3">
                   <p class="text-muted">
-                    Already have an account ?
-                    <a [routerLink]="'/auth/log-in'" class="text-primary ms-2"
-                      >Log in</a
-                    >
+                    Already have an account?
+                    <a [routerLink]="'/auth/log-in'" class="text-primary ms-2">Log in</a>
                   </p>
                 </div>
               </div>
@@ -206,13 +183,8 @@
             </div>
             <!--end card-->
           </div>
-          <!--end col-->
         </div>
-        <!--end row-->
       </div>
-      <!--end card-body-->
     </div>
-    <!--end col-->
   </div>
-  <!--end row-->
 </div>
