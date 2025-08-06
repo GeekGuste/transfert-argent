@@ -39,11 +39,12 @@ export class TopbarComponent implements OnInit {
   }
   ngOnInit(): void {
     this.authService.getUserByToken().subscribe(
-      (response: any) => {this.user = response},
+      (response: any) => {this.user = response;this.authService.setCurrentUserValue(this.user)},
       err => {
         this.logout();
       }
-    );  }
+    );
+  }
 
   toggleMobileMenu() {
     this.mobileMenuButtonClicked.emit()

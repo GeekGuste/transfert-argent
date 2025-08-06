@@ -602,53 +602,53 @@
       >Settings</a
     >
     <ng-template ngbNavContent>
-      <div class="tab-pane p-3" id="settings" role="tabpanel">
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
         <div class="card">
           <div class="card-header">
-            <div class="row align-items-center">
-              <div class="col">
-                <h4 class="card-title">Personal Information</h4>
-              </div>
-              <!--end col-->
-            </div>
-            <!--end row-->
+            <h4 class="card-title">Personal Information</h4>
           </div>
-          <!--end card-header-->
           <div class="card-body pt-0">
             <div class="form-group mb-3 row">
-              <label
-                class="col-xl-3 col-lg-3 text-end mb-lg-0 align-self-center form-label"
+              <label class="col-xl-3 col-lg-3 text-end form-label"
                 >First Name</label
               >
               <div class="col-lg-9 col-xl-8">
-                <input class="form-control" type="text" value="Rosa" />
-              </div>
-            </div>
-            <div class="form-group mb-3 row">
-              <label
-                class="col-xl-3 col-lg-3 text-end mb-lg-0 align-self-center form-label"
-                >Last Name</label
-              >
-              <div class="col-lg-9 col-xl-8">
-                <input class="form-control" type="text" value="Dodson" />
-              </div>
-            </div>
-            <div class="form-group mb-3 row">
-              <label
-                class="col-xl-3 col-lg-3 text-end mb-lg-0 align-self-center form-label"
-                >Company Name</label
-              >
-              <div class="col-lg-9 col-xl-8">
-                <input class="form-control" type="text" value="MannatThemes" />
-                <span class="form-text text-muted font-12"
-                  >We'll never share your email with anyone else.</span
-                >
+                <input
+                  type="text"
+                  formControlName="firstName"
+                  class="form-control"
+                />
               </div>
             </div>
 
             <div class="form-group mb-3 row">
-              <label
-                class="col-xl-3 col-lg-3 text-end mb-lg-0 align-self-center form-label"
+              <label class="col-xl-3 col-lg-3 text-end form-label"
+                >Last Name</label
+              >
+              <div class="col-lg-9 col-xl-8">
+                <input
+                  type="text"
+                  formControlName="lastName"
+                  class="form-control"
+                />
+              </div>
+            </div>
+
+            <div class="form-group mb-3 row">
+              <label class="col-xl-3 col-lg-3 text-end form-label"
+                >Company Name</label
+              >
+              <div class="col-lg-9 col-xl-8">
+                <input
+                  type="text"
+                  formControlName="companyName"
+                  class="form-control"
+                />
+              </div>
+            </div>
+
+            <div class="form-group mb-3 row">
+              <label class="col-xl-3 col-lg-3 text-end form-label"
                 >Contact Phone</label
               >
               <div class="col-lg-9 col-xl-8">
@@ -658,17 +658,16 @@
                   ></span>
                   <input
                     type="text"
+                    formControlName="phone"
                     class="form-control"
-                    value="+123456789"
                     placeholder="Phone"
-                    aria-describedby="basic-addon1"
                   />
                 </div>
               </div>
             </div>
+
             <div class="form-group mb-3 row">
-              <label
-                class="col-xl-3 col-lg-3 text-end mb-lg-0 align-self-center form-label"
+              <label class="col-xl-3 col-lg-3 text-end form-label"
                 >Email Address</label
               >
               <div class="col-lg-9 col-xl-8">
@@ -677,18 +676,17 @@
                     ><i class="las la-at"></i
                   ></span>
                   <input
-                    type="text"
+                    type="email"
+                    formControlName="email"
                     class="form-control"
-                    value="rosa.dodson@demo.com"
                     placeholder="Email"
-                    aria-describedby="basic-addon1"
                   />
                 </div>
               </div>
             </div>
+
             <div class="form-group mb-3 row">
-              <label
-                class="col-xl-3 col-lg-3 text-end mb-lg-0 align-self-center form-label"
+              <label class="col-xl-3 col-lg-3 text-end form-label"
                 >Website Link</label
               >
               <div class="col-lg-9 col-xl-8">
@@ -698,21 +696,20 @@
                   ></span>
                   <input
                     type="text"
+                    formControlName="website"
                     class="form-control"
-                    [value]=" credits.website"
-                    placeholder="Email"
-                    aria-describedby="basic-addon1"
+                    placeholder="Website"
                   />
                 </div>
               </div>
             </div>
+
             <div class="form-group mb-3 row">
-              <label
-                class="col-xl-3 col-lg-3 text-end mb-lg-0 align-self-center form-label"
-                >USA</label
+              <label class="col-xl-3 col-lg-3 text-end form-label"
+                >Country</label
               >
               <div class="col-lg-9 col-xl-8">
-                <select class="form-select">
+                <select class="form-select" formControlName="country">
                   <option>London</option>
                   <option>India</option>
                   <option>USA</option>
@@ -721,6 +718,7 @@
                 </select>
               </div>
             </div>
+
             <div class="form-group row">
               <div class="col-lg-9 col-xl-8 offset-lg-3">
                 <button type="submit" class="btn btn-primary me-0.5">
@@ -730,57 +728,57 @@
               </div>
             </div>
           </div>
-          <!--end card-body-->
         </div>
-        <!--end card-->
-        <div class="card">
+      </form>
+
+      <form [formGroup]="passwordForm" (ngSubmit)="onChangePassword()">
+        <div class="card mt-4">
           <div class="card-header">
             <h4 class="card-title">Change Password</h4>
           </div>
-          <!--end card-header-->
           <div class="card-body pt-0">
             <div class="form-group mb-3 row">
-              <label
-                class="col-xl-3 col-lg-3 text-end mb-lg-0 align-self-center form-label"
+              <label class="col-xl-3 col-lg-3 text-end form-label"
                 >Current Password</label
               >
               <div class="col-lg-9 col-xl-8">
                 <input
-                  class="form-control"
                   type="password"
+                  formControlName="currentPassword"
+                  class="form-control"
                   placeholder="Password"
                 />
-                <a href="javascript:void(0);" class="text-primary font-12"
-                  >Forgot password ?</a
-                >
               </div>
             </div>
+
             <div class="form-group mb-3 row">
-              <label
-                class="col-xl-3 col-lg-3 text-end mb-lg-0 align-self-center form-label"
+              <label class="col-xl-3 col-lg-3 text-end form-label"
                 >New Password</label
               >
               <div class="col-lg-9 col-xl-8">
                 <input
-                  class="form-control"
                   type="password"
+                  formControlName="newPassword"
+                  class="form-control"
                   placeholder="New Password"
                 />
               </div>
             </div>
+
             <div class="form-group mb-3 row">
-              <label
-                class="col-xl-3 col-lg-3 text-end mb-lg-0 align-self-center form-label"
+              <label class="col-xl-3 col-lg-3 text-end form-label"
                 >Confirm Password</label
               >
               <div class="col-lg-9 col-xl-8">
                 <input
-                  class="form-control"
                   type="password"
-                  placeholder="Re-Password"
+                  formControlName="confirmPassword"
+                  class="form-control"
+                  placeholder="Confirm Password"
                 />
               </div>
             </div>
+
             <div class="form-group row">
               <div class="col-lg-9 col-xl-8 offset-lg-3">
                 <button type="submit" class="btn btn-primary me-0.5">
@@ -790,49 +788,36 @@
               </div>
             </div>
           </div>
-          <!--end card-body-->
         </div>
-        <!--end card-->
-        <div class="card">
-          <div class="card-header">
-            <h4 class="card-title">Other Settings</h4>
-          </div>
-          <!--end card-header-->
-          <div class="card-body pt-0">
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                value=""
-                id="Email_Notifications"
-                checked
-              />
-              <label class="form-check-label" for="Email_Notifications">
-                Email Notifications
-              </label>
-              <span class="form-text text-muted fs-12 mt-0 ms-0.5"
-                >Do you need them?</span
-              >
-            </div>
-            <div class="form-check mt-2">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                value=""
-                id="API_Access"
-              />
-              <label class="form-check-label" for="API_Access">
-                API Access
-              </label>
-              <span class="form-text text-muted font-12 mt-0 ms-0.5"
-                >Enable/Disable access</span
-              >
-            </div>
-          </div>
-          <!--end card-body-->
+      </form>
+
+      <!-- <div class="card mt-4">
+        <div class="card-header">
+          <h4 class="card-title">Other Settings</h4>
         </div>
-        <!--end card-->
-      </div>
+        <div class="card-body pt-0">
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="Email_Notifications"
+              formControlName="emailNotifications"
+            />
+            <label class="form-check-label" for="Email_Notifications"
+              >Email Notifications</label
+            >
+          </div>
+          <div class="form-check mt-2">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="API_Access"
+              formControlName="apiAccess"
+            />
+            <label class="form-check-label" for="API_Access">API Access</label>
+          </div>
+        </div>
+      </div> -->
     </ng-template>
   </li>
 </ul>

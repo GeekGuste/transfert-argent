@@ -1,6 +1,8 @@
 import { ChartOptions } from '@/app/common/apexchart.model'
 import { currency } from '@/app/common/constants'
+import { AuthService } from '@/app/core/service/ws/auth/auth.service'
 import { Component } from '@angular/core'
+import { Router } from '@angular/router'
 import { NgApexchartsModule } from 'ng-apexcharts'
 
 @Component({
@@ -48,4 +50,14 @@ export class PersonalProfileComponent {
     },
     labels: ['Compleation'],
   }
+
+  user!: any | null;
+    constructor(
+      private router: Router,
+      private authService: AuthService,
+    ) {
+      this.authService.currentUser.subscribe((currentUser) => {
+        this.user = currentUser;
+      });
+    }
 }

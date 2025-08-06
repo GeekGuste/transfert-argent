@@ -25,8 +25,9 @@ export class UserService {
     return this.httpClient.post(this.endpoint+'/users/invite',userForm);
   }
 
-  updateUser(userForm:any){
-    return this.httpClient.put(this.endpoint+'/users/update',userForm);
+  updateUser(user:any){
+    console.log(user);
+    return this.httpClient.put(this.endpoint+'/users/users/'+user.id,user);
   }
 
   deleteUser(user:any){
