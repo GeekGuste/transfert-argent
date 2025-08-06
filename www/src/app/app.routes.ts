@@ -25,6 +25,7 @@ export const routes: Routes = [
     path: '**',
     component: Error404Component,
     data: { title: '404 - Error' },
+    pathMatch:"full"
   },
   // {
   //   path: 'error-500',
