@@ -41,12 +41,16 @@
                   <a href="javascript:void(0);" (click)="editUser(user)" class="me-0.5"
                     ><i class="las la-pen text-secondary font-16"></i
                   ></a>
-                   <a href="javascript:void(0);" (click)="deactivateUser(user)"
-                    ><i class="las la-lock text-secondary font-16"></i
-                  ></a>
-                   <a href="javascript:void(0);" (click)="activateUser(user)"
+                  @if(user.isEnabled){
+                    <a href="javascript:void(0);" (click)="deactivateUser(user)"
+                      ><i class="las la-lock text-secondary font-16"></i
+                    ></a>
+                  }
+                  @if(!user.isEnabled){
+                      <a href="javascript:void(0);" (click)="activateUser(user)"
                     ><i class="las la-unlock text-secondary font-16"></i
                   ></a>
+                  }
                   <a href="javascript:void(0);" (click)="deleteUser(user)"
                     ><i class="las la-trash-alt text-secondary font-16"></i
                   ></a>
