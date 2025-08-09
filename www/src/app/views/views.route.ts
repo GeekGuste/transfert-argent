@@ -76,4 +76,10 @@ export const VIEW_ROUTES: Route[] = [
     loadChildren: () =>
       import('./users/users.route').then((mod) => mod.USERS_ROUTES),
   },
+    {
+    path: 'country',
+    canActivate: [authGuard],
+    loadChildren: () =>
+      import('./country/country.route').then((mod) => mod.COUNTRIES_ROUTES),
+  },
 ]

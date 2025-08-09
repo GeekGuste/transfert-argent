@@ -34,8 +34,10 @@
             ],
             "styles": [
               "src/styles.scss"
+
             ],
             "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
               "node_modules/tui-chart/dist/tui-chart-all.min.js",
               "node_modules/tui-chart/dist/maps/usa.js",
               "node_modules/tobii/dist/js/tobii.min.js",
@@ -43,6 +45,7 @@
               "node_modules/listree/dist/listree.umd.min.js",
               "node_modules/imask/dist/imask.min.js",
               "node_modules/jsvectormap/dist/js/jsvectormap.min.js"
+
             ],
             "allowedCommonJsDependencies": [
               "quill-delta",
@@ -145,8 +148,11 @@
             ],
             "styles": [
               "src/styles.scss"
+
             ],
-            "scripts": []
+            "scripts": [
+                "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+            ]
           }
         }
       }

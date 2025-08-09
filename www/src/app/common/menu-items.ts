@@ -27,6 +27,27 @@ export const MENU_ITEMS: MenuItem[] = [
       }
     ],
   },
+   {
+    key: 'country',
+    // icon: 'iconoir-home-simple',
+    icon: 'iconoir-dash-flag',
+    label: 'Country',
+    collapsed: false,
+    subMenu: [
+      {
+        key: 'country-add',
+        label: 'Ajouter un pays',
+        url: '/country/add',
+        parentKey: 'country add',
+      },
+       {
+        key: 'country-list',
+        label: 'Liste des utilisateurs',
+        url: '/country/list',
+        parentKey: 'country list',
+      }
+    ],
+  },
 
 
 

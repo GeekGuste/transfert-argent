@@ -19,10 +19,9 @@
   <!--end card-header-->
   <div class="card-body pt-0">
     <p class="text-muted fw-medium mb-3">
-      It is a long established fact that a reader will be distracted by the
-      readable content of a page when looking at its layout.
+      Ici ce sera la description de l'utilisateur
     </p>
-    <div class="mb-3">
+    <!-- <div class="mb-3">
       <span
         class="badge bg-transparent border border-light text-gray-700 fs-12 fw-medium mb-1 me-0.5"
         >Javascript</span
@@ -43,33 +42,33 @@
         class="badge bg-transparent border border-light text-gray-700 fs-12 fw-medium mb-1"
         >Flutter</span
       >
-    </div>
+    </div> -->
     <ul class="list-unstyled mb-0">
       <li class="">
         <i
           class="las la-birthday-cake me-2 text-secondary fs-22 align-middle"
         ></i>
-        <b> Birth Date </b> : 06 June 1989
+        <b> Birth Date </b> : {{ (user.birthday)?user.birthday:"Pas encore de date de naissance" }}
       </li>
-      <li class="mt-2">
+      <!-- <li class="mt-2">
         <i class="las la-briefcase me-2 text-secondary fs-22 align-middle"></i>
         <b> Position </b> : Full Stack Developer
       </li>
       <li class="mt-2">
         <i class="las la-university me-2 text-secondary fs-22 align-middle"></i>
         <b> Education </b> : Stanford Univercity
-      </li>
+      </li> -->
       <li class="mt-2">
         <i class="las la-language me-2 text-secondary fs-22 align-middle"></i>
-        <b> Languages </b> : English, French, Spanish
+        <b> Language de préférence </b> : {{ (user.birthday)?user.birthday:"Aucun" }}
       </li>
       <li class="mt-2">
         <i class="las la-phone me-2 text-secondary fs-22 align-middle"></i>
-        <b> Phone </b> : +91 23456 78910
+        <b> Phone </b> : {{ user.phone }}
       </li>
       <li class="mt-2">
         <i class="las la-envelope text-secondary fs-22 align-middle me-2"></i>
-        <b> Email </b> : mannat.theme&#64;gmail.com
+        <b> Email </b> : {{ user.userName }}
       </li>
     </ul>
     <div class="row justify-content-center mt-4">
