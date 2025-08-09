@@ -69,7 +69,7 @@ export class PersonalDetailComponent implements OnInit {
       id: [user.id ? user.id : '', Validators.required],
       lastName: [user.lastName ? user.lastName : '', Validators.required],
       companyName: [''],
-      phone: [''],
+      phone: [user.phone ? user.phone : ''],
       email: [user.userName || '', [Validators.required, Validators.email]],
       website: [''],
       country: [''],
