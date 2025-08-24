@@ -1,5 +1,5 @@
-import { Route } from '@angular/router'
-import { authGuard } from '../core/guard/auth/auth.guard'
+import { Route } from '@angular/router';
+import { authGuard } from '../core/guard/auth/auth.guard';
 
 export const VIEW_ROUTES: Route[] = [
   {
@@ -7,7 +7,7 @@ export const VIEW_ROUTES: Route[] = [
     canActivate: [authGuard],
     loadChildren: () =>
       import('./dashboards/dashboards.route').then(
-        (mod) => mod.DASHBOARD_ROUTES
+        (mod) => mod.DASHBOARD_ROUTES,
       ),
   },
   {
@@ -26,7 +26,7 @@ export const VIEW_ROUTES: Route[] = [
     canActivate: [authGuard],
     loadChildren: () =>
       import('./advance_ui/advance-ui.route').then(
-        (mod) => mod.ADVANCED_ROUTES
+        (mod) => mod.ADVANCED_ROUTES,
       ),
   },
   {
@@ -68,18 +68,23 @@ export const VIEW_ROUTES: Route[] = [
       import('./pages/pages.route').then((mod) => mod.PAGES_ROUTES),
   },
 
-
   //spécific pages
-   {
+  {
     path: 'users',
     canActivate: [authGuard],
     loadChildren: () =>
       import('./users/users.route').then((mod) => mod.USERS_ROUTES),
   },
-    {
+  {
     path: 'country',
     canActivate: [authGuard],
     loadChildren: () =>
       import('./country/country.route').then((mod) => mod.COUNTRIES_ROUTES),
   },
-]
+  {
+    path: 'service',
+    canActivate: [authGuard],
+    loadChildren: () =>
+      import('./service/service.route').then((mod) => mod.SERVICES_ROUTES),
+  },
+];

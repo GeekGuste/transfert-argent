@@ -1,0 +1,157 @@
+<!--end row-->
+
+<div class="row justify-content-center">
+  <div class="col-md-10 col-lg-10">
+    <div class="card">
+      <div class="card-header">
+        <div class="row align-items-center">
+          <div class="col">
+            <h4 class="card-title">Liste des services</h4>
+          </div>
+          <!--end col-->
+        </div>
+        <!--end row-->
+      </div>
+      <!--end card-header-->
+      <div class="card-body pt-0">
+        <div class="table-responsive">
+          <table class="table table-striped mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Active</th>
+                <th class="text-end">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngIf="services !== []">
+                <tr *ngFor="let service of services">
+                  <td>
+                    {{ service.name }}
+                  </td>
+                  <td>
+                    {{ service.description }}
+                  </td>
+                  <td>
+                    <span *ngIf="service.isEnabled" class="badge bg-success"
+                      >Actif</span
+                    >
+                    <span *ngIf="!service.isEnabled" class="badge bg-secondary"
+                      >Inactif</span
+                    >
+                  </td>
+
+                  <td class="text-end">
+                    <a
+                      href="javascript:void(0);"
+                      (click)="openEditModal(service)"
+                      class="me-0.5"
+                      ><i class="las la-pen text-secondary font-16"></i
+                    ></a>
+                    @if (service.isEnabled) {
+                      <a
+                        href="javascript:void(0);"
+                        (click)="deactivateService(service)"
+                        ><i class="las la-lock text-secondary font-16"></i
+                      ></a>
+                    }
+                    @if (!service.isEnabled) {
+                      <a
+                        href="javascript:void(0);"
+                        (click)="activateService(service)"
+                        ><i class="las la-unlock text-secondary font-16"></i
+                      ></a>
+                    }
+                    <a
+                      href="javascript:void(0);"
+                      (click)="deleteService(service)"
+                      ><i class="las la-trash-alt text-secondary font-16"></i
+                    ></a>
+                    <!-- <ng-container *ngIf="(loading && currentService!==null && currentService.name === service.serviceName)">
+                      <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    </ng-container> -->
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+          <!--end /table-->
+        </div>
+        <!--end /tableresponsive-->
+      </div>
+      <!--end card-body-->
+    </div>
+    <!--end card-->
+  </div>
+  <!--end col-->
+</div>
+<!--end row-->
+
+<!-- MODAL -->
+<div
+  class="modal fade"
+  id="editServiceModal"
+  tabindex="-1"
+  aria-labelledby="editServiceModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Modifier le pays</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+      <form [formGroup]="editForm">
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Nom</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="name"
+            />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Description</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="description"
+            />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Actif</label>
+            <select
+              class="form-select"
+              formControlName="isEnabled"
+            >
+              <option [ngValue]="true">Oui</option>
+              <option [ngValue]="false">Non</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Annuler
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="updateService()"
+          >
+            Mettre à jour
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -48,6 +48,27 @@ export const MENU_ITEMS: MenuItem[] = [
       }
     ],
   },
+     {
+    key: 'Services',
+    // icon: 'iconoir-home-simple',
+    icon: 'iconoir-task-list',
+    label: 'Service',
+    collapsed: false,
+    subMenu: [
+      {
+        key: 'service-add',
+        label: 'Ajouter un Service',
+        url: '/service/add',
+        parentKey: 'service add',
+      },
+       {
+        key: 'service-list',
+        label: 'Liste des Services',
+        url: '/service/list',
+        parentKey: 'service list',
+      }
+    ],
+  },
 
 
 
