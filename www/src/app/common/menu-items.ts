@@ -42,7 +42,7 @@ export const MENU_ITEMS: MenuItem[] = [
       },
        {
         key: 'country-list',
-        label: 'Liste des utilisateurs',
+        label: 'Liste des pays',
         url: '/country/list',
         parentKey: 'country list',
       }
