@@ -9,18 +9,24 @@ import { authGuard } from './core/guard/auth/auth.guard'
 import { connectedGuard } from './core/guard/auth/connected.guard'
 
 export const routes: Routes = [
-  {
+   {
     path: '',
-    component: LayoutComponent,
-    canActivate: [authGuard],
     loadChildren: () =>
-      import('./views/views.route').then((mod) => mod.VIEW_ROUTES),
+      import('./views/pages/pages.route').then((mod) => mod.PAGES_ROUTES),
   },
+  // {
+  //   path: '',
+  //   component: LayoutComponent,
+  //   canActivate: [authGuard],
+  //   loadChildren: () =>
+  //     import('./views/views.route').then((mod) => mod.VIEW_ROUTES),
+  // },
   {
     path: 'auth',
     loadChildren: () =>
       import('./views/auth/auth.route').then((mod) => mod.AUTH_ROUTES),
   },
+
   {
     path: '**',
     component: Error404Component,

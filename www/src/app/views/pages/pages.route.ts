@@ -8,8 +8,14 @@ import { PricingComponent } from './pricing/pricing.component'
 import { BlogsComponent } from './blogs/blogs.component'
 import { FaqComponent } from './faq/faq.component'
 import { GalleryComponent } from './gallery/gallery.component'
+import { HomeComponent } from './home/home.component'
 
 export const PAGES_ROUTES: Route[] = [
+    {
+    path: '',
+    redirectTo: 'home',
+    pathMatch: 'full',
+  },
   {
     path: 'profile',
     component: ProfileComponent,
@@ -54,5 +60,15 @@ export const PAGES_ROUTES: Route[] = [
     path: 'gallery',
     component: GalleryComponent,
     data: { title: 'Gallery' },
+  },
+   {
+    path: 'home',
+    component: HomeComponent,
+    data: { title: 'home' },
+  },
+      {
+    path: '**',
+    redirectTo: 'home',
+    pathMatch: 'full',
   },
 ]
