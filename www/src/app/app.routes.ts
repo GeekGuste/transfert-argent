@@ -9,8 +9,13 @@ import { authGuard } from './core/guard/auth/auth.guard'
 import { connectedGuard } from './core/guard/auth/connected.guard'
 
 export const routes: Routes = [
-   {
+    {
     path: '',
+    redirectTo: 'maintenance',
+    pathMatch: 'full',
+  },
+   {
+    path: 'home',
     loadChildren: () =>
       import('./views/pages/pages.route').then((mod) => mod.PAGES_ROUTES),
   },
@@ -26,6 +31,11 @@ export const routes: Routes = [
     loadChildren: () =>
       import('./views/auth/auth.route').then((mod) => mod.AUTH_ROUTES),
   },
+    {
+    path: 'maintenance',
+    component: MaintenanceComponent,
+    data: { title: 'Maintenance' },
+  },
 
   {
     path: '**',
@@ -38,9 +48,5 @@ export const routes: Routes = [
   //   component: Error500Component,
   //   data: { title: '500 - Error' },
   // },
-  // {
-  //   path: 'maintenance',
-  //   component: MaintenanceComponent,
-  //   data: { title: 'Maintenance' },
-  // },
+
 ]
