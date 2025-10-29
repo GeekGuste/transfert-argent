@@ -1,1 +1,84 @@
-<p>home works!</p>
+<div class="container">
+  <header>
+    <a class="brand" href="#">
+      <div class="logo">TA</div>
+      <div>
+        <div class="brand-name">TransAfrik</div>
+        <div class="brand-sub">Transferts & colis | Afrique ↔ Monde</div>
+      </div>
+    </a>
+
+    <nav>
+      <a routerLink="/services">Services</a>
+      <a routerLink="/process">Comment ça marche</a>
+      <a routerLink="/faq">FAQ</a>
+      <a routerLink="/contact" class="cta">Contactez-nous</a>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-left card">
+      <h1>Transfert d'argent & mise en relation colis</h1>
+      <p class="lead">
+        Envoyez de l'argent rapidement, organisez vos colis entre l'Afrique et le reste du monde.
+      </p>
+
+      <div class="features">
+        <div class="pill">Transferts rapides</div>
+        <div class="pill">Suivi colis</div>
+        <div class="pill">Réseau local</div>
+        <div class="pill">Support 24/7</div>
+      </div>
+
+      <div class="hero-buttons">
+        <a routerLink="/contact" class="cta">Demander une démo</a>
+        <a routerLink="/process" class="btn-outline">Comment ça marche</a>
+      </div>
+    </div>
+
+    <div class="hero-right card">
+      <h3>Simulateur de frais</h3>
+      <p class="muted">Entrez un montant pour estimer vos frais de transfert.</p>
+
+      <form>
+        <div class="form-row">
+          <select>
+            <option>Pays d'envoi</option>
+            <option>France</option>
+            <option>Sénégal</option>
+            <option>Nigeria</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <select>
+            <option>Pays de réception</option>
+            <option>France</option>
+            <option>Sénégal</option>
+            <option>Nigeria</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <input type="number" placeholder="Montant (EUR)" />
+        </div>
+        <button type="button" class="btn">Calculer</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section class="grid">
+    <div class="service card">
+      <h4>Transferts d'argent</h4>
+      <p class="muted">Envoi sécurisé d'argent vers comptes bancaires ou mobile money.</p>
+    </div>
+    <div class="service card">
+      <h4>Mise en relation colis</h4>
+      <p class="muted">Connectez expéditeurs et transporteurs en Afrique et à l’international.</p>
+    </div>
+    <div class="service card">
+      <h4>Assurance & conformité</h4>
+      <p class="muted">Protection colis, conformité KYC/AML et assistance douanière.</p>
+    </div>
+  </section>
+</div>
