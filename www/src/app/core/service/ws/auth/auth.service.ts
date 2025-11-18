@@ -97,4 +97,32 @@ export class AuthService {
     }
     return this.httpClient.put(this.endpoint + '/reset-password', body);
   }
+
+  verifyEmail(request: any) {
+    console.log('AuthService verifyEmail called with', request);
+    return this.httpClient.post(this.endpoint + '/users/verify-email', request).pipe(
+      map((loginResponse: any) => {
+            console.log('response', loginResponse);
+
+        localStorage.setItem(
+          'access_token',
+          JSON.stringify(loginResponse.access_token)
+        );
+        localStorage.setItem(
+          'token_type',
+          JSON.stringify(loginResponse.token_type)
+        );
+      })
+    );
+  }
+
+  reSendCode(request: any) {
+  const email = request.email;  // 👉 récupération de l'email dans request
+
+  return this.httpClient.get(this.endpoint + '/users/resend-code', {
+    params: { email: email }
+  });
+}
+
+
 }

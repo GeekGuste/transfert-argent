@@ -13,6 +13,8 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     { url: endpoint + '/users/register', method: 'POST'  },
     { url: endpoint + '/forgot-password', method: 'POST'  },
     { url: endpoint + '/reset-password', method: 'PUT'  },
+    { url: endpoint + '/users/verify-email', method: 'POST'  },
+    { url: endpoint + '/users/resend-code', method: 'GET'  },
   ];
   console.log(req.url);
   console.log(isRouteInArray(urlsToNotUse,req.url,req.method));

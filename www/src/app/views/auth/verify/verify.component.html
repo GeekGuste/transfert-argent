@@ -1,0 +1,110 @@
+<div class="container-xxl">
+  <div class="row vh-100 d-flex justify-content-center">
+    <div class="col-12 align-self-center">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-lg-4 mx-auto">
+            <div class="card">
+              <!-- Header -->
+              <div class="card-body p-0 bg-black auth-header-box rounded-top">
+                <div class="text-center p-3">
+                  <a routerLink="/" class="logo logo-admin">
+                    <img
+                      src="assets/images/logo-sm.png"
+                      height="50"
+                      alt="logo"
+                      class="auth-logo"
+                    />
+                  </a>
+                  <h4 class="mt-3 mb-1 fw-semibold text-white fs-18">
+                    Bravo, vous avez reçu un code de vérification ! verifiez vos mails
+                  </h4>
+                  <p class="text-muted fw-medium mb-0">
+                    Il se peut aussi qu'il soit dans vos spam.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Form -->
+              <div class="card-body pt-0">
+                <form
+                  [formGroup]="signInForm"
+                  (ngSubmit)="verifyEmail()"
+                  class="my-4"
+                >
+                  <div class="form-group mb-2">
+                    <label class="form-label" for="email">email</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="email"
+                      formControlName="email"
+                      name="email"
+                      placeholder="alfayedtchagnao19@gmail.com"
+                      readonly
+                    />
+                  </div>
+
+                  <div class="form-group">
+                    <label class="form-label" for="code">Code</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      name="code"
+                      formControlName="code"
+                      id="code"
+                      placeholder="Entrez le code de vérification"
+                      [disabled]="loading"
+                    />
+                  </div>
+
+
+                  <div class="form-group mb-0 row">
+                    <div class="col-12">
+                      <div class="d-grid mt-3">
+                        <button class="btn btn-primary" type="submit" [disabled]="loading">
+                          <ng-container *ngIf="!loading">
+                            Verifier <i class="fas fa-sign-in-alt ms-1"></i>
+                          </ng-container>
+                          <ng-container *ngIf="loading">
+                            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                            Logging in...
+                          </ng-container>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div *ngIf="hasWrongCredentials" class="text-danger text-center mt-3">
+                    Invalid email or password.
+                  </div>
+
+                   <div *ngIf="hasEmailSent" class="text-success text-center mt-3">
+                    Un email a été renvoyé à votre adresse. Veuillez vérifier votre boîte de réception.
+                  </div>
+                </form>
+
+                <!-- Sign up + Social -->
+                <div class="text-center mb-2">
+                  <p class="text-muted">
+                    Vous n'avez pas recu de code ?
+                    <a (click)="resendVerificationCode()" class="text-primary ms-2">
+                      Me renvoyer un nouveau code
+                    </a>
+                  </p>
+                </div>
+              </div>
+              <!--end card-body-->
+            </div>
+            <!--end card-->
+          </div>
+          <!--end col-->
+        </div>
+        <!--end row-->
+      </div>
+      <!--end card-body-->
+    </div>
+    <!--end col-->
+  </div>
+  <!--end row-->
+</div>

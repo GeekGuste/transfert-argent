@@ -4,6 +4,7 @@ import { LoginComponent } from './login/login.component'
 import { RegisterComponent } from './register/register.component'
 import { RecoverPwComponent } from './recover-pw/recover-pw.component'
 import { connectedGuard } from '@/app/core/guard/auth/connected.guard'
+import { VerifyComponent } from './verify/verify.component'
 
 export const AUTH_ROUTES: Route[] = [
   {
@@ -26,5 +27,10 @@ export const AUTH_ROUTES: Route[] = [
     path: 'lock-screen',
     component: LockScreenComponent,
     data: { title: 'Lock Screen' },
+  },
+   {
+    path: 'verify-email',
+    component: VerifyComponent,
+    data: { title: 'verify email' },
   },
 ]

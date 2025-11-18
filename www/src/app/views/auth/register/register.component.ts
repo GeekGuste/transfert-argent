@@ -75,7 +75,9 @@ export class RegisterComponent {
     this.authService.register(this.signupForm.value).subscribe({
       next: (response) => {
         // Redirection après login réussi
-        this.router.navigateByUrl('users');
+        this.router.navigate(['auth/verify-email'], {
+          queryParams: { email: this.signupForm.get('email')?.value },
+        });
       },
       error: (err) => {
         this.loading = false;
