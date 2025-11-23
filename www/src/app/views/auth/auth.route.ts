@@ -5,6 +5,7 @@ import { RegisterComponent } from './register/register.component'
 import { RecoverPwComponent } from './recover-pw/recover-pw.component'
 import { connectedGuard } from '@/app/core/guard/auth/connected.guard'
 import { VerifyComponent } from './verify/verify.component'
+import { NewPwComponent } from './new-pw/new-pw.component'
 
 export const AUTH_ROUTES: Route[] = [
   {
@@ -22,6 +23,11 @@ export const AUTH_ROUTES: Route[] = [
     path: 'recover-pw',
     component: RecoverPwComponent,
     data: { title: 'Recover Password' },
+  },
+  {
+    path: 'new-pw',
+    component: NewPwComponent,
+    data: { title: 'New Password' },
   },
   {
     path: 'lock-screen',

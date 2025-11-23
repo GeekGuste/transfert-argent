@@ -1,6 +1,7 @@
+import { AuthService } from '@/app/core/service/ws/auth/auth.service'
 import { Component } from '@angular/core'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms'
-import { RouterLink } from '@angular/router'
+import { Router, RouterLink } from '@angular/router'
 
 @Component({
   selector: 'app-recover-pw',
@@ -15,7 +16,8 @@ export class RecoverPwComponent {
   hasEmailSent = false
   hasError = false
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private router: Router,    private authService: AuthService,
+  ) {
     this.recoverForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
     })
@@ -28,10 +30,16 @@ export class RecoverPwComponent {
     }
     this.loading = true
     this.hasError = false
-    // Simule l'envoi d'email
-    setTimeout(() => {
-      this.loading = false
-      this.hasEmailSent = true
-    }, 2000)
+    this.authService.submitForgotPassword(this.recoverForm.value).subscribe({
+      next: (response) => {
+        // Redirection après login réussi
+        this.loading = false
+        this.hasEmailSent = true
+        this.router.navigateByUrl('auth/new-pw');
+      },
+      error: (err) => {
+        this.loading = false;
+      },
+    });
   }
 }

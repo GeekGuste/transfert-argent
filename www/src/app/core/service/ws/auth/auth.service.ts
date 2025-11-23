@@ -64,8 +64,8 @@ export class AuthService {
     );
   }
 
-  submitForgotPassword(emailToForgotPassword: any){
-    return this.httpClient.post(this.endpoint + '/forgot-password', emailToForgotPassword);
+  submitForgotPassword(resetForm: any){
+    return this.httpClient.get(this.endpoint + '/users/me/reset-password', { params: { email: resetForm.email } });
   }
 
   update(update: any) {
@@ -90,12 +90,13 @@ export class AuthService {
 
   }
 
-  resetPassword(token:string,password:string){
+  resetPassword(resetForm:any){
     const body = {
-      token:token,
-      password:password
+      code:resetForm.code,
+      newPassword:resetForm.password,
+      email:resetForm.email
     }
-    return this.httpClient.put(this.endpoint + '/reset-password', body);
+    return this.httpClient.post(this.endpoint + '/users/me/reset-password', body);
   }
 
   verifyEmail(request: any) {
