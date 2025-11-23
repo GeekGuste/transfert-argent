@@ -4,6 +4,6 @@ import { inject } from '@angular/core';
 
 export const connectedGuard: CanActivateFn = (route, state) => {
   return inject(AuthService).isAuthenticated()
-  ?inject(Router).createUrlTree(['users'])
+  ?inject(Router).createUrlTree(['views/users'])
   :true;
 };
