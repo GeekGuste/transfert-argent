@@ -19,7 +19,7 @@ export const AUTH_ROUTES: Route[] = [
     data: { title: 'Register' },
   },
   {
-    path: 'reset-pass',
+    path: 'recover-pw',
     component: RecoverPwComponent,
     data: { title: 'Recover Password' },
   },

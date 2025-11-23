@@ -24,32 +24,50 @@
                 </div>
               </div>
               <div class="card-body pt-0">
-                <form class="my-4" action="index.html">
+                <form [formGroup]="recoverForm" (ngSubmit)="sendRecoveryEmail()" class="my-4">
                   <div class="form-group mb-2">
-                    <label class="form-label" for="username">Email</label>
+                    <label class="form-label" for="userEmail">Email</label>
                     <input
                       type="text"
                       class="form-control"
                       id="userEmail"
+                      formControlName="email"
                       name="Email"
                       placeholder="Enter Email Address"
+                      [disabled]="loading"
                     />
                   </div>
-                  <!--end form-group-->
-
+                  @if (hasError) {
+                    <div class="text-danger text-center mt-2">
+                      Veuillez entrer une adresse email valide.
+                    </div>
+                  }
+                  @if (hasEmailSent) {
+                    <div class="text-success text-center mt-2">
+                      Un email de récupération a été envoyé à votre adresse.
+                    </div>
+                  }
                   <div class="form-group mb-0 row">
                     <div class="col-12">
                       <div class="d-grid mt-3">
-                        <button class="btn btn-primary" type="button">
-                          Reset <i class="fas fa-sign-in-alt ms-1"></i>
+                        <button class="btn btn-primary" type="submit" [disabled]="loading">
+                          @if(!loading){
+                            <ng-container>
+                            Reset <i class="fas fa-sign-in-alt ms-1"></i>
+                          </ng-container>
+                          }
+
+                          @if(loading){
+                            <ng-container>
+                            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                            Envoi en cours...
+                          </ng-container>
+                          }
                         </button>
                       </div>
                     </div>
-                    <!--end col-->
                   </div>
-                  <!--end form-group-->
                 </form>
-                <!--end form-->
                 <div class="text-center mb-2">
                   <p class="text-muted">
                     Remember It ?
@@ -59,17 +77,10 @@
                   </p>
                 </div>
               </div>
-              <!--end card-body-->
             </div>
-            <!--end card-->
           </div>
-          <!--end col-->
         </div>
-        <!--end row-->
       </div>
-      <!--end card-body-->
     </div>
-    <!--end col-->
   </div>
-  <!--end row-->
 </div>
