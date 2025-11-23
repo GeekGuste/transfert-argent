@@ -19,13 +19,13 @@ export const routes: Routes = [
     loadChildren: () =>
       import('./views/pages/pages.route').then((mod) => mod.PAGES_ROUTES),
   },
-  // {
-  //   path: '',
-  //   component: LayoutComponent,
-  //   canActivate: [authGuard],
-  //   loadChildren: () =>
-  //     import('./views/views.route').then((mod) => mod.VIEW_ROUTES),
-  // },
+  {
+    path: 'views',
+    component: LayoutComponent,
+    canActivate: [authGuard],
+    loadChildren: () =>
+      import('./views/views.route').then((mod) => mod.VIEW_ROUTES),
+  },
   {
     path: 'auth',
     loadChildren: () =>

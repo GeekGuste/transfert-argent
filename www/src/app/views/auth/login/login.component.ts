@@ -58,7 +58,7 @@ export class LoginComponent implements OnInit {
     this.authService.login(this.signInForm.value).subscribe({
       next: (response) => {
         // Redirection après login réussi
-        this.router.navigateByUrl('users')
+        this.router.navigateByUrl('views/users')
       },
       error: (err) => {
         this.loading = false
