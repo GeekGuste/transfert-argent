@@ -11,5 +11,5 @@ import { environment } from '../../../environments/environment'
 export class FooterComponent {
   currentYear = currentYear;
   credits = credits
-  appVersion = environment.version; // You can set this dynamically if needed
+  appVersion = environment.version;
 }

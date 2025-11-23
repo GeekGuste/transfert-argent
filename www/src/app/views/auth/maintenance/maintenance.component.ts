@@ -1,3 +1,4 @@
+import { environment } from '@/environments/environment';
 import { Component } from '@angular/core'
 import { RouterLink } from '@angular/router'
 
@@ -8,4 +9,6 @@ import { RouterLink } from '@angular/router'
   templateUrl: './maintenance.component.html',
   styles: ``,
 })
-export class MaintenanceComponent {}
+export class MaintenanceComponent {
+  appVersion = environment.version;
+}
