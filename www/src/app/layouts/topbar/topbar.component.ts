@@ -68,7 +68,7 @@ export class TopbarComponent implements OnInit {
 
    logout(){
     this.authService.logout();
-    this.authService.currentUser.subscribe(currentUser => {this.user = null;    this.router.navigateByUrl('/dashboard');
+    this.authService.currentUser.subscribe(currentUser => {this.user = null;    this.router.navigateByUrl('/');
 })
   }
 }

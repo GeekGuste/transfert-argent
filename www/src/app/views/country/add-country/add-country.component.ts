@@ -54,7 +54,7 @@ export class AddCountryComponent {
     this.countryService.createCountry(this.signupForm.value).subscribe({
       next: (response) => {
         // Redirection après login réussi
-        this.router.navigateByUrl('country');
+        this.router.navigateByUrl('views/country');
       },
       error: (err) => {
         this.loading = false;

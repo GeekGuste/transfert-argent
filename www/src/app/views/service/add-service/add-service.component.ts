@@ -69,7 +69,7 @@ export class AddServiceComponent {
     this.serviceService.createService(this.signupForm.value).subscribe({
       next: (response) => {
         // Redirection après login réussi
-        this.router.navigateByUrl('service');
+        this.router.navigateByUrl('views/service');
       },
       error: (err) => {
         this.loading = false;
