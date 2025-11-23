@@ -16,13 +16,13 @@ export const MENU_ITEMS: MenuItem[] = [
       {
         key: 'user-add',
         label: 'Ajouter un utilisateur',
-        url: '/users/add',
+        url: '/views/users/add',
         parentKey: 'user add',
       },
        {
         key: 'user-list',
         label: 'Liste des utilisateurs',
-        url: '/users/list',
+        url: '/views/users/list',
         parentKey: 'user list',
       }
     ],
@@ -37,13 +37,13 @@ export const MENU_ITEMS: MenuItem[] = [
       {
         key: 'country-add',
         label: 'Ajouter un pays',
-        url: '/country/add',
+        url: '/views/country/add',
         parentKey: 'country add',
       },
        {
         key: 'country-list',
         label: 'Liste des pays',
-        url: '/country/list',
+        url: '/views/country/list',
         parentKey: 'country list',
       }
     ],
@@ -58,13 +58,13 @@ export const MENU_ITEMS: MenuItem[] = [
       {
         key: 'service-add',
         label: 'Ajouter un Service',
-        url: '/service/add',
+        url: '/views/service/add',
         parentKey: 'service add',
       },
        {
         key: 'service-list',
         label: 'Liste des Services',
-        url: '/service/list',
+        url: '/views/service/list',
         parentKey: 'service list',
       }
     ],
