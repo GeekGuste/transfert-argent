@@ -45,25 +45,39 @@ export class LoginComponent implements OnInit {
     return this.signInForm.controls
   }
 
-  login(): void {
-    this.submitted = true
-    this.hasWrongCredentials = false
+login(): void {
+  this.submitted = true
+  this.hasWrongCredentials = false
 
-    if (this.signInForm.invalid) {
-      return
-    }
-
-    this.loading = true
-
-    this.authService.login(this.signInForm.value).subscribe({
-      next: (response) => {
-        // Redirection après login réussi
-        this.router.navigateByUrl('views/users')
-      },
-      error: (err) => {
-        this.loading = false
-        this.hasWrongCredentials = true
-      }
-    })
+  if (this.signInForm.invalid) {
+    return
   }
+
+  this.loading = true
+
+  this.authService.login(this.signInForm.value).subscribe({
+    next: (response) => {
+      // Redirection après login réussi
+      this.router.navigateByUrl('views/users')
+    },
+    error: (err) => {
+      this.loading = false
+
+      // Normalise le corps d'erreur puis récupère statusCode
+      const errorBody = err?.error ?? err
+      const statusCode = Number(errorBody?.statusCode ?? err?.status)
+
+      // Si 401 => compte non activé : redirection vers verify-email
+      if (statusCode === 401) {
+        this.router.navigate(['auth/verify-email'], {
+          queryParams: { email: this.signInForm.get('email')?.value },
+        })
+        return
+      }
+
+      // Autres erreurs : afficher message d'erreur générique
+      this.hasWrongCredentials = true
+    },
+  })
+}
 }
