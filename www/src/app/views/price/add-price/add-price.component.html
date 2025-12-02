@@ -1,0 +1,145 @@
+<div class="container-xxl">
+  <div class="row vh-100 d-flex justify-content-center">
+    <div class="col-12 align-self-center">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-lg-4 mx-auto">
+            <div class="card">
+              <div class="card-body p-0 bg-black auth-header-box rounded-top">
+                <div class="text-center p-3">
+                  <a routerLink="/" class="logo logo-admin">
+                    <img
+                      src="assets/images/logo-sm.png"
+                      height="50"
+                      alt="logo"
+                      class="auth-logo"
+                    />
+                  </a>
+                  <h4 class="mt-3 mb-1 fw-semibold text-white fs-18">
+                    Ajouter une tarification
+                  </h4>
+                  <p class="text-muted fw-medium mb-0">
+                    Entrez les détails pour ajouter un prix.
+                  </p>
+                </div>
+              </div>
+              <div class="card-body pt-0">
+                <form
+                  class="my-4"
+                  action="index.html"
+                  [formGroup]="signupForm"
+                  (ngSubmit)="onSubmit()"
+                >
+                  <div class="form-group mb-2">
+                    <label class="form-label" for="name">Name</label>
+                    <input
+                      type="text"
+                      formControlName="name"
+                      [ngClass]="{
+                        'is-invalid': submitted && form['name'].errors,
+                      }"
+                      class="form-control"
+                      id="name"
+                      name="name"
+                      placeholder="Enter name"
+                    />
+                    <div class="invalid-feedback">Please enter your name</div>
+                  </div>
+                  <!--end form-group-->
+
+                  <div class="form-group mb-2">
+                    <label class="form-label" for="amount"
+                      >Amount</label
+                    >
+                    <input
+                      type="number"
+                      formControlName="amount"
+                      [ngClass]="{
+                        'is-invalid': submitted && form['amount'].errors,
+                      }"
+                      class="form-control"
+                      id="amount"
+                      name="amount"
+                      placeholder="Enter amount"
+                    />
+                    <div class="invalid-feedback">
+                      Please enter the amount
+                    </div>
+                  </div>
+
+                    <div class="form-group mb-2">
+                    <label class="form-label" for="frequency"
+                      >Frequency</label
+                    >
+                    <input
+                      type="text"
+                      formControlName="frequency"
+                      [ngClass]="{
+                        'is-invalid': submitted && form['frequency'].errors,
+                      }"
+                      class="form-control"
+                      id="frequency"
+                      name="frequency"
+                      placeholder="Enter frequency"
+                    />
+                    <div class="invalid-feedback">
+                      Please enter the frequency
+                    </div>
+                  </div>
+                  <!--end form-group-->
+
+                  <div class="form-group mb-2">
+                    <label class="form-label" for="countries">Services</label>
+                    <select
+                      id="serviceIds"
+                      formControlName="serviceIds"
+                      class="form-control"
+                      multiple
+                      [ngClass]="{
+                        'is-invalid': submitted && form['serviceIds'].errors,
+                      }"
+                    >
+                      <option
+                        *ngFor="let service of services"
+                        [value]="service.id"
+                      >
+                        {{ service.name }}
+                      </option>
+                    </select>
+
+                    <div class="invalid-feedback">
+                      Please select at least one country
+                    </div>
+                  </div>
+
+                  <!--end form-group-->
+
+                  <div class="form-group mb-0 row">
+                    <div class="col-12">
+                      <div class="d-grid mt-3">
+                        <button class="btn btn-primary" type="submit">
+                          Ajouter un service
+                          <i class="fas fa-sign-in-alt ms-1"></i>
+                        </button>
+                      </div>
+                    </div>
+                    <!--end col-->
+                  </div>
+                  <!--end form-group-->
+                </form>
+                <!--end form-->
+              </div>
+              <!--end card-body-->
+            </div>
+            <!--end card-->
+          </div>
+          <!--end col-->
+        </div>
+        <!--end row-->
+      </div>
+      <!--end card-body-->
+    </div>
+    <!--end col-->
+  </div>
+  <!--end row-->
+</div>

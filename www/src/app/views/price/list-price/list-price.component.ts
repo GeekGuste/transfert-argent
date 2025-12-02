@@ -1,0 +1,97 @@
+import { PriceService } from '@/app/core/service/ws/price/price.service';
+import { ServiceService } from '@/app/core/service/ws/service/service.service';
+import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { mergeMap } from 'rxjs';
+
+declare var bootstrap: any; // Pour contrôler le modal Bootstrap
+
+@Component({
+  selector: 'app-list-service',
+  imports: [CommonModule,ReactiveFormsModule],
+  templateUrl: './list-price.component.html',
+  styleUrl: './list-price.component.scss',
+})
+export class ListPriceComponent implements OnInit {
+  loading = false;
+  currentService: any = null;
+  editForm!: FormGroup;
+  subscriptions: any[] = [];
+
+  constructor(private priceService: PriceService, private fb: FormBuilder
+) {}
+  ngOnInit(): void {
+   // Création du formulaire
+    this.editForm = this.fb.group({
+      id: [null],
+      name: ['', Validators.required],
+      amount: ['', Validators.required],
+      frequency: ['', Validators.required],
+    });
+    this.initServices();
+  }
+
+  initServices() {
+    this.priceService.getPrices().subscribe(
+      (response: any) => {
+        this.subscriptions = response;
+      },
+      (err) => {},
+      () => {},
+    );
+  }
+
+  editService(service: any) {
+    alert("cette fonctionnalité n'est pas encore développée");
+  }
+
+  deleteService(service: any) {
+        alert("cette fonctionnalité n'est pas encore développée");
+
+  //   this.serviceService
+  //     .deleteService(service)
+  //     .pipe(mergeMap(() => this.serviceService.getServices()))
+  //     .subscribe(
+  //       (response: any) => {
+  //         this.services = response;
+  //       },
+  //       (err) => {
+  //         // Gère l'erreur si nécessaire
+  //       },
+  //     );
+   }
+
+  openEditModal(service: any) {
+    this.editForm.patchValue(service); // remplit le form
+    const modal = new bootstrap.Modal(
+      document.getElementById('editServiceModal')
+    );
+    modal.show();
+  }
+
+  updateService() {
+    if (this.editForm.invalid) {
+      this.editForm.markAllAsTouched();
+      return;
+    }
+
+    this.loading = true;
+    this.priceService
+      .updatePrice(this.editForm.value) // méthode à ajouter dans le service
+      .pipe(mergeMap(() => this.priceService.getPrices()))
+      .subscribe(
+        (response: any) => {
+          this.subscriptions = response;
+          this.loading = false;
+          const modal = bootstrap.Modal.getInstance(
+            document.getElementById('editServiceModal')
+          );
+          modal.hide();
+        },
+        () => {
+          this.loading = false;
+        }
+      );
+  }
+}

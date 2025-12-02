@@ -69,6 +69,27 @@ export const MENU_ITEMS: MenuItem[] = [
       }
     ],
   },
+  {
+    key: 'Tarifs',
+    // icon: 'iconoir-home-simple',
+    icon: 'iconoir-money-square',
+    label: 'Tarif',
+    collapsed: false,
+    subMenu: [
+      {
+        key: 'price-add',
+        label: 'Ajouter un Tarif',
+        url: '/views/price/add',
+        parentKey: 'price add',
+      },
+       {
+        key: 'price-list',
+        label: 'Liste des Tarifs',
+        url: '/views/price/list',
+        parentKey: 'price list',
+      }
+    ],
+  },
 
 
 

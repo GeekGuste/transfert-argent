@@ -87,4 +87,11 @@ export const VIEW_ROUTES: Route[] = [
     loadChildren: () =>
       import('./service/service.route').then((mod) => mod.SERVICES_ROUTES),
   },
+
+  {
+    path: 'price',
+    canActivate: [authGuard],
+    loadChildren: () =>
+      import('./price/price.route').then((mod) => mod.PRICES_ROUTES),
+  },
 ];
