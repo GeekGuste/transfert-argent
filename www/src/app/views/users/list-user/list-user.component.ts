@@ -1,11 +1,12 @@
 import { UserService } from '@/app/core/service/ws/user/user.service';
+import { AlreveleTranslatorModule } from '@alrevele/translator';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { mergeMap } from 'rxjs';
 
 @Component({
   selector: 'app-list-user',
-  imports: [CommonModule],
+  imports: [CommonModule, AlreveleTranslatorModule],
   templateUrl: './list-user.component.html',
   styleUrl: './list-user.component.scss',
 })
@@ -14,7 +15,7 @@ export class ListUserComponent implements OnInit {
   currentUser: any = null;
 
   users: any[] = [];
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService) { }
   ngOnInit(): void {
     this.initUsers();
   }
@@ -24,8 +25,8 @@ export class ListUserComponent implements OnInit {
       (response: any) => {
         this.users = response;
       },
-      (err) => {},
-      () => {},
+      (err) => { },
+      () => { },
     );
   }
 
@@ -72,18 +73,18 @@ export class ListUserComponent implements OnInit {
   }
 
   deleteUser(user: any) {
-        alert("cette fonctionnalité n'est pas encore développée");
+    alert("cette fonctionnalité n'est pas encore développée");
 
-  //   this.userService
-  //     .deleteUser(user)
-  //     .pipe(mergeMap(() => this.userService.getUsers()))
-  //     .subscribe(
-  //       (response: any) => {
-  //         this.users = response;
-  //       },
-  //       (err) => {
-  //         // Gère l'erreur si nécessaire
-  //       },
-  //     );
-   }
+    //   this.userService
+    //     .deleteUser(user)
+    //     .pipe(mergeMap(() => this.userService.getUsers()))
+    //     .subscribe(
+    //       (response: any) => {
+    //         this.users = response;
+    //       },
+    //       (err) => {
+    //         // Gère l'erreur si nécessaire
+    //       },
+    //     );
+  }
 }

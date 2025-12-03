@@ -6,7 +6,9 @@
       <div class="card-header">
         <div class="row align-items-center">
           <div class="col">
-            <h4 class="card-title">Liste des utilisateurs</h4>
+            <h4 class="card-title">
+              <lib-trl [key]="'USER.LIST_USER'"></lib-trl>
+            </h4>
           </div>
           <!--end col-->
         </div>
@@ -29,52 +31,40 @@
             </thead>
             <tbody>
               <ng-container *ngIf="users!==[]">
-                   <tr *ngFor="let user of users">
-                <td>
-                  <img
-                    src="assets/images/users/avatar-3.jpg"
-                    alt=""
-                    class="rounded-circle thumb-md me-1 d-inline"
-                  />
-                </td>
-                   <td>
-                  {{ user.firstName }}
-                </td>
+                <tr *ngFor="let user of users">
                   <td>
-                  {{ user.lastName }}
-                </td>
-                <td>{{ user.userName }}</td>
-                <td>{{ (user.phone)?user.phone:"Pas encore attribué" }}</td>
-                 <td>
-                    <span *ngIf="user.isEnabled" class="badge bg-success"
-                      >Actif</span
-                    >
-                    <span *ngIf="!user.isEnabled" class="badge bg-secondary"
-                      >Inactif</span
-                    >
+                    <img src="assets/images/users/avatar-3.jpg" alt="" class="rounded-circle thumb-md me-1 d-inline" />
                   </td>
-                <td class="text-end">
-                  <a href="javascript:void(0);" (click)="editUser(user)" class="me-0.5"
-                    ><i class="las la-pen text-secondary font-16"></i
-                  ></a>
-                  @if(user.isEnabled){
-                    <a href="javascript:void(0);" (click)="deactivateUser(user)"
-                      ><i class="las la-lock text-secondary font-16"></i
-                    ></a>
-                  }
-                  @if(!user.isEnabled){
-                      <a href="javascript:void(0);" (click)="activateUser(user)"
-                    ><i class="las la-unlock text-secondary font-16"></i
-                  ></a>
-                  }
-                  <a href="javascript:void(0);" (click)="deleteUser(user)"
-                    ><i class="las la-trash-alt text-secondary font-16"></i
-                  ></a>
-                   <ng-container *ngIf="(loading && currentUser!==null && currentUser.userName === user.userName)">
+                  <td>
+                    {{ user.firstName }}
+                  </td>
+                  <td>
+                    {{ user.lastName }}
+                  </td>
+                  <td>{{ user.userName }}</td>
+                  <td>{{ (user.phone)?user.phone:"Pas encore attribué" }}</td>
+                  <td>
+                    <span *ngIf="user.isEnabled" class="badge bg-success">Actif</span>
+                    <span *ngIf="!user.isEnabled" class="badge bg-secondary">Inactif</span>
+                  </td>
+                  <td class="text-end">
+                    <a href="javascript:void(0);" (click)="editUser(user)" class="me-0.5"><i
+                        class="las la-pen text-secondary font-16"></i></a>
+                    @if(user.isEnabled){
+                    <a href="javascript:void(0);" (click)="deactivateUser(user)"><i
+                        class="las la-lock text-secondary font-16"></i></a>
+                    }
+                    @if(!user.isEnabled){
+                    <a href="javascript:void(0);" (click)="activateUser(user)"><i
+                        class="las la-unlock text-secondary font-16"></i></a>
+                    }
+                    <a href="javascript:void(0);" (click)="deleteUser(user)"><i
+                        class="las la-trash-alt text-secondary font-16"></i></a>
+                    <ng-container *ngIf="(loading && currentUser!==null && currentUser.userName === user.userName)">
                       <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
                     </ng-container>
                   </td>
-              </tr>
+                </tr>
               </ng-container>
 
             </tbody>
