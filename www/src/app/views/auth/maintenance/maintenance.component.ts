@@ -1,11 +1,12 @@
 import { environment } from '@/environments/environment';
+import { AlreveleTranslatorModule } from '@alrevele/translator';
 import { Component } from '@angular/core'
 import { RouterLink } from '@angular/router'
 
 @Component({
   selector: 'app-maintenance',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, AlreveleTranslatorModule],
   templateUrl: './maintenance.component.html',
   styles: ``,
 })

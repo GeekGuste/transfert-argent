@@ -8,6 +8,9 @@ import { SimplebarAngularModule } from 'simplebar-angular'
 import { TabItems } from './data'
 import { environment } from '@/environments/environment'
 import { AuthService } from '@/app/core/service/ws/auth/auth.service'
+import { LanguageService } from '@/app/core/service/language.service'
+import { CommonModule } from '@angular/common'
+import { AlreveleTranslatorModule } from '@alrevele/translator'
 
 @Component({
   selector: 'app-topbar',
@@ -17,6 +20,8 @@ import { AuthService } from '@/app/core/service/ws/auth/auth.service'
     SimplebarAngularModule,
     NgbNavModule,
     RouterModule,
+    CommonModule,
+    AlreveleTranslatorModule
   ],
   templateUrl: './topbar.component.html',
   styles: ``,
@@ -27,19 +32,37 @@ export class TopbarComponent implements OnInit {
   scrollY = 0
   @Output() mobileMenuButtonClicked = new EventEmitter()
   endpointForImage = environment.endpointForImage;
-  user! : any | null;
+  user!: any | null;
+
+  // Language management
+  private languageService = inject(LanguageService)
+  currentLanguage$ = this.languageService.getLanguage$()
+  currentLanguage = this.languageService.getCurrentLanguage()
+
+  languages = [
+    { code: 'en', name: 'English', flag: 'assets/images/flags/us_flag.jpg' },
+    { code: 'es', name: 'Spanish', flag: 'assets/images/flags/spain_flag.jpg' },
+    { code: 'de', name: 'German', flag: 'assets/images/flags/germany_flag.jpg' },
+    { code: 'fr', name: 'French', flag: 'assets/images/flags/french_flag.jpg' },
+  ]
+
   constructor(
-     private router:Router,
-    private authService:AuthService
+    private router: Router,
+    private authService: AuthService
   ) {
-        this.authService.currentUser.subscribe(currentUser => this.user = currentUser)
+    this.authService.currentUser.subscribe(currentUser => this.user = currentUser)
 
     window.addEventListener('scroll', this.handleScroll, { passive: true })
     this.handleScroll()
+
+    // Subscribe to language changes
+    this.currentLanguage$.subscribe(lang => {
+      this.currentLanguage = lang
+    })
   }
   ngOnInit(): void {
     this.authService.getUserByToken().subscribe(
-      (response: any) => {this.user = response;this.authService.setCurrentUserValue(this.user)},
+      (response: any) => { this.user = response; this.authService.setCurrentUserValue(this.user) },
       err => {
         this.logout();
       }
@@ -66,9 +89,20 @@ export class TopbarComponent implements OnInit {
     this.scrollY = window.scrollY
   }
 
-   logout(){
+  logout() {
     this.authService.logout();
-    this.authService.currentUser.subscribe(currentUser => {this.user = null;    this.router.navigateByUrl('/');
-})
+    this.authService.currentUser.subscribe(currentUser => {
+      this.user = null; this.router.navigateByUrl('/');
+    })
+  }
+
+  // Change language
+  changeLanguage(languageCode: string) {
+    this.languageService.setLanguage(languageCode)
+  }
+
+  // Get current language object
+  getCurrentLanguageObject() {
+    return this.languages.find(lang => lang.code === this.currentLanguage) || this.languages[0]
   }
 }

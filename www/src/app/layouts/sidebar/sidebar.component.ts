@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common'
 import { MenuItem } from '@/app/core/models/menu.model'
 import { MENU_ITEMS } from '@/app/common/menu-items'
 import { basePath } from '@/app/common/constants'
+import { LanguageService } from '@/app/core/service/language.service'
 
 @Component({
   selector: 'app-sidebar',
@@ -31,6 +32,10 @@ export class SidebarComponent {
     basePath !== '' ? basePath + '/' : '',
     '/'
   )
+  // Language management
+  private languageService = inject(LanguageService)
+  currentLanguage$ = this.languageService.getLanguage$()
+  currentLanguage = this.languageService.getCurrentLanguage()
 
   constructor() {
     this.router.events.forEach((event) => {
@@ -44,6 +49,11 @@ export class SidebarComponent {
           // this.scrollToActive();
         }, 200)
       }
+    })
+
+    // S'abonner aux changements de langue pour mise à jour instantanée
+    this.currentLanguage$.subscribe(lang => {
+      this.currentLanguage = lang;
     })
   }
 

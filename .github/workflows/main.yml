@@ -23,7 +23,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: ./www
-        run: npm install --force
+        run: npm install
 
       - name: Build project
         working-directory: ./www

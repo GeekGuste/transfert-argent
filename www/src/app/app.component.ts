@@ -9,16 +9,21 @@ import {
   type Event,
 } from '@angular/router'
 import { TitleService } from './core/service/title.service'
+import { LanguageService } from './core/service/language.service'
 import {
   NgProgressComponent,
   NgProgressModule,
   type NgProgressRef,
 } from 'ngx-progressbar'
 
+import { AlreveleTranslatorModule } from '@alrevele/translator'
+
+import { environment } from '@/environments/environment'
+
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, NgProgressModule],
+  imports: [RouterOutlet, NgProgressModule, AlreveleTranslatorModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
@@ -29,10 +34,19 @@ export class AppComponent {
 
   private titleService = inject(TitleService)
   private router = inject(Router)
+  private languageService = inject(LanguageService)
+
+  language = this.languageService.getCurrentLanguage();
+  software_key = environment.software_key;
 
   constructor() {
     this.router.events.subscribe((event: Event) => {
       this.checkRouteChange(event)
+    })
+
+    // S'abonner aux changements de langue pour mise à jour instantanée
+    this.languageService.getLanguage$().subscribe(lang => {
+      this.language = lang;
     })
   }
 
