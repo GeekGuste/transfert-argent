@@ -9,12 +9,12 @@ import { authGuard } from './core/guard/auth/auth.guard'
 import { connectedGuard } from './core/guard/auth/connected.guard'
 
 export const routes: Routes = [
-    {
+  {
     path: '',
-    redirectTo: 'maintenance',
+    redirectTo: 'home',
     pathMatch: 'full',
   },
-   {
+  {
     path: 'home',
     loadChildren: () =>
       import('./views/pages/pages.route').then((mod) => mod.PAGES_ROUTES),
@@ -31,7 +31,7 @@ export const routes: Routes = [
     loadChildren: () =>
       import('./views/auth/auth.route').then((mod) => mod.AUTH_ROUTES),
   },
-    {
+  {
     path: 'maintenance',
     component: MaintenanceComponent,
     data: { title: 'Maintenance' },
@@ -41,7 +41,7 @@ export const routes: Routes = [
     path: '**',
     component: Error404Component,
     data: { title: '404 - Error' },
-    pathMatch:"full"
+    pathMatch: "full"
   },
   // {
   //   path: 'error-500',
