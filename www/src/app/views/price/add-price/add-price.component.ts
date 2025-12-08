@@ -12,11 +12,12 @@ import {
   Validators,
 } from '@angular/forms'
 import { Router, RouterLink } from '@angular/router'
+import { TrlPipe } from '@alrevele/translator'
 
 @Component({
   selector: 'app-add-price',
   standalone: true,
-  imports: [RouterLink, FormsModule, ReactiveFormsModule, CommonModule],
+  imports: [RouterLink, FormsModule, ReactiveFormsModule, CommonModule, TrlPipe],
   templateUrl: './add-price.component.html',
   styles: ``,
 })
@@ -27,30 +28,33 @@ export class AddPriceComponent {
   submitted: boolean = false
   loading = false;
   hasWrongCredentials = false;
-  services:any[] = [];
+  services: any[] = [];
+  frequencies: any[] = [];
 
   public fb = inject(UntypedFormBuilder);
   public router = inject(Router);
 
   constructor(private priceService: PriceService, private serviceService: ServiceService) {
     this.initCountries();
+    this.initFrequencies();
     this.signupForm = this.fb.group(
       {
         name: ['', [Validators.required]],
         amount: ['', [Validators.required]],
         frequency: ['', [Validators.required]],
+        currency: ['', [Validators.required]],
         serviceIds: [],
       }
     )
   }
 
-   initCountries() {
+  initCountries() {
     this.serviceService.getServices().subscribe(
       (response: any) => {
         this.services = response.services;
       },
-      (err) => {},
-      () => {},
+      (err) => { },
+      () => { },
     );
   }
 
@@ -58,7 +62,7 @@ export class AddPriceComponent {
     return this.signupForm.controls
   }
 
-   onSubmit() {
+  onSubmit() {
     console.log(this.signupForm.value);
     this.submitted = true;
 
@@ -78,5 +82,15 @@ export class AddPriceComponent {
         this.hasWrongCredentials = true;
       },
     });
+  }
+
+  initFrequencies() {
+    this.priceService.getFrequencies().subscribe(
+      (response: any) => {
+        this.frequencies = response;
+      },
+      (err) => { },
+      () => { },
+    );
   }
 }

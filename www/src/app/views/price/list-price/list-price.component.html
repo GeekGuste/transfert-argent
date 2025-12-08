@@ -6,7 +6,7 @@
       <div class="card-header">
         <div class="row align-items-center">
           <div class="col">
-            <h4 class="card-title">Liste des services</h4>
+            <h4 class="card-title">{{ 'PRICE.LIST.TITLE' | trl }}</h4>
           </div>
           <!--end col-->
         </div>
@@ -18,10 +18,10 @@
           <table class="table table-striped mb-0">
             <thead class="table-light">
               <tr>
-                <th>Name</th>
-                <th>Amount</th>
-                <th>Drequency</th>
-                <th class="text-end">Action</th>
+                <th>{{ 'PRICE.LIST.TABLE.NAME_HEADER' | trl }}</th>
+                <th>{{ 'PRICE.LIST.TABLE.AMOUNT_HEADER' | trl }}</th>
+                <th>{{ 'PRICE.LIST.TABLE.FREQUENCY_HEADER' | trl }}</th>
+                <th class="text-end">{{ 'PRICE.LIST.TABLE.ACTION_HEADER' | trl }}</th>
               </tr>
             </thead>
             <tbody>
@@ -33,36 +33,22 @@
                   <td>
                     {{ subscription.amount }}
                   </td>
-                   <td>
+                  <td>
                     {{ subscription.frequency }}
                   </td>
 
 
                   <td class="text-end">
-                    <a
-                      href="javascript:void(0);"
-                      (click)="openEditModal(subscription)"
-                      class="me-0.5"
-                      ><i class="las la-pen text-secondary font-16"></i
-                    ></a>
+                    <a href="javascript:void(0);" (click)="openEditModal(subscription)" class="me-0.5"><i
+                        class="las la-pen text-secondary font-16"></i></a>
                     @if (subscription.isEnabled) {
-                      <a
-                        href="javascript:void(0);"
-
-                        ><i class="las la-lock text-secondary font-16"></i
-                      ></a>
+                    <a href="javascript:void(0);"><i class="las la-lock text-secondary font-16"></i></a>
                     }
                     @if (!subscription.isEnabled) {
-                      <a
-                        href="javascript:void(0);"
-                        ><i class="las la-unlock text-secondary font-16"></i
-                      ></a>
+                    <a href="javascript:void(0);"><i class="las la-unlock text-secondary font-16"></i></a>
                     }
-                    <a
-                      href="javascript:void(0);"
-                      (click)="deleteService(subscription)"
-                      ><i class="las la-trash-alt text-secondary font-16"></i
-                    ></a>
+                    <a href="javascript:void(0);" (click)="deleteService(subscription)"><i
+                        class="las la-trash-alt text-secondary font-16"></i></a>
                     <!-- <ng-container *ngIf="(loading && currentService!==null && currentService.name === service.serviceName)">
                       <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
                     </ng-container> -->
@@ -84,66 +70,37 @@
 <!--end row-->
 
 <!-- MODAL -->
-<div
-  class="modal fade"
-  id="editServiceModal"
-  tabindex="-1"
-  aria-labelledby="editServiceModalLabel"
-  aria-hidden="true"
->
+<div class="modal fade" id="editServiceModal" tabindex="-1" aria-labelledby="editServiceModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Modifier le pays</h5>
-        <button
-          type="button"
-          class="btn-close"
-          data-bs-dismiss="modal"
-        ></button>
+        <h5 class="modal-title">{{ 'PRICE.LIST.MODAL.TITLE' | trl }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <form [formGroup]="editForm">
         <div class="modal-body">
           <div class="mb-3">
-            <label class="form-label">Nom</label>
-            <input
-              type="text"
-              class="form-control"
-              formControlName="name"
-            />
+            <label class="form-label">{{ 'PRICE.LIST.MODAL.NAME_LABEL' | trl }}</label>
+            <input type="text" class="form-control" formControlName="name" />
           </div>
           <div class="mb-3">
-            <label class="form-label">Amount</label>
-            <input
-              type="text"
-              class="form-control"
-              formControlName="amount"
-            />
+            <label class="form-label">{{ 'PRICE.LIST.MODAL.AMOUNT_LABEL' | trl }}</label>
+            <input type="text" class="form-control" formControlName="amount" />
           </div>
           <div class="mb-3">
-            <label class="form-label">Actif</label>
-            <select
-              class="form-select"
-              formControlName="isEnabled"
-            >
-              <option [ngValue]="true">Oui</option>
-              <option [ngValue]="false">Non</option>
+            <label class="form-label">{{ 'PRICE.LIST.MODAL.ACTIVE_LABEL' | trl }}</label>
+            <select class="form-select" formControlName="isEnabled">
+              <option [ngValue]="true">{{ 'PRICE.LIST.MODAL.ACTIVE_YES' | trl }}</option>
+              <option [ngValue]="false">{{ 'PRICE.LIST.MODAL.ACTIVE_NO' | trl }}</option>
             </select>
           </div>
         </div>
         <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-secondary"
-            data-bs-dismiss="modal"
-          >
-            Annuler
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            {{ 'PRICE.LIST.MODAL.CANCEL_BUTTON' | trl }}
           </button>
-          <button
-            type="button"
-            class="btn btn-primary"
-            (click)="updateService()"
-          >
-            Mettre à jour
+          <button type="button" class="btn btn-primary" (click)="updateService()">
+            {{ 'PRICE.LIST.MODAL.UPDATE_BUTTON' | trl }}
           </button>
         </div>
       </form>

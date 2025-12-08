@@ -4,12 +4,13 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { mergeMap } from 'rxjs';
+import { TrlPipe } from '@alrevele/translator';
 
 declare var bootstrap: any; // Pour contrôler le modal Bootstrap
 
 @Component({
   selector: 'app-list-service',
-  imports: [CommonModule,ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TrlPipe],
   templateUrl: './list-price.component.html',
   styleUrl: './list-price.component.scss',
 })
@@ -20,9 +21,9 @@ export class ListPriceComponent implements OnInit {
   subscriptions: any[] = [];
 
   constructor(private priceService: PriceService, private fb: FormBuilder
-) {}
+  ) { }
   ngOnInit(): void {
-   // Création du formulaire
+    // Création du formulaire
     this.editForm = this.fb.group({
       id: [null],
       name: ['', Validators.required],
@@ -37,8 +38,8 @@ export class ListPriceComponent implements OnInit {
       (response: any) => {
         this.subscriptions = response;
       },
-      (err) => {},
-      () => {},
+      (err) => { },
+      () => { },
     );
   }
 
@@ -47,20 +48,20 @@ export class ListPriceComponent implements OnInit {
   }
 
   deleteService(service: any) {
-        alert("cette fonctionnalité n'est pas encore développée");
+    alert("cette fonctionnalité n'est pas encore développée");
 
-  //   this.serviceService
-  //     .deleteService(service)
-  //     .pipe(mergeMap(() => this.serviceService.getServices()))
-  //     .subscribe(
-  //       (response: any) => {
-  //         this.services = response;
-  //       },
-  //       (err) => {
-  //         // Gère l'erreur si nécessaire
-  //       },
-  //     );
-   }
+    //   this.serviceService
+    //     .deleteService(service)
+    //     .pipe(mergeMap(() => this.serviceService.getServices()))
+    //     .subscribe(
+    //       (response: any) => {
+    //         this.services = response;
+    //       },
+    //       (err) => {
+    //         // Gère l'erreur si nécessaire
+    //       },
+    //     );
+  }
 
   openEditModal(service: any) {
     this.editForm.patchValue(service); // remplit le form
