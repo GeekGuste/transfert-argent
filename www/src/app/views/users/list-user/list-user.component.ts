@@ -1,12 +1,12 @@
 import { UserService } from '@/app/core/service/ws/user/user.service';
-import { AlreveleTranslatorModule } from '@alrevele/translator';
+import { TrlPipe } from '@alrevele/translator';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { mergeMap } from 'rxjs';
 
 @Component({
   selector: 'app-list-user',
-  imports: [CommonModule, AlreveleTranslatorModule],
+  imports: [CommonModule, TrlPipe],
   templateUrl: './list-user.component.html',
   styleUrl: './list-user.component.scss',
 })

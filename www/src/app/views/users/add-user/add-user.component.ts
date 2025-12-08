@@ -9,11 +9,12 @@ import {
   Validators,
 } from '@angular/forms'
 import { RouterLink } from '@angular/router'
+import { TrlPipe } from '@alrevele/translator'
 
 @Component({
   selector: 'app-add-user',
   standalone: true,
-  imports: [RouterLink, FormsModule, ReactiveFormsModule, CommonModule],
+  imports: [RouterLink, FormsModule, ReactiveFormsModule, CommonModule, TrlPipe],
   templateUrl: './add-user.component.html',
   styles: ``,
 })

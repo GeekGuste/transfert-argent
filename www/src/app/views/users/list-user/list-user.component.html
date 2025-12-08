@@ -7,7 +7,7 @@
         <div class="row align-items-center">
           <div class="col">
             <h4 class="card-title">
-              <lib-trl [key]="'USER.LIST_USER'"></lib-trl>
+              {{ 'USERS.LIST.TITLE' | trl }}
             </h4>
           </div>
           <!--end col-->
@@ -20,13 +20,13 @@
           <table class="table table-striped mb-0">
             <thead class="table-light">
               <tr>
-                <th>Customer</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Email</th>
-                <th>Contact No</th>
-                <th>Active</th>
-                <th class="text-end">Action</th>
+                <th>{{ 'USERS.LIST.TABLE.CUSTOMER_HEADER' | trl }}</th>
+                <th>{{ 'USERS.LIST.TABLE.FIRSTNAME_HEADER' | trl }}</th>
+                <th>{{ 'USERS.LIST.TABLE.LASTNAME_HEADER' | trl }}</th>
+                <th>{{ 'USERS.LIST.TABLE.EMAIL_HEADER' | trl }}</th>
+                <th>{{ 'USERS.LIST.TABLE.CONTACT_HEADER' | trl }}</th>
+                <th>{{ 'USERS.LIST.TABLE.ACTIVE_HEADER' | trl }}</th>
+                <th class="text-end">{{ 'USERS.LIST.TABLE.ACTION_HEADER' | trl }}</th>
               </tr>
             </thead>
             <tbody>
@@ -42,10 +42,12 @@
                     {{ user.lastName }}
                   </td>
                   <td>{{ user.userName }}</td>
-                  <td>{{ (user.phone)?user.phone:"Pas encore attribué" }}</td>
+                  <td>{{ (user.phone)?user.phone:("USERS.LIST.TABLE.NO_PHONE" | trl) }}</td>
                   <td>
-                    <span *ngIf="user.isEnabled" class="badge bg-success">Actif</span>
-                    <span *ngIf="!user.isEnabled" class="badge bg-secondary">Inactif</span>
+                    <span *ngIf="user.isEnabled" class="badge bg-success">{{ 'USERS.LIST.TABLE.STATUS_ACTIVE' | trl
+                      }}</span>
+                    <span *ngIf="!user.isEnabled" class="badge bg-secondary">{{ 'USERS.LIST.TABLE.STATUS_INACTIVE' | trl
+                      }}</span>
                   </td>
                   <td class="text-end">
                     <a href="javascript:void(0);" (click)="editUser(user)" class="me-0.5"><i
