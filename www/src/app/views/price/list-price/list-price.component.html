@@ -21,6 +21,8 @@
                 <th>{{ 'PRICE.LIST.TABLE.NAME_HEADER' | trl }}</th>
                 <th>{{ 'PRICE.LIST.TABLE.AMOUNT_HEADER' | trl }}</th>
                 <th>{{ 'PRICE.LIST.TABLE.FREQUENCY_HEADER' | trl }}</th>
+                <th>{{ 'PRICE.LIST.TABLE.CURRENCY_HEADER' | trl }}</th>
+                <th>{{ 'PRICE.LIST.TABLE.SERVICES_HEADER' | trl }}</th>
                 <th class="text-end">{{ 'PRICE.LIST.TABLE.ACTION_HEADER' | trl }}</th>
               </tr>
             </thead>
@@ -35,6 +37,14 @@
                   </td>
                   <td>
                     {{ subscription.frequency }}
+                  </td>
+                  <td>
+                    {{ subscription.currency }}
+                  </td>
+                  <td>
+                    @for (service of subscription.services; track service; let last = $last) {
+                    <span>{{ service.name }}{{ !last ? ', ' : '' }}</span>
+                    }
                   </td>
 
 
@@ -88,10 +98,20 @@
             <input type="text" class="form-control" formControlName="amount" />
           </div>
           <div class="mb-3">
-            <label class="form-label">{{ 'PRICE.LIST.MODAL.ACTIVE_LABEL' | trl }}</label>
-            <select class="form-select" formControlName="isEnabled">
-              <option [ngValue]="true">{{ 'PRICE.LIST.MODAL.ACTIVE_YES' | trl }}</option>
-              <option [ngValue]="false">{{ 'PRICE.LIST.MODAL.ACTIVE_NO' | trl }}</option>
+            <label class="form-label">{{ 'PRICE.ADD.FORM.CURRENCY_LABEL' | trl }}</label>
+            <input type="text" class="form-control" formControlName="currency" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">{{ 'PRICE.ADD.FORM.SERVICES_LABEL' | trl }}</label>
+            <select class="form-select" formControlName="serviceIds" multiple>
+              <option *ngFor="let service of services" [value]="service.id">{{ service.name }}</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">{{ 'PRICE.ADD.FORM.FREQUENCY_LABEL' | trl }}</label>
+            <select class="form-select" formControlName="frequency">
+              <option value="" disabled selected>{{ 'PRICE.ADD.FORM.FREQUENCY_PLACEHOLDER' | trl }}</option>
+              <option *ngFor="let item of frequencies" [value]="item.frequency">{{ item.label }}</option>
             </select>
           </div>
         </div>

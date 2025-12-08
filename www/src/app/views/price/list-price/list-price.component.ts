@@ -18,9 +18,11 @@ export class ListPriceComponent implements OnInit {
   loading = false;
   currentService: any = null;
   editForm!: FormGroup;
+  services: any[] = [];
+  frequencies: any[] = [];
   subscriptions: any[] = [];
 
-  constructor(private priceService: PriceService, private fb: FormBuilder
+  constructor(private priceService: PriceService, private serviceService: ServiceService, private fb: FormBuilder
   ) { }
   ngOnInit(): void {
     // Création du formulaire
@@ -29,14 +31,39 @@ export class ListPriceComponent implements OnInit {
       name: ['', Validators.required],
       amount: ['', Validators.required],
       frequency: ['', Validators.required],
+      currency: ['', Validators.required],
+      serviceIds: [],
+      isEnabled: [true]
     });
     this.initServices();
+    this.initServiceOptions();
+    this.initFrequencies();
   }
 
   initServices() {
     this.priceService.getPrices().subscribe(
       (response: any) => {
         this.subscriptions = response;
+      },
+      (err) => { },
+      () => { },
+    );
+  }
+
+  initServiceOptions() {
+    this.serviceService.getServices().subscribe(
+      (response: any) => {
+        this.services = response.services;
+      },
+      (err) => { },
+      () => { },
+    );
+  }
+
+  initFrequencies() {
+    this.priceService.getFrequencies().subscribe(
+      (response: any) => {
+        this.frequencies = response;
       },
       (err) => { },
       () => { },
