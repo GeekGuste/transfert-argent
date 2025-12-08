@@ -6,7 +6,7 @@ import { Router, RouterLink } from '@angular/router'
 @Component({
   selector: 'app-recover-pw',
   standalone: true,
-  imports: [RouterLink,ReactiveFormsModule],
+  imports: [RouterLink, ReactiveFormsModule],
   templateUrl: './recover-pw.component.html',
   styles: ``,
 })
@@ -16,7 +16,7 @@ export class RecoverPwComponent {
   hasEmailSent = false
   hasError = false
 
-  constructor(private fb: FormBuilder, private router: Router,    private authService: AuthService,
+  constructor(private fb: FormBuilder, private router: Router, private authService: AuthService,
   ) {
     this.recoverForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -35,7 +35,9 @@ export class RecoverPwComponent {
         // Redirection après login réussi
         this.loading = false
         this.hasEmailSent = true
-        this.router.navigateByUrl('auth/new-pw');
+        this.router.navigate(['auth/new-pw'], {
+          queryParams: { email: this.recoverForm.get('email')?.value },
+        });
       },
       error: (err) => {
         this.loading = false;
