@@ -41,4 +41,12 @@ export class UserService {
    activateUser(user:any){
     return this.httpClient.post(this.endpoint+'/users/users/' + user.id + '/enable',user);
   }
+
+   getUserRoles(){
+    return this.httpClient.get(this.endpoint+'/users/users/roles');
+  }
+
+  updateUserRoles(user:any){
+    return this.httpClient.post(this.endpoint+'/users/users/' + user.id + '/roles',user);
+  }
 }

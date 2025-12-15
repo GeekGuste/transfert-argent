@@ -7,7 +7,7 @@
         <div class="row align-items-center">
           <div class="col">
             <h4 class="card-title">
-              {{ 'USERS.LIST.TITLE' | trl }}
+              {{ "USERS.LIST.TITLE" | trl }}
             </h4>
           </div>
           <!--end col-->
@@ -20,20 +20,26 @@
           <table class="table table-striped mb-0">
             <thead class="table-light">
               <tr>
-                <th>{{ 'USERS.LIST.TABLE.CUSTOMER_HEADER' | trl }}</th>
-                <th>{{ 'USERS.LIST.TABLE.FIRSTNAME_HEADER' | trl }}</th>
-                <th>{{ 'USERS.LIST.TABLE.LASTNAME_HEADER' | trl }}</th>
-                <th>{{ 'USERS.LIST.TABLE.EMAIL_HEADER' | trl }}</th>
-                <th>{{ 'USERS.LIST.TABLE.CONTACT_HEADER' | trl }}</th>
-                <th>{{ 'USERS.LIST.TABLE.ACTIVE_HEADER' | trl }}</th>
-                <th class="text-end">{{ 'USERS.LIST.TABLE.ACTION_HEADER' | trl }}</th>
+                <th>{{ "USERS.LIST.TABLE.CUSTOMER_HEADER" | trl }}</th>
+                <th>{{ "USERS.LIST.TABLE.FIRSTNAME_HEADER" | trl }}</th>
+                <th>{{ "USERS.LIST.TABLE.LASTNAME_HEADER" | trl }}</th>
+                <th>{{ "USERS.LIST.TABLE.EMAIL_HEADER" | trl }}</th>
+                <th>{{ "USERS.LIST.TABLE.CONTACT_HEADER" | trl }}</th>
+                <th>{{ "USERS.LIST.TABLE.ACTIVE_HEADER" | trl }}</th>
+                <th class="text-end">
+                  {{ "USERS.LIST.TABLE.ACTION_HEADER" | trl }}
+                </th>
               </tr>
             </thead>
             <tbody>
-              <ng-container *ngIf="users!==[]">
+              <ng-container *ngIf="users !== []">
                 <tr *ngFor="let user of users">
                   <td>
-                    <img src="assets/images/users/avatar-3.jpg" alt="" class="rounded-circle thumb-md me-1 d-inline" />
+                    <img
+                      src="assets/images/users/avatar-3.jpg"
+                      alt=""
+                      class="rounded-circle thumb-md me-1 d-inline"
+                    />
                   </td>
                   <td>
                     {{ user.firstName }}
@@ -42,33 +48,59 @@
                     {{ user.lastName }}
                   </td>
                   <td>{{ user.userName }}</td>
-                  <td>{{ (user.phone)?user.phone:("USERS.LIST.TABLE.NO_PHONE" | trl) }}</td>
                   <td>
-                    <span *ngIf="user.isEnabled" class="badge bg-success">{{ 'USERS.LIST.TABLE.STATUS_ACTIVE' | trl
-                      }}</span>
-                    <span *ngIf="!user.isEnabled" class="badge bg-secondary">{{ 'USERS.LIST.TABLE.STATUS_INACTIVE' | trl
-                      }}</span>
+                    {{
+                      user.phone
+                        ? user.phone
+                        : ("USERS.LIST.TABLE.NO_PHONE" | trl)
+                    }}
+                  </td>
+                  <td>
+                    <span *ngIf="user.isEnabled" class="badge bg-success">{{
+                      "USERS.LIST.TABLE.STATUS_ACTIVE" | trl
+                    }}</span>
+                    <span *ngIf="!user.isEnabled" class="badge bg-secondary">{{
+                      "USERS.LIST.TABLE.STATUS_INACTIVE" | trl
+                    }}</span>
                   </td>
                   <td class="text-end">
-                    <a href="javascript:void(0);" (click)="editUser(user)" class="me-0.5"><i
-                        class="las la-pen text-secondary font-16"></i></a>
-                    @if(user.isEnabled){
-                    <a href="javascript:void(0);" (click)="deactivateUser(user)"><i
-                        class="las la-lock text-secondary font-16"></i></a>
+                    <a
+                      href="javascript:void(0);"
+                      (click)="editUser(user)"
+                      class="me-0.5"
+                      ><i class="las la-pen text-secondary font-16"></i
+                    ></a>
+                    @if (user.isEnabled) {
+                      <a
+                        href="javascript:void(0);"
+                        (click)="deactivateUser(user)"
+                        ><i class="las la-lock text-secondary font-16"></i
+                      ></a>
                     }
-                    @if(!user.isEnabled){
-                    <a href="javascript:void(0);" (click)="activateUser(user)"><i
-                        class="las la-unlock text-secondary font-16"></i></a>
+                    @if (!user.isEnabled) {
+                      <a href="javascript:void(0);" (click)="activateUser(user)"
+                        ><i class="las la-unlock text-secondary font-16"></i
+                      ></a>
                     }
-                    <a href="javascript:void(0);" (click)="deleteUser(user)"><i
-                        class="las la-trash-alt text-secondary font-16"></i></a>
-                    <ng-container *ngIf="(loading && currentUser!==null && currentUser.userName === user.userName)">
-                      <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    <a href="javascript:void(0);" (click)="deleteUser(user)"
+                      ><i class="las la-trash-alt text-secondary font-16"></i
+                    ></a>
+                    <ng-container
+                      *ngIf="
+                        loading &&
+                        currentUser !== null &&
+                        currentUser.userName === user.userName
+                      "
+                    >
+                      <span
+                        class="spinner-border spinner-border-sm me-2"
+                        role="status"
+                        aria-hidden="true"
+                      ></span>
                     </ng-container>
                   </td>
                 </tr>
               </ng-container>
-
             </tbody>
           </table>
           <!--end /table-->
@@ -82,3 +114,100 @@
   <!--end col-->
 </div>
 <!--end row-->
+
+<!-- MODAL -->
+<div
+  class="modal fade"
+  id="editUserModal"
+  tabindex="-1"
+  aria-labelledby="editUserModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ "USERS.LIST.MODAL.TITLE" | trl }}</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+      <form [formGroup]="editForm">
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">{{
+              "USERS.LIST.TABLE.FIRSTNAME_HEADER" | trl
+            }}</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="firstName"
+            />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">{{
+              "USERS.LIST.TABLE.LASTNAME_HEADER" | trl
+            }}</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="lastName"
+            />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">{{
+              "USERS.LIST.TABLE.EMAIL_HEADER" | trl
+            }}</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="userName"
+            />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">{{
+              "USERS.LIST.TABLE.CONTACT_HEADER" | trl
+            }}</label>
+            <input type="text" class="form-control" formControlName="phone" />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">{{
+              "USERS.LIST.MODAL.ROLE_LABEL" | trl
+            }}</label>
+            <select class="form-select" formControlName="role">
+              <option *ngFor="let role of roles" [ngValue]="role">
+                {{ role }}
+              </option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">{{
+              "USERS.LIST.MODAL.ACTIVE_LABEL" | trl
+            }}</label>
+            <select class="form-select" formControlName="isEnabled">
+              <option [ngValue]="true">
+                {{ "USERS.LIST.MODAL.ACTIVE_YES" | trl }}
+              </option>
+              <option [ngValue]="false">
+                {{ "USERS.LIST.MODAL.ACTIVE_NO" | trl }}
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            {{ "USERS.LIST.MODAL.CANCEL_BUTTON" | trl }}
+          </button>
+          <button type="button" class="btn btn-primary" (click)="updateUser()">
+            {{ "USERS.LIST.MODAL.UPDATE_BUTTON" | trl }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

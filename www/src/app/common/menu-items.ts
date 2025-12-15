@@ -13,12 +13,12 @@ export const MENU_ITEMS: MenuItem[] = [
     label: 'MENUITEMS.USERS',
     collapsed: false,
     subMenu: [
-      {
-        key: 'user-add',
-        label: 'MENUITEMS.USERS.ADD',
-        url: '/views/users/add',
-        parentKey: 'user add',
-      },
+      // {
+      //   key: 'user-add',
+      //   label: 'MENUITEMS.USERS.ADD',
+      //   url: '/views/users/add',
+      //   parentKey: 'user add',
+      // },
       {
         key: 'user-list',
         label: 'MENUITEMS.USERS.LIST',
