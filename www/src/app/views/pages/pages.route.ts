@@ -61,4 +61,10 @@ export const PAGES_ROUTES: Route[] = [
     component: GalleryComponent,
     data: { title: 'Gallery' },
   },
+
+  {
+    path: '**',
+    redirectTo: '',
+    pathMatch: 'full',
+  },
 ]
