@@ -11,11 +11,12 @@ import {
   Validators,
 } from '@angular/forms'
 import { Router, RouterLink } from '@angular/router'
+import { TrlPipe } from '@alrevele/translator'
 
 @Component({
   selector: 'app-add-service',
   standalone: true,
-  imports: [RouterLink, FormsModule, ReactiveFormsModule, CommonModule],
+  imports: [RouterLink, FormsModule, ReactiveFormsModule, CommonModule, TrlPipe],
   templateUrl: './add-service.component.html',
   styles: ``,
 })
@@ -26,7 +27,7 @@ export class AddServiceComponent {
   submitted: boolean = false
   loading = false;
   hasWrongCredentials = false;
-  countries:any[] = [];
+  countries: any[] = [];
 
   public fb = inject(UntypedFormBuilder);
   public router = inject(Router);
@@ -37,19 +38,19 @@ export class AddServiceComponent {
       {
         name: ['', [Validators.required]],
         description: ['', [Validators.required]],
-        isEnabled:[false],
+        isEnabled: [false],
         countries: [[]],
       }
     )
   }
 
-   initCountries() {
+  initCountries() {
     this.countryService.getCountries().subscribe(
       (response: any) => {
         this.countries = response.countries;
       },
-      (err) => {},
-      () => {},
+      (err) => { },
+      () => { },
     );
   }
 
@@ -57,7 +58,7 @@ export class AddServiceComponent {
     return this.signupForm.controls
   }
 
-   onSubmit() {
+  onSubmit() {
     this.submitted = true;
 
     if (this.signupForm.invalid) {

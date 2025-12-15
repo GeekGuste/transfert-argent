@@ -10,11 +10,12 @@ import {
   Validators,
 } from '@angular/forms'
 import { Router, RouterLink } from '@angular/router'
+import { TrlPipe } from '@alrevele/translator'
 
 @Component({
   selector: 'app-add-country',
   standalone: true,
-  imports: [RouterLink, FormsModule, ReactiveFormsModule, CommonModule],
+  imports: [RouterLink, FormsModule, ReactiveFormsModule, CommonModule, TrlPipe],
   templateUrl: './add-country.component.html',
   styles: ``,
 })
@@ -42,7 +43,7 @@ export class AddCountryComponent {
     return this.signupForm.controls
   }
 
-   onSubmit() {
+  onSubmit() {
     this.submitted = true;
 
     if (this.signupForm.invalid) {

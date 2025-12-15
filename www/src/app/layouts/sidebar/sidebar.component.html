@@ -70,7 +70,9 @@
       @if (menu.icon) {
       <i class="{{ menu.icon }} menu-icon"></i>
       }
-      <span class="nav-text"> {{ menu.label }} </span>
+      <span class="nav-text">
+        <lib-trl [key]='menu.label'></lib-trl>
+      </span>
       @if (menu.badge) {
       <span class="badge rounded text-success bg-success-subtle ms-1">New</span>
       }
@@ -110,6 +112,8 @@
 <ng-template #MenuItemLink let-menu="menu">
   <a class="nav-link" [routerLink]="menu.url" [ngClass]="{ active: activeMenuItems.includes(menu.key) }"
     [attr.aria-controls]="menu.key">
-    <span class="nav-text">{{ menu.label }}</span>
+    <span class="nav-text">
+      <lib-trl [key]='menu.label'></lib-trl>
+    </span>
   </a>
 </ng-template>

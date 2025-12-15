@@ -8,87 +8,52 @@
               <div class="card-body p-0 bg-black auth-header-box rounded-top">
                 <div class="text-center p-3">
                   <a routerLink="/" class="logo logo-admin">
-                    <img
-                      src="assets/images/logo-sm.png"
-                      height="50"
-                      alt="logo"
-                      class="auth-logo"
-                    />
+                    <img src="assets/images/logo-sm.png" height="50" alt="logo" class="auth-logo" />
                   </a>
                   <h4 class="mt-3 mb-1 fw-semibold text-white fs-18">
-                    Ajouter un service
+                    {{ 'SERVICE.ADD.TITLE' | trl }}
                   </h4>
                   <p class="text-muted fw-medium mb-0">
-                    Entrez les détails pour ajouter un service.
+                    {{ 'SERVICE.ADD.SUBTITLE' | trl }}
                   </p>
                 </div>
               </div>
               <div class="card-body pt-0">
-                <form
-                  class="my-4"
-                  action="index.html"
-                  [formGroup]="signupForm"
-                  (ngSubmit)="onSubmit()"
-                >
+                <form class="my-4" action="index.html" [formGroup]="signupForm" (ngSubmit)="onSubmit()">
                   <div class="form-group mb-2">
-                    <label class="form-label" for="name">Name</label>
-                    <input
-                      type="text"
-                      formControlName="name"
-                      [ngClass]="{
+                    <label class="form-label" for="name">{{ 'SERVICE.ADD.FORM.NAME_LABEL' | trl }}</label>
+                    <input type="text" formControlName="name" [ngClass]="{
                         'is-invalid': submitted && form['name'].errors,
-                      }"
-                      class="form-control"
-                      id="name"
-                      name="name"
-                      placeholder="Enter name"
-                    />
-                    <div class="invalid-feedback">Please enter your name</div>
+                      }" class="form-control" id="name" name="name"
+                      [placeholder]="'SERVICE.ADD.FORM.NAME_PLACEHOLDER' | trl" />
+                    <div class="invalid-feedback">{{ 'SERVICE.ADD.FORM.NAME_ERROR' | trl }}</div>
                   </div>
                   <!--end form-group-->
 
                   <div class="form-group mb-2">
-                    <label class="form-label" for="description"
-                      >Description</label
-                    >
-                    <input
-                      type="description"
-                      formControlName="description"
-                      [ngClass]="{
+                    <label class="form-label" for="description">{{ 'SERVICE.ADD.FORM.DESCRIPTION_LABEL' | trl }}</label>
+                    <input type="description" formControlName="description" [ngClass]="{
                         'is-invalid': submitted && form['description'].errors,
-                      }"
-                      class="form-control"
-                      id="description"
-                      name="user description"
-                      placeholder="Enter description"
-                    />
+                      }" class="form-control" id="description" name="user description"
+                      [placeholder]="'SERVICE.ADD.FORM.DESCRIPTION_PLACEHOLDER' | trl" />
                     <div class="invalid-feedback">
-                      Please enter the description of the country
+                      {{ 'SERVICE.ADD.FORM.DESCRIPTION_ERROR' | trl }}
                     </div>
                   </div>
                   <!--end form-group-->
 
                   <div class="form-group mb-2">
-                    <label class="form-label" for="countries">Countries</label>
-                    <select
-                      id="countries"
-                      formControlName="countries"
-                      class="form-control"
-                      multiple
-                      [ngClass]="{
+                    <label class="form-label" for="countries">{{ 'SERVICE.ADD.FORM.COUNTRIES_LABEL' | trl }}</label>
+                    <select id="countries" formControlName="countries" class="form-control" multiple [ngClass]="{
                         'is-invalid': submitted && form['countries'].errors,
-                      }"
-                    >
-                      <option
-                        *ngFor="let country of countries"
-                        [value]="country"
-                      >
+                      }">
+                      <option *ngFor="let country of countries" [value]="country">
                         {{ country.name }}
                       </option>
                     </select>
 
                     <div class="invalid-feedback">
-                      Please select at least one country
+                      {{ 'SERVICE.ADD.FORM.COUNTRIES_ERROR' | trl }}
                     </div>
                   </div>
 
@@ -98,7 +63,7 @@
                     <div class="col-12">
                       <div class="d-grid mt-3">
                         <button class="btn btn-primary" type="submit">
-                          Ajouter un service
+                          {{ 'SERVICE.ADD.FORM.SUBMIT_BUTTON' | trl }}
                           <i class="fas fa-sign-in-alt ms-1"></i>
                         </button>
                       </div>

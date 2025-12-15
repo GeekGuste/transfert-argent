@@ -9,6 +9,7 @@ import { MenuItem } from '@/app/core/models/menu.model'
 import { MENU_ITEMS } from '@/app/common/menu-items'
 import { basePath } from '@/app/common/constants'
 import { LanguageService } from '@/app/core/service/language.service'
+import { AlreveleTranslatorModule } from '@alrevele/translator'
 
 @Component({
   selector: 'app-sidebar',
@@ -19,6 +20,7 @@ import { LanguageService } from '@/app/core/service/language.service'
     RouterModule,
     NgbCollapseModule,
     CommonModule,
+    AlreveleTranslatorModule
   ],
   templateUrl: './sidebar.component.html',
   styles: ``,

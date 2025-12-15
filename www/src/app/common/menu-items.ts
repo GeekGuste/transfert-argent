@@ -3,67 +3,67 @@ import { MenuItem } from '../core/models/menu.model'
 export const MENU_ITEMS: MenuItem[] = [
   {
     key: 'main',
-    label: 'Main Menu',
+    label: 'MENUITEMS.MAIN',
     isTitle: true,
   },
   {
     key: 'dashboards',
     // icon: 'iconoir-home-simple',
     icon: 'iconoir-user',
-    label: 'Users',
+    label: 'MENUITEMS.USERS',
     collapsed: false,
     subMenu: [
       {
         key: 'user-add',
-        label: 'Ajouter un utilisateur',
+        label: 'MENUITEMS.USERS.ADD',
         url: '/views/users/add',
         parentKey: 'user add',
       },
-       {
+      {
         key: 'user-list',
-        label: 'Liste des utilisateurs',
+        label: 'MENUITEMS.USERS.LIST',
         url: '/views/users/list',
         parentKey: 'user list',
       }
     ],
   },
-   {
+  {
     key: 'country',
     // icon: 'iconoir-home-simple',
     icon: 'iconoir-dash-flag',
-    label: 'Country',
+    label: 'MENUITEMS.COUNTRY',
     collapsed: false,
     subMenu: [
       {
         key: 'country-add',
-        label: 'Ajouter un pays',
+        label: 'MENUITEMS.COUNTRY.ADD',
         url: '/views/country/add',
         parentKey: 'country add',
       },
-       {
+      {
         key: 'country-list',
-        label: 'Liste des pays',
+        label: 'MENUITEMS.COUNTRY.LIST',
         url: '/views/country/list',
         parentKey: 'country list',
       }
     ],
   },
-     {
+  {
     key: 'Services',
     // icon: 'iconoir-home-simple',
     icon: 'iconoir-task-list',
-    label: 'Service',
+    label: 'MENUITEMS.SERVICE',
     collapsed: false,
     subMenu: [
       {
         key: 'service-add',
-        label: 'Ajouter un Service',
+        label: 'MENUITEMS.SERVICE.ADD',
         url: '/views/service/add',
         parentKey: 'service add',
       },
-       {
+      {
         key: 'service-list',
-        label: 'Liste des Services',
+        label: 'MENUITEMS.SERVICE.LIST',
         url: '/views/service/list',
         parentKey: 'service list',
       }
@@ -73,18 +73,18 @@ export const MENU_ITEMS: MenuItem[] = [
     key: 'Tarifs',
     // icon: 'iconoir-home-simple',
     icon: 'iconoir-money-square',
-    label: 'Tarif',
+    label: 'MENUITEMS.SUBSCRIPTION',
     collapsed: false,
     subMenu: [
       {
         key: 'price-add',
-        label: 'Ajouter un Tarif',
+        label: 'MENUITEMS.SUBSCRIPTION.ADD',
         url: '/views/price/add',
         parentKey: 'price add',
       },
-       {
+      {
         key: 'price-list',
-        label: 'Liste des Tarifs',
+        label: 'MENUITEMS.SUBSCRIPTION.LIST',
         url: '/views/price/list',
         parentKey: 'price list',
       }
