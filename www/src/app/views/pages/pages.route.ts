@@ -13,8 +13,8 @@ import { HomeComponent } from './home/home.component'
 export const PAGES_ROUTES: Route[] = [
   {
     path: '',
-    redirectTo: 'home',
-    pathMatch: 'full',
+    component: HomeComponent,
+    data: { title: 'home' },
   },
   {
     path: 'profile',
@@ -60,15 +60,5 @@ export const PAGES_ROUTES: Route[] = [
     path: 'gallery',
     component: GalleryComponent,
     data: { title: 'Gallery' },
-  },
-  {
-    path: 'home',
-    component: HomeComponent,
-    data: { title: 'home' },
-  },
-  {
-    path: '**',
-    redirectTo: 'home',
-    pathMatch: 'full',
   },
 ]
