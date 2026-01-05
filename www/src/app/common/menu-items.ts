@@ -90,12 +90,27 @@ export const MENU_ITEMS: MenuItem[] = [
       }
     ],
   },
-
-
-
-
-
-
+    {
+    key: 'Currency',
+    // icon: 'iconoir-home-simple',
+    icon: 'iconoir-money-square',
+    label: 'MENUITEMS.CURRENCY',
+    collapsed: false,
+    subMenu: [
+      {
+        key: 'currency-add',
+        label: 'MENUITEMS.CURRENCY.ADD',
+        url: '/views/currency/add',
+        parentKey: 'currency add',
+      },
+      {
+        key: 'currency-list',
+        label: 'MENUITEMS.CURRENCY.LIST',
+        url: '/views/currency/list',
+        parentKey: 'currency list',
+      }
+    ],
+  },
 
   // {
   //   key: 'dashboards',

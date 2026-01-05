@@ -94,4 +94,15 @@ export const VIEW_ROUTES: Route[] = [
     loadChildren: () =>
       import('./price/price.route').then((mod) => mod.PRICES_ROUTES),
   },
+  {
+    path: 'currency',
+    canActivate: [authGuard],
+    loadChildren: () =>
+      import('./currency/currency.route').then((mod) => mod.CURRENCY_ROUTES),
+  },
+    {
+      path: '**',
+      redirectTo: 'dashboard',
+      pathMatch: "full"
+    },
 ];
