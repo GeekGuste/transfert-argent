@@ -7,15 +7,12 @@ import { inject } from '@angular/core'
 import { AuthenticationService } from './core/service/auth.service'
 import { authGuard } from './core/guard/auth/auth.guard'
 import { connectedGuard } from './core/guard/auth/connected.guard'
+import { MainLayoutComponent } from './layouts/main-layout/main-layout.component'
 
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'home',
-    pathMatch: 'full',
-  },
-  {
-    path: 'home',
+    component: MainLayoutComponent,
     loadChildren: () =>
       import('./views/pages/pages.route').then((mod) => mod.PAGES_ROUTES),
   },
@@ -25,11 +22,6 @@ export const routes: Routes = [
     canActivate: [authGuard],
     loadChildren: () =>
       import('./views/views.route').then((mod) => mod.VIEW_ROUTES),
-  },
-  {
-    path: 'auth',
-    loadChildren: () =>
-      import('./views/auth/auth.route').then((mod) => mod.AUTH_ROUTES),
   },
   {
     path: 'maintenance',

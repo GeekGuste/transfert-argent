@@ -1,0 +1,93 @@
+<div class="home-container">
+    <!-- HEADER -->
+    <header class="header">
+        <div class="header-content">
+            <a class="brand" routerLink="/">
+                <div class="logo">GR</div>
+                <div class="brand-info">
+                    <div class="brand-name">GlobRel</div>
+                    <div class="brand-sub">Connect. Trust. Grow.</div>
+                </div>
+            </a>
+
+            <nav class="nav">
+                <a routerLink="/services" class="nav-link">Services</a>
+                <a routerLink="/how-it-works" class="nav-link">Comment ça marche</a>
+                <a routerLink="/faq" class="nav-link">FAQ</a>
+
+                <!-- Language Selector -->
+                <div class="language-selector">
+                    <button class="lang-btn" (click)="toggleLanguageDropdown()">
+                        <span class="flag">{{ getCurrentLanguageFlag() }}</span>
+                        <span class="lang-code">{{ currentLanguage | uppercase }}</span>
+                        <svg class="chevron" [class.open]="languageDropdownOpen" width="16" height="16"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+
+                    <div class="lang-dropdown" [class.active]="languageDropdownOpen">
+                        <button *ngFor="let lang of languages" class="lang-option" (click)="changeLanguage(lang.code)"
+                            [class.active]="currentLanguage === lang.code">
+                            <span class="flag">{{ lang.flag }}</span>
+                            <span class="lang-name">{{ lang.name }}</span>
+                        </button>
+                    </div>
+                </div>
+
+                <a routerLink="/auth/log-in" class="nav-link">Connexion</a>
+                <a routerLink="/auth/register" class="btn-primary">S'inscrire</a>
+            </nav>
+
+            <button class="mobile-menu-btn" (click)="toggleMobileMenu()">
+                <span class="menu-icon"></span>
+            </button>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div class="mobile-menu" [class.active]="mobileMenuOpen">
+            <a routerLink="/services" class="mobile-nav-link" (click)="closeMobileMenu()">Services</a>
+            <a routerLink="/how-it-works" class="mobile-nav-link" (click)="closeMobileMenu()">Comment ça marche</a>
+            <a routerLink="/faq" class="mobile-nav-link" (click)="closeMobileMenu()">FAQ</a>
+
+            <div class="mobile-lang-selector">
+                <div class="mobile-lang-label">Langue</div>
+                <div class="mobile-lang-options">
+                    @for (lang of languages; track $index) {
+                    <button class="mobile-lang-btn" [class.active]="currentLanguage === lang.code"
+                        (click)="changeLanguage(lang.code)">
+                        {{ lang.flag }} {{ lang.code | uppercase }}
+                    </button>
+                    }
+                </div>
+            </div>
+
+            <a routerLink="/auth/log-in" class="mobile-nav-link" (click)="closeMobileMenu()">Connexion</a>
+            <a routerLink="/auth/register" class="btn-primary" (click)="closeMobileMenu()">S'inscrire</a>
+        </div>
+    </header>
+    <router-outlet></router-outlet>
+    <section class="final-cta-section">
+        <div class="final-cta-content">
+            <h2 class="final-cta-title">Rejoignez le réseau GlobRel</h2>
+            <p class="final-cta-subtitle">
+                Plus de 10 000 personnes nous font déjà confiance pour leurs transferts d'argent et envois de colis.
+                Rejoignez-nous dès aujourd'hui !
+            </p>
+            <div class="final-cta-buttons">
+                <a routerLink="/register" class="btn-primary btn-large">
+                    S'inscrire gratuitement
+                </a>
+                <a routerLink="/create-transfer" class="btn-secondary btn-large">
+                    Créer une annonce
+                </a>
+            </div>
+            <p class="final-cta-note">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+                Inscription gratuite • Sans engagement • Paiements sécurisés
+            </p>
+        </div>
+    </section>
+</div>

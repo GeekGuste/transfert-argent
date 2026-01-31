@@ -77,6 +77,7 @@ $yellow:  #ff9f43;
 $green:   #22c55e;
 $teal:    #22c5ad;
 $cyan:    #41cbd8;
+$primary-violet: #482890; // Violet profond global - identité principale
 // scss-docs-end color-variables
 
 // scss-docs-start colors-map
@@ -329,7 +330,7 @@ $cyans: (
 // fusv-enable
 
 // scss-docs-start theme-color-variables
-$primary:       $green;
+$primary:       $primary-violet;
 $secondary:     $gray-600;
 $success:       $teal;
 $info:          $cyan;

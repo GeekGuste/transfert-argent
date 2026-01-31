@@ -17,6 +17,11 @@ export const PAGES_ROUTES: Route[] = [
     data: { title: 'home' },
   },
   {
+    path: 'auth',
+    loadChildren: () =>
+      import('../../views/auth/auth.route').then((mod) => mod.AUTH_ROUTES),
+  },
+  {
     path: 'profile',
     component: ProfileComponent,
     data: { title: 'Profile' },
