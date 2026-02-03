@@ -1,0 +1,200 @@
+<div class="container mt-5">
+  <!-- Stepper navigation -->
+  <ul class="nav nav-pills mb-4">
+    <li class="nav-item me-2" *ngFor="let step of steps">
+      <button
+        class="btn"
+        [class.active]="currentStep() === step.id"
+        [class.btn-primary]="currentStep() === step.id"
+        [class.btn-outline-secondary]="currentStep() !== step.id"
+        (click)="goToStep(step.id)"
+      >
+        {{ step.label }}
+      </button>
+    </li>
+  </ul>
+
+  <form [formGroup]="listingForm">
+    <!-- Step 1 : Identité / Besoin -->
+    <div *ngIf="currentStep() === 1">
+      <div class="mb-3">
+        <label class="form-label">Quel est votre besoin ?</label>
+        <select class="form-select" formControlName="need">
+          <option value="" disabled selected>
+            -- Sélectionnez votre option --
+          </option>
+          <option value="voyageur">Je suis voyageur</option>
+          <option value="chercheur">Je recherche un voyageur</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Nom et prénom</label>
+        <input type="text" class="form-control" formControlName="fullName" />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Numéro de téléphone</label>
+        <input type="text" class="form-control" formControlName="phone" />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Adresse mail</label>
+        <input type="email" class="form-control" formControlName="email" />
+      </div>
+
+      <button
+        class="btn btn-primary"
+        type="button"
+        (click)="nextStep()"
+        [disabled]="!isStepValid(1)"
+      >
+        Suivant
+      </button>
+    </div>
+
+    <!-- Step 2 : Voyage / Colis -->
+    <div *ngIf="currentStep() === 2">
+      <div class="mb-3">
+        <label class="form-label">Date de départ</label>
+        <input
+          type="date"
+          class="form-control"
+          formControlName="departureDate"
+        />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Date d’arrivée</label>
+        <input type="date" class="form-control" formControlName="arrivalDate" />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Nombre de kilo</label>
+        <input type="number" class="form-control" formControlName="weight" />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Prix au kilo (€)</label>
+        <input
+          type="number"
+          class="form-control"
+          formControlName="pricePerKg"
+        />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Pays de départ</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="departureCountry"
+        />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Ville de départ</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="departureCity"
+        />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Pays d'arrivée</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="arrivalCountry"
+        />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Ville d’arrivée</label>
+        <input type="text" class="form-control" formControlName="arrivalCity" />
+      </div>
+
+      <button class="btn btn-secondary me-2" type="button" (click)="prevStep()">
+        Précédent
+      </button>
+      <button
+        class="btn btn-primary"
+        type="button"
+        (click)="nextStep()"
+        [disabled]="!isStepValid(2)"
+      >
+        Suivant
+      </button>
+    </div>
+
+    <!-- Step 3 : Infos supplémentaires -->
+    <div *ngIf="currentStep() === 3">
+      <div class="mb-3">
+        <label class="form-label">Description du colis</label>
+        <textarea
+          class="form-control"
+          formControlName="packageDescription"
+        ></textarea>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Informations du destinataire</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="recipientInfo"
+        />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Code secret pour réception</label>
+        <input type="text" class="form-control" formControlName="secretCode" />
+      </div>
+
+      <button class="btn btn-secondary me-2" type="button" (click)="prevStep()">
+        Précédent
+      </button>
+      <button
+        class="btn btn-primary"
+        type="button"
+        (click)="nextStep()"
+        [disabled]="!isStepValid(3)"
+      >
+        Suivant
+      </button>
+    </div>
+
+    <!-- Step 4 : Paiement et validation -->
+    <div *ngIf="currentStep() === 4">
+      <div class="mb-3">
+        <label class="form-label">Moyen de paiement</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="paymentMethod"
+        />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Tranche d’âge</label>
+        <input type="text" class="form-control" formControlName="ageRange" />
+      </div>
+      <div class="form-check mb-3">
+        <input
+          type="checkbox"
+          class="form-check-input"
+          formControlName="acceptTerms"
+        />
+        <label class="form-check-label"
+          >Acceptez-vous les termes du contrat ?</label
+        >
+      </div>
+
+      <button class="btn btn-secondary me-2" type="button" (click)="prevStep()">
+        Précédent
+      </button>
+      <button
+        class="btn btn-success"
+        type="button"
+        (click)="submit()"
+        [disabled]="!isStepValid(4)"
+      >
+        Créer l'annonce
+      </button>
+    </div>
+
+    <!-- Step 5 : Confirmation -->
+    <div *ngIf="currentStep() === 5" class="text-center mt-5">
+      <h2>Félicitations ! 🎉</h2>
+      <p>Votre annonce a été créée avec succès.</p>
+    </div>
+  </form>
+</div>

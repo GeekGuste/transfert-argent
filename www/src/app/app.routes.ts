@@ -8,8 +8,13 @@ import { AuthenticationService } from './core/service/auth.service'
 import { authGuard } from './core/guard/auth/auth.guard'
 import { connectedGuard } from './core/guard/auth/connected.guard'
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component'
+import { AddListingComponent } from './views/listings/add-listing/add-listing.component'
 
 export const routes: Routes = [
+  {
+    path: 'forms',
+    component: AddListingComponent,
+  },
   {
     path: '',
     component: MainLayoutComponent,
