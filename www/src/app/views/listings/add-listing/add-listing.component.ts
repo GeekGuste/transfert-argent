@@ -1,6 +1,15 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormGroup, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormGroup,
+  FormControl,
+  Validators,
+  ReactiveFormsModule
+} from '@angular/forms';
+import { ListingService } from '@/app/core/service/ws/listing/listing.service';
+import { Listing } from '@/app/core/models/listing.model';
+
+type UserType = 'voyageur' | 'chercheur';
 
 @Component({
   selector: 'app-add-listing',
@@ -11,101 +20,152 @@ import { FormGroup, FormControl, ReactiveFormsModule, Validators } from '@angula
 })
 export class AddListingComponent {
 
-  // Stepper
+  /* ============================
+   * Stepper
+   * ============================ */
   currentStep = signal(1);
 
-  steps = [
-    { id: 1, label: 'Identité / Besoin' },
-    { id: 2, label: 'Voyage / Colis' },
-    { id: 3, label: 'Infos supplémentaires' },
-    { id: 4, label: 'Paiement / Validation' },
+  stepsVoyageur = [
+    { id: 1, label: 'Identité' },
+    { id: 2, label: 'Voyage' },
+    { id: 3, label: 'Trajet & prix' },
+    { id: 4, label: 'Paiement' },
     { id: 5, label: 'Confirmation' }
   ];
 
-  // FormGroup
+  stepsChercheur = [
+    { id: 1, label: 'Identité' },
+    { id: 2, label: 'Recherche' },
+    { id: 3, label: 'Trajet & prix' },
+    { id: 4, label: 'Paiement' },
+    { id: 5, label: 'Confirmation' }
+  ];
+
+  activeSteps = computed(() =>
+    this.userType === 'voyageur'
+      ? this.stepsVoyageur
+      : this.stepsChercheur
+  );
+
+  /* ============================
+   * Formulaire
+   * ============================ */
   listingForm = new FormGroup({
-    // Step 1
-    need: new FormControl('', Validators.required),
-    fullName: new FormControl('', Validators.required),
-    phone: new FormControl('', Validators.required),
-    email: new FormControl('', [Validators.required, Validators.email]),
+    need: new FormControl<UserType>('voyageur', Validators.required),
 
-    // Step 2
-    departureDate: new FormControl('', Validators.required),
-    arrivalDate: new FormControl('', Validators.required),
-    weight: new FormControl('', Validators.required),
-    pricePerKg: new FormControl('', Validators.required),
-    departureCountry: new FormControl('', Validators.required),
-    departureCity: new FormControl('', Validators.required),
-    arrivalCountry: new FormControl('', Validators.required),
-    arrivalCity: new FormControl('', Validators.required),
+    identity: new FormGroup({
+      lastName: new FormControl<string>('', Validators.required),
+      firstName: new FormControl<string>('', Validators.required),
+      phone: new FormControl<string>('', Validators.required),
+      email: new FormControl<string>('', [Validators.required, Validators.email]),
+      isAdult: new FormControl<boolean>(false, Validators.requiredTrue),
+    }),
 
-    // Step 3
-    packageDescription: new FormControl('', Validators.required),
-    recipientInfo: new FormControl('', Validators.required),
-    secretCode: new FormControl('', Validators.required),
+    voyageur: new FormGroup({
+      departureDate: new FormControl<string>(''),
+      arrivalDate: new FormControl<string>(''),
+      availableWeight: new FormControl<number>(0),
+    }),
 
-    // Step 4
-    paymentMethod: new FormControl('', Validators.required),
-    ageRange: new FormControl('', Validators.required),
-    acceptTerms: new FormControl(false, Validators.requiredTrue)
+    chercheur: new FormGroup({
+      maxTravelDate: new FormControl<string>(''),
+      desiredWeight: new FormControl<number>(0),
+    }),
+
+    common: new FormGroup({
+      departurePlace: new FormControl<string>('', Validators.required),
+      arrivalPlace: new FormControl<string>('', Validators.required),
+      pricePerKg: new FormControl<number>(0, Validators.required),
+    }),
+
+    legal: new FormGroup({
+      paymentMethod: new FormControl<string>('', Validators.required),
+      acceptTerms: new FormControl<boolean>(false, Validators.requiredTrue),
+    }),
   });
 
-  // Navigation
+  /* ============================
+   * Getters pour template
+   * ============================ */
+  get identityGroup(): FormGroup { return this.listingForm.get('identity') as FormGroup; }
+  get voyageurGroup(): FormGroup { return this.listingForm.get('voyageur') as FormGroup; }
+  get chercheurGroup(): FormGroup { return this.listingForm.get('chercheur') as FormGroup; }
+  get commonGroup(): FormGroup { return this.listingForm.get('common') as FormGroup; }
+  get legalGroup(): FormGroup { return this.listingForm.get('legal') as FormGroup; }
+  get userType() { return this.listingForm.get('need')?.value; }
+
+  constructor(private listingService: ListingService) { }
+
+  /* ============================
+   * Navigation
+   * ============================ */
   nextStep() {
-    if (this.currentStep() < this.steps.length) {
+    if (!this.isStepValid(this.currentStep())) return;
+    if (this.currentStep() < this.activeSteps().length) {
       this.currentStep.set(this.currentStep() + 1);
     }
   }
 
   prevStep() {
-    if (this.currentStep() > 1) {
-      this.currentStep.set(this.currentStep() - 1);
-    }
+    if (this.currentStep() > 1) this.currentStep.set(this.currentStep() - 1);
   }
 
-  goToStep(id: number) {
-    this.currentStep.set(id);
+  goToStep(stepId: number) {
+    if (stepId <= this.currentStep()) this.currentStep.set(stepId);
   }
 
-  // Validation par étape
-  isStepValid(stepNumber: number) {
-    switch (stepNumber) {
-      case 1:
-        return this.listingForm.controls['need'].valid &&
-          this.listingForm.controls['fullName'].valid &&
-          this.listingForm.controls['phone'].valid &&
-          this.listingForm.controls['email'].valid;
+  isStepValid(step: number): boolean {
+    switch (step) {
+      case 1: return this.listingForm.get('need')!.valid && this.identityGroup.valid;
       case 2:
-        return this.listingForm.controls['departureDate'].valid &&
-          this.listingForm.controls['arrivalDate'].valid &&
-          this.listingForm.controls['weight'].valid &&
-          this.listingForm.controls['pricePerKg'].valid &&
-          this.listingForm.controls['departureCountry'].valid &&
-          this.listingForm.controls['departureCity'].valid &&
-          this.listingForm.controls['arrivalCountry'].valid &&
-          this.listingForm.controls['arrivalCity'].valid;
-      case 3:
-        return this.listingForm.controls['packageDescription'].valid &&
-          this.listingForm.controls['recipientInfo'].valid &&
-          this.listingForm.controls['secretCode'].valid;
-      case 4:
-        return this.listingForm.controls['paymentMethod'].valid &&
-          this.listingForm.controls['ageRange'].valid &&
-          this.listingForm.controls['acceptTerms'].valid;
-      default:
-        return false;
+        return this.userType === 'voyageur'
+          ? this.voyageurGroup.valid
+          : this.chercheurGroup.valid;
+      case 3: return this.commonGroup.valid;
+      case 4: return this.legalGroup.valid;
+      default: return true;
     }
   }
 
-  // Soumission finale
+  /* ============================
+   * Soumission
+   * ============================ */
   submit() {
-    if (this.listingForm.valid) {
-      console.log('Annonce créée :', this.listingForm.value);
-      this.nextStep(); // Passe à l'étape de confirmation
-    } else {
-      console.warn('Formulaire incomplet');
+    if (!this.listingForm.valid) {
+      this.listingForm.markAllAsTouched();
+      return;
     }
-  }
 
+    const listing: Listing = {
+      id: 0, // à générer côté serveur
+      need: this.listingForm.get('need')!.value,
+      lastName: this.identityGroup.get('lastName')!.value,
+      firstName: this.identityGroup.get('firstName')!.value,
+      phone: this.identityGroup.get('phone')!.value,
+      email: this.identityGroup.get('email')!.value,
+      isAdult: this.identityGroup.get('isAdult')!.value,
+
+      departureDate: this.voyageurGroup.get('departureDate')!.value,
+      arrivalDate: this.voyageurGroup.get('arrivalDate')!.value,
+      availableWeight: this.voyageurGroup.get('availableWeight')!.value,
+
+      maxTravelDate: this.chercheurGroup.get('maxTravelDate')!.value,
+      desiredWeight: this.chercheurGroup.get('desiredWeight')!.value,
+
+      departurePlace: this.commonGroup.get('departurePlace')!.value,
+      arrivalPlace: this.commonGroup.get('arrivalPlace')!.value,
+      pricePerKg: this.commonGroup.get('pricePerKg')!.value,
+      paymentMethod: this.legalGroup.get('paymentMethod')!.value,
+
+      acceptTerms: this.legalGroup.get('acceptTerms')!.value
+    };
+
+    this.listingService.createListing(listing).subscribe({
+      next: res => {
+        console.log('Annonce créée :', res);
+        this.currentStep.set(5);
+      },
+      error: err => console.error('Erreur création :', err)
+    });
+  }
 }
