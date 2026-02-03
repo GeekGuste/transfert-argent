@@ -2,7 +2,7 @@ name: Build and deploy
 
 on:
   push:
-    branches: [main]
+    branches: [preprod]
   workflow_dispatch:
 
 env:
@@ -56,6 +56,6 @@ jobs:
       - name: Sync files to hosting
         uses: SamKirkland/FTP-Deploy-Action@4.0.0
         with:
-          server: ${{ secrets.ftp_prod_host }}
-          username: ${{ secrets.ftp_prod_usr }}
-          password: ${{ secrets.ftp_prod_password }}
+          server: ${{ secrets.ftp_host }}
+          username: ${{ secrets.ftp_usr }}
+          password: ${{ secrets.ftp_password }}
