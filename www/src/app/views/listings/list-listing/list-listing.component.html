@@ -1,1 +1,41 @@
-<p>list-listing works!</p>
+<div class="container mt-5">
+  <h2 class="mb-4">Liste des annonces</h2>
+
+  <div *ngIf="loading" class="alert alert-info">Chargement des annonces...</div>
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+  <table *ngIf="!loading && listings.length > 0" class="table table-striped">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Type</th>
+        <th>Nom</th>
+        <th>Prénom</th>
+        <th>Téléphone</th>
+        <th>Email</th>
+        <th>Départ</th>
+        <th>Arrivée</th>
+        <th>Prix/kg</th>
+        <th>Paiement</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let listing of listings">
+        <td>{{ listing.id }}</td>
+        <td>{{ listing.need }}</td>
+        <td>{{ listing.lastName }}</td>
+        <td>{{ listing.firstName }}</td>
+        <td>{{ listing.phone }}</td>
+        <td>{{ listing.email }}</td>
+        <td>{{ listing.departurePlace || "-" }}</td>
+        <td>{{ listing.arrivalPlace || "-" }}</td>
+        <td>{{ listing.pricePerKg || "-" }}</td>
+        <td>{{ listing.paymentMethod || "-" }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="!loading && listings.length === 0" class="alert alert-warning">
+    Aucune annonce trouvée.
+  </div>
+</div>

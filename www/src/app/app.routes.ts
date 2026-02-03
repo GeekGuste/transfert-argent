@@ -9,11 +9,16 @@ import { authGuard } from './core/guard/auth/auth.guard'
 import { connectedGuard } from './core/guard/auth/connected.guard'
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component'
 import { AddListingComponent } from './views/listings/add-listing/add-listing.component'
+import { ListListingComponent } from './views/listings/list-listing/list-listing.component'
 
 export const routes: Routes = [
   {
     path: 'forms',
     component: AddListingComponent,
+  },
+  {
+    path: 'forms/list',
+    component: ListListingComponent,
   },
   {
     path: '',
