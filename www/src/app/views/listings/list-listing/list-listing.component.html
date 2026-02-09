@@ -1,41 +1,161 @@
-<div class="container mt-5">
-  <h2 class="mb-4">Liste des annonces</h2>
+<div class="container-fluid py-4">
+  <div class="row mb-4 align-items-center">
+    <div class="col">
+      <h2 class="page-title fw-bold mb-0">Annonces récentes</h2>
+      <p class="text-muted mb-0">
+        Découvrez les opportunités de transport et de recherche en cours.
+      </p>
+    </div>
+  </div>
 
-  <div *ngIf="loading" class="alert alert-info">Chargement des annonces...</div>
-  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+  <div *ngIf="loading" class="d-flex justify-content-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Chargement...</span>
+    </div>
+  </div>
 
-  <table *ngIf="!loading && listings.length > 0" class="table table-striped">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Type</th>
-        <th>Nom</th>
-        <th>Prénom</th>
-        <th>Téléphone</th>
-        <th>Email</th>
-        <th>Départ</th>
-        <th>Arrivée</th>
-        <th>Prix/kg</th>
-        <th>Paiement</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let listing of listings">
-        <td>{{ listing.id }}</td>
-        <td>{{ listing.need }}</td>
-        <td>{{ listing.lastName }}</td>
-        <td>{{ listing.firstName }}</td>
-        <td>{{ listing.phone }}</td>
-        <td>{{ listing.email }}</td>
-        <td>{{ listing.departurePlace || "-" }}</td>
-        <td>{{ listing.arrivalPlace || "-" }}</td>
-        <td>{{ listing.pricePerKg || "-" }}</td>
-        <td>{{ listing.paymentMethod || "-" }}</td>
-      </tr>
-    </tbody>
-  </table>
+  <div
+    *ngIf="error"
+    class="alert alert-danger shadow-sm border-0 d-flex align-items-center"
+    role="alert"
+  >
+    <i class="fas fa-exclamation-circle me-2 fs-4"></i>
+    <div>{{ error }}</div>
+  </div>
 
-  <div *ngIf="!loading && listings.length === 0" class="alert alert-warning">
-    Aucune annonce trouvée.
+  <div *ngIf="!loading && listings.length === 0" class="text-center py-5">
+    <div class="mb-3">
+      <i class="fas fa-box-open text-muted" style="font-size: 4rem"></i>
+    </div>
+    <h4 class="text-muted">Aucune annonce trouvée</h4>
+    <p class="text-muted">Soyez le premier à créer une annonce !</p>
+    <a routerLink="/listings/add" class="btn btn-primary px-4 rounded-pill">
+      Créer une annonce
+    </a>
+  </div>
+
+  <div *ngIf="!loading && listings.length > 0">
+    <!-- Tabs Navigation -->
+    <ul
+      class="nav nav-pills nav-justified mb-4 bg-light p-1 rounded-pill shadow-sm mx-auto"
+      style="max-width: 500px"
+    >
+      <li class="nav-item">
+        <button
+          class="nav-link rounded-pill py-2 px-4 transition-all"
+          [class.active]="activeTab === 'travelers'"
+          (click)="activeTab = 'travelers'"
+        >
+          <i class="fas fa-plane me-2"></i>Voyageurs
+          <span
+            class="badge bg-white text-primary ms-1"
+            *ngIf="travelers.length > 0"
+            >{{ travelers.length }}</span
+          >
+        </button>
+      </li>
+      <li class="nav-item">
+        <button
+          class="nav-link rounded-pill py-2 px-4 transition-all"
+          [class.active]="activeTab === 'senders'"
+          (click)="activeTab = 'senders'"
+        >
+          <i class="fas fa-search me-2"></i>Expéditeurs
+          <span
+            class="badge bg-white text-success ms-1"
+            *ngIf="senders.length > 0"
+            >{{ senders.length }}</span
+          >
+        </button>
+      </li>
+    </ul>
+
+    <!-- Listings Grid -->
+    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4 anim-fade-in">
+      <div
+        class="col"
+        *ngFor="let listing of activeTab === 'travelers' ? travelers : senders"
+      >
+        <div class="card h-100 border-0 shadow-sm listing-card">
+          <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+              <span
+                class="badge rounded-pill px-3 py-2"
+                [class.bg-primary-subtle]="listing.need === Need.VOYAGEUR"
+                [class.text-primary]="listing.need === Need.VOYAGEUR"
+                [class.bg-success-subtle]="listing.need === Need.CHERCHEUR"
+                [class.text-success]="listing.need === Need.CHERCHEUR"
+              >
+                <i
+                  class="fas me-1"
+                  [class.fa-plane]="listing.need === Need.VOYAGEUR"
+                  [class.fa-search]="listing.need === Need.CHERCHEUR"
+                ></i>
+                {{ listing.need === Need.VOYAGEUR ? "Voyageur" : "Expéditeur" }}
+              </span>
+              <div class="price-tag text-end">
+                <span
+                  class="fs-4 fw-bold"
+                  [class.text-primary]="listing.need === Need.VOYAGEUR"
+                  [class.text-success]="listing.need === Need.CHERCHEUR"
+                  >{{ listing.pricePerKg }}</span
+                >
+                <span class="text-muted small ms-1">€/kg</span>
+              </div>
+            </div>
+
+            <div class="route-info mb-4">
+              <div class="d-flex align-items-center mb-2">
+                <div class="icon-circle bg-light me-3">
+                  <i class="fas fa-map-marker-alt text-danger"></i>
+                </div>
+                <div>
+                  <small class="text-muted d-block">Départ</small>
+                  <span class="fw-semibold">{{
+                    listing.departureLocation || "Non spécifié"
+                  }}</span>
+                </div>
+              </div>
+
+              <div class="route-line my-1 ms-3"></div>
+
+              <div class="d-flex align-items-center">
+                <div class="icon-circle bg-light me-3">
+                  <i class="fas fa-map-pin text-success"></i>
+                </div>
+                <div>
+                  <small class="text-muted d-block">Arrivée</small>
+                  <span class="fw-semibold">{{
+                    listing.arrivalLocation || "Non spécifié"
+                  }}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="user-info d-flex align-items-center pt-3 border-top">
+              <div class="avatar me-3">
+                {{ listing.firstName?.charAt(0)
+                }}{{ listing.lastName?.charAt(0) }}
+              </div>
+              <div class="flex-grow-1">
+                <h6 class="mb-0 fw-bold">
+                  {{ listing.firstName }} {{ listing.lastName }}
+                </h6>
+                <small class="text-muted">
+                  <i class="far fa-calendar-alt me-1"></i>
+                  {{
+                    listing.departureDate || listing.maxTravelDate
+                      | date: "mediumDate"
+                  }}
+                </small>
+              </div>
+              <button class="btn btn-icon btn-light rounded-circle shadow-sm">
+                <i class="fas fa-chevron-right"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

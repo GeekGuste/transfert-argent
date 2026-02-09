@@ -19,8 +19,8 @@
       <div class="mb-3">
         <label class="form-label">Votre besoin</label>
         <select class="form-select" formControlName="need">
-          <option value="voyageur">Je suis voyageur</option>
-          <option value="chercheur">Je cherche un voyageur</option>
+          <option [value]="Need.VOYAGEUR">Je suis voyageur</option>
+          <option [value]="Need.CHERCHEUR">Je cherche un voyageur</option>
         </select>
       </div>
 
@@ -64,7 +64,7 @@
     <!-- STEP 2 : Voyage ou Recherche -->
     <div *ngIf="currentStep() === 2">
       <!-- Voyageur -->
-      <div *ngIf="userType === 'voyageur'" [formGroup]="voyageurGroup">
+      <div *ngIf="userType === Need.VOYAGEUR" [formGroup]="voyageurGroup">
         <div class="mb-3">
           <label class="form-label">Date de départ</label>
           <input
@@ -92,7 +92,7 @@
       </div>
 
       <!-- Chercheur -->
-      <div *ngIf="userType === 'chercheur'" [formGroup]="chercheurGroup">
+      <div *ngIf="userType === Need.CHERCHEUR" [formGroup]="chercheurGroup">
         <div class="mb-3">
           <label class="form-label">Date maximale de voyage</label>
           <input
@@ -131,7 +131,7 @@
         <input
           type="text"
           class="form-control"
-          formControlName="departurePlace"
+          formControlName="departureLocation"
         />
       </div>
       <div class="mb-3">
@@ -139,18 +139,28 @@
         <input
           type="text"
           class="form-control"
-          formControlName="arrivalPlace"
+          formControlName="arrivalLocation"
         />
       </div>
       <div class="mb-3">
-        <label class="form-label">Prix au kilo (€)</label>
-        <input
-          type="number"
-          class="form-control"
-          formControlName="pricePerKg"
-        />
+        <label class="form-label">Prix au kilo</label>
+        <div class="input-group">
+          <input
+            type="number"
+            class="form-control"
+            formControlName="pricePerKg"
+          />
+          <select
+            class="form-select"
+            formControlName="currencyId"
+            style="max-width: 120px"
+          >
+            <option *ngFor="let currency of currencies" [value]="currency.id">
+              {{ currency.code }}
+            </option>
+          </select>
+        </div>
       </div>
-
       <button class="btn btn-secondary me-2" type="button" (click)="prevStep()">
         Précédent
       </button>

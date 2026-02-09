@@ -19,6 +19,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     { url: endpoint + '/users/me/reset-password', method: 'POST' },
     { url: endpoint + '/listings', method: 'POST' },
     { url: endpoint + '/listings', method: 'GET' },
+    { url: endpoint + '/currency', method: 'GET' },
   ];
   console.log(req.url);
   console.log(isRouteInArray(urlsToNotUse, req.url, req.method));
