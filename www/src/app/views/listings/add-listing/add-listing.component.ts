@@ -9,7 +9,8 @@ import {
 import { ListingService } from '@/app/core/service/ws/listing/listing.service';
 import { Listing } from '@/app/core/models/listing.model';
 
-type UserType = 'voyageur' | 'chercheur';
+import { Need } from '@/app/common/need.enum';
+import { CurrencyService } from '@/app/core/service/ws/currency/currency.service';
 
 @Component({
   selector: 'app-add-listing',
@@ -19,6 +20,8 @@ type UserType = 'voyageur' | 'chercheur';
   styleUrls: ['./add-listing.component.scss']
 })
 export class AddListingComponent {
+  Need = Need;
+  currencies: any = [];
 
   /* ============================
    * Stepper
@@ -42,7 +45,7 @@ export class AddListingComponent {
   ];
 
   activeSteps = computed(() =>
-    this.userType === 'voyageur'
+    this.userType === Need.VOYAGEUR
       ? this.stepsVoyageur
       : this.stepsChercheur
   );
@@ -51,7 +54,7 @@ export class AddListingComponent {
    * Formulaire
    * ============================ */
   listingForm = new FormGroup({
-    need: new FormControl<UserType>('voyageur', Validators.required),
+    need: new FormControl<Need>(Need.VOYAGEUR, Validators.required),
 
     identity: new FormGroup({
       lastName: new FormControl<string>('', Validators.required),
@@ -62,20 +65,21 @@ export class AddListingComponent {
     }),
 
     voyageur: new FormGroup({
-      departureDate: new FormControl<string>(''),
-      arrivalDate: new FormControl<string>(''),
+      departureDate: new FormControl<Date>(new Date()),
+      arrivalDate: new FormControl<Date>(new Date()),
       availableWeight: new FormControl<number>(0),
     }),
 
     chercheur: new FormGroup({
-      maxTravelDate: new FormControl<string>(''),
+      maxTravelDate: new FormControl<Date>(new Date()),
       desiredWeight: new FormControl<number>(0),
     }),
 
     common: new FormGroup({
-      departurePlace: new FormControl<string>('', Validators.required),
-      arrivalPlace: new FormControl<string>('', Validators.required),
+      departureLocation: new FormControl<string>('', Validators.required),
+      arrivalLocation: new FormControl<string>('', Validators.required),
       pricePerKg: new FormControl<number>(0, Validators.required),
+      currencyId: new FormControl<number>(0, Validators.required),
     }),
 
     legal: new FormGroup({
@@ -94,7 +98,9 @@ export class AddListingComponent {
   get legalGroup(): FormGroup { return this.listingForm.get('legal') as FormGroup; }
   get userType() { return this.listingForm.get('need')?.value; }
 
-  constructor(private listingService: ListingService) { }
+  constructor(private listingService: ListingService, private currencyService: CurrencyService) {
+    this.getCurrencies();
+  }
 
   /* ============================
    * Navigation
@@ -118,7 +124,7 @@ export class AddListingComponent {
     switch (step) {
       case 1: return this.listingForm.get('need')!.valid && this.identityGroup.valid;
       case 2:
-        return this.userType === 'voyageur'
+        return this.userType === Need.VOYAGEUR
           ? this.voyageurGroup.valid
           : this.chercheurGroup.valid;
       case 3: return this.commonGroup.valid;
@@ -152,9 +158,10 @@ export class AddListingComponent {
       maxTravelDate: this.chercheurGroup.get('maxTravelDate')!.value,
       desiredWeight: this.chercheurGroup.get('desiredWeight')!.value,
 
-      departurePlace: this.commonGroup.get('departurePlace')!.value,
-      arrivalPlace: this.commonGroup.get('arrivalPlace')!.value,
+      departureLocation: this.commonGroup.get('departureLocation')!.value,
+      arrivalLocation: this.commonGroup.get('arrivalLocation')!.value,
       pricePerKg: this.commonGroup.get('pricePerKg')!.value,
+      currencyId: this.commonGroup.get('currencyId')!.value,
       paymentMethod: this.legalGroup.get('paymentMethod')!.value,
 
       acceptTerms: this.legalGroup.get('acceptTerms')!.value
@@ -166,6 +173,16 @@ export class AddListingComponent {
         this.currentStep.set(5);
       },
       error: err => console.error('Erreur création :', err)
+    });
+  }
+
+  getCurrencies() {
+    this.currencyService.getCurrencies().subscribe({
+      next: (res: any) => {
+        this.currencies = res.currencies || res;
+        console.log(this.currencies);
+      },
+      error: err => console.error('Erreur récupération :', err)
     });
   }
 }
