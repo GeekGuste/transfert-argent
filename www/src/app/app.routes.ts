@@ -21,12 +21,6 @@ export const routes: Routes = [
     component: ListListingComponent,
   },
   {
-    path: '',
-    component: MainLayoutComponent,
-    loadChildren: () =>
-      import('./views/pages/pages.route').then((mod) => mod.PAGES_ROUTES),
-  },
-  {
     path: 'views',
     component: LayoutComponent,
     canActivate: [authGuard],
@@ -37,6 +31,12 @@ export const routes: Routes = [
     path: 'maintenance',
     component: MaintenanceComponent,
     data: { title: 'Maintenance' },
+  },
+  {
+    path: '',
+    component: MainLayoutComponent,
+    loadChildren: () =>
+      import('./views/pages/pages.route').then((mod) => mod.PAGES_ROUTES),
   },
 
   {

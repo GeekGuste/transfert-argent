@@ -10,7 +10,7 @@ import { NewPwComponent } from './new-pw/new-pw.component'
 export const AUTH_ROUTES: Route[] = [
   {
     path: 'log-in',
-    canActivate:[connectedGuard],
+    canActivate: [connectedGuard],
     component: LoginComponent,
     data: { title: 'Login' },
   },
@@ -34,7 +34,7 @@ export const AUTH_ROUTES: Route[] = [
     component: LockScreenComponent,
     data: { title: 'Lock Screen' },
   },
-   {
+  {
     path: 'verify-email',
     component: VerifyComponent,
     data: { title: 'verify email' },
