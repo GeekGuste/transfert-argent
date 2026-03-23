@@ -45,4 +45,8 @@ export class ListingService {
     return this.httpClient.put(this.endpoint + '/listings/' + Listing.id, Listing);
   }
 
+  createApplication(applicationForm: any) {
+    return this.httpClient.post(this.endpoint + '/applications', applicationForm);
+  }
+
 }
