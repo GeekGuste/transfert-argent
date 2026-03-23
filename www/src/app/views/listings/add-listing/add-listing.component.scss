@@ -1,4 +1,9 @@
 .nav-pills {
+  display: flex !important;
+  width: 100% !important;
+  margin: 10px 4px 25px 4px !important;
+  padding: 8px !important;
+  
   .nav-item {
     .btn {
       transition: all 0.3s ease;
