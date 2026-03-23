@@ -3,6 +3,7 @@ import { LanguageService } from '@/app/core/service/language.service';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterModule, RouterOutlet } from "@angular/router";
+import { version } from "../../../environments/version";
 
 @Component({
   selector: 'app-main-layout',
@@ -14,6 +15,8 @@ export class MainLayoutComponent {
   mobileMenuOpen = false;
   languageDropdownOpen = false;
   currentLanguage: string = 'fr';
+  version = version;
+  currentYear = new Date().getFullYear();
 
   // Langues disponibles pour un projet international
   languages: Language[] = [
