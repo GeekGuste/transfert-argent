@@ -149,7 +149,10 @@
                   }}
                 </small>
               </div>
-              <button class="btn btn-icon btn-light rounded-circle shadow-sm">
+              <button
+                class="btn btn-icon btn-light rounded-circle shadow-sm"
+                [routerLink]="['/forms', listing.id, 'details']"
+              >
                 <i class="fas fa-chevron-right"></i>
               </button>
             </div>

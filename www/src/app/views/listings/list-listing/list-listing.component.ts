@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { ListingService } from '@/app/core/service/ws/listing/listing.service';
 import { Listing } from '@/app/core/models/listing.model';
 import { Need } from '@/app/common/need.enum';
@@ -7,7 +8,7 @@ import { Need } from '@/app/common/need.enum';
 @Component({
   selector: 'app-list-listing',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './list-listing.component.html',
   styleUrls: ['./list-listing.component.scss']
 })

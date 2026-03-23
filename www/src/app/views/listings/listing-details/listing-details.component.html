@@ -1,1 +1,160 @@
-<p>listing-details works!</p>
+<div class="container-fluid py-4">
+  <!-- Loading -->
+  <div *ngIf="loading" class="d-flex justify-content-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Chargement...</span>
+    </div>
+  </div>
+
+  <!-- Error -->
+  <div
+    *ngIf="error"
+    class="alert alert-danger shadow-sm border-0 d-flex align-items-center"
+    role="alert"
+  >
+    <i class="fas fa-exclamation-circle me-2 fs-4"></i>
+    <div>{{ error }}</div>
+  </div>
+
+  <!-- Content -->
+  <div *ngIf="!loading && listing">
+    <!-- Back button -->
+    <div class="mb-4">
+      <button
+        class="btn btn-outline-secondary rounded-pill px-4"
+        routerLink="/forms/list"
+      >
+        <i class="fas fa-arrow-left me-2"></i>Retour aux annonces
+      </button>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+      <div class="card-body p-4 p-md-5">
+        <!-- Header -->
+        <div class="d-flex justify-content-between align-items-start mb-4">
+          <div>
+            <span
+              class="badge rounded-pill px-3 py-2 me-2"
+              [class.bg-primary-subtle]="
+                listing.need?.key === 'VOYAGEUR' || listing.need === 'VOYAGEUR'
+              "
+              [class.text-primary]="
+                listing.need?.key === 'VOYAGEUR' || listing.need === 'VOYAGEUR'
+              "
+              [class.bg-success-subtle]="
+                listing.need?.key === 'CHERCHEUR' ||
+                listing.need === 'CHERCHEUR'
+              "
+              [class.text-success]="
+                listing.need?.key === 'CHERCHEUR' ||
+                listing.need === 'CHERCHEUR'
+              "
+            >
+              <i
+                class="fas me-1"
+                [class.fa-plane]="
+                  listing.need?.key === 'VOYAGEUR' ||
+                  listing.need === 'VOYAGEUR'
+                "
+                [class.fa-search]="
+                  listing.need?.key === 'CHERCHEUR' ||
+                  listing.need === 'CHERCHEUR'
+                "
+              >
+              </i>
+              {{
+                (listing.need?.key || listing.need) === "VOYAGEUR"
+                  ? "Voyageur"
+                  : "Expéditeur"
+              }}
+            </span>
+          </div>
+          <div class="price-tag text-end">
+            <span class="fs-2 fw-bold text-primary">{{
+              listing.pricePerKg
+            }}</span>
+            <span class="text-muted ms-1">€/kg</span>
+          </div>
+        </div>
+
+        <!-- Route -->
+        <div class="row g-4 mb-4">
+          <div class="col-md-6">
+            <div class="p-3 bg-light rounded-3">
+              <small class="text-muted d-block mb-1"
+                ><i class="fas fa-map-marker-alt text-danger me-1"></i
+                >Départ</small
+              >
+              <span class="fw-semibold fs-5">{{
+                listing.departureLocation || "Non spécifié"
+              }}</span>
+              <div *ngIf="listing.departureDate" class="text-muted small mt-1">
+                <i class="far fa-calendar-alt me-1"></i
+                >{{ listing.departureDate | date: "longDate" }}
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="p-3 bg-light rounded-3">
+              <small class="text-muted d-block mb-1"
+                ><i class="fas fa-map-pin text-success me-1"></i>Arrivée</small
+              >
+              <span class="fw-semibold fs-5">{{
+                listing.arrivalLocation || "Non spécifié"
+              }}</span>
+              <div *ngIf="listing.maxTravelDate" class="text-muted small mt-1">
+                <i class="far fa-calendar-alt me-1"></i
+                >{{ listing.maxTravelDate | date: "longDate" }}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Capacity -->
+        <div *ngIf="listing.availableKg" class="mb-4">
+          <h6 class="fw-bold text-muted text-uppercase small mb-2">
+            Capacité disponible
+          </h6>
+          <span class="fs-5 fw-semibold">{{ listing.availableKg }} kg</span>
+        </div>
+
+        <!-- Description -->
+        <div *ngIf="listing.description" class="mb-4">
+          <h6 class="fw-bold text-muted text-uppercase small mb-2">
+            Description
+          </h6>
+          <p class="mb-0">{{ listing.description }}</p>
+        </div>
+
+        <hr />
+
+        <!-- User info -->
+        <div class="d-flex align-items-center pt-2">
+          <div
+            class="avatar me-3"
+            style="
+              width: 48px;
+              height: 48px;
+              border-radius: 50%;
+              background: var(--bs-primary);
+              color: #fff;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-weight: 700;
+              font-size: 1.1rem;
+            "
+          >
+            {{ listing.firstName?.charAt(0) }}{{ listing.lastName?.charAt(0) }}
+          </div>
+          <div>
+            <h6 class="mb-0 fw-bold">
+              {{ listing.firstName }} {{ listing.lastName }}
+            </h6>
+            <small class="text-muted">Annonceur</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
