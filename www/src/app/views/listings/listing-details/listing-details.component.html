@@ -128,33 +128,208 @@
 
         <hr />
 
-        <!-- User info -->
-        <div class="d-flex align-items-center pt-2">
-          <div
-            class="avatar me-3"
-            style="
-              width: 48px;
-              height: 48px;
-              border-radius: 50%;
-              background: var(--bs-primary);
-              color: #fff;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              font-weight: 700;
-              font-size: 1.1rem;
-            "
+        <!-- User info + Postuler -->
+        <div class="d-flex align-items-center justify-content-between pt-2">
+          <div class="d-flex align-items-center">
+            <div
+              class="avatar me-3"
+              style="
+                width: 48px;
+                height: 48px;
+                border-radius: 50%;
+                background: var(--bs-primary);
+                color: #fff;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 700;
+                font-size: 1.1rem;
+              "
+            >
+              {{ listing.firstName?.charAt(0) }}{{ listing.lastName?.charAt(0) }}
+            </div>
+            <div>
+              <h6 class="mb-0 fw-bold">
+                {{ listing.firstName }} {{ listing.lastName }}
+              </h6>
+              <small class="text-muted">Annonceur</small>
+            </div>
+          </div>
+
+          <!-- Bouton Postuler -->
+          <button
+            class="btn btn-primary rounded-pill px-4 py-2 fw-semibold shadow-sm"
+            (click)="openModal()"
           >
-            {{ listing.firstName?.charAt(0) }}{{ listing.lastName?.charAt(0) }}
-          </div>
-          <div>
-            <h6 class="mb-0 fw-bold">
-              {{ listing.firstName }} {{ listing.lastName }}
-            </h6>
-            <small class="text-muted">Annonceur</small>
-          </div>
+            <i class="fas fa-paper-plane me-2"></i>Postuler
+          </button>
         </div>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- ===== Modal Postuler ===== -->
+<div
+  class="modal-overlay"
+  *ngIf="showModal"
+  (click)="closeModal()"
+  style="
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 1050;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  "
+>
+  <div
+    class="modal-dialog-custom"
+    (click)="$event.stopPropagation()"
+    style="
+      background: #fff;
+      border-radius: 1rem;
+      width: 100%;
+      max-width: 560px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+      overflow: hidden;
+    "
+  >
+    <!-- Modal Header -->
+    <div class="d-flex justify-content-between align-items-center px-4 pt-4 pb-3 border-bottom">
+      <h5 class="mb-0 fw-bold">
+        <i class="fas fa-paper-plane text-primary me-2"></i>Postuler à cette annonce
+      </h5>
+      <button
+        class="btn btn-sm btn-light rounded-circle"
+        style="width:36px;height:36px;"
+        (click)="closeModal()"
+      >
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <!-- Succès -->
+    <div *ngIf="applySuccess" class="p-4 text-center">
+      <div class="mb-3" style="font-size:3rem;">🎉</div>
+      <h5 class="fw-bold text-success">Candidature envoyée !</h5>
+      <p class="text-muted mb-4">Votre demande a bien été transmise à l'annonceur. Bonne chance !</p>
+      <button class="btn btn-primary rounded-pill px-4" (click)="closeModal()">Fermer</button>
+    </div>
+
+    <!-- Formulaire -->
+    <form *ngIf="!applySuccess" (ngSubmit)="submitApplication()" #applyForm="ngForm" class="p-4">
+
+      <!-- Erreur API -->
+      <div *ngIf="applyError" class="alert alert-danger border-0 rounded-3 py-2 px-3 mb-3 small">
+        <i class="fas fa-exclamation-circle me-1"></i>{{ applyError }}
+      </div>
+
+      <div class="row g-3">
+        <!-- Prénom -->
+        <div class="col-md-6">
+          <label class="form-label fw-semibold small">Prénom <span class="text-danger">*</span></label>
+          <input
+            type="text"
+            class="form-control rounded-3"
+            [(ngModel)]="applicationForm.firstName"
+            name="firstName"
+            placeholder="Votre prénom"
+            required
+          />
+        </div>
+
+        <!-- Nom -->
+        <div class="col-md-6">
+          <label class="form-label fw-semibold small">Nom <span class="text-danger">*</span></label>
+          <input
+            type="text"
+            class="form-control rounded-3"
+            [(ngModel)]="applicationForm.lastName"
+            name="lastName"
+            placeholder="Votre nom"
+            required
+          />
+        </div>
+
+        <!-- Email -->
+        <div class="col-md-6">
+          <label class="form-label fw-semibold small">Email <span class="text-danger">*</span></label>
+          <input
+            type="email"
+            class="form-control rounded-3"
+            [(ngModel)]="applicationForm.email"
+            name="email"
+            placeholder="exemple@mail.com"
+            required
+          />
+        </div>
+
+        <!-- Téléphone -->
+        <div class="col-md-6">
+          <label class="form-label fw-semibold small">Téléphone <span class="text-danger">*</span></label>
+          <input
+            type="tel"
+            class="form-control rounded-3"
+            [(ngModel)]="applicationForm.phone"
+            name="phone"
+            placeholder="+33 6 00 00 00 00"
+            required
+          />
+        </div>
+
+        <!-- Description -->
+        <div class="col-12">
+          <label class="form-label fw-semibold small">Message / Description</label>
+          <textarea
+            class="form-control rounded-3"
+            [(ngModel)]="applicationForm.description"
+            name="description"
+            rows="3"
+            placeholder="Présentez-vous ou ajoutez un message à l'annonceur..."
+          ></textarea>
+        </div>
+
+        <!-- Majeur -->
+        <div class="col-12">
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="isAdult"
+              [(ngModel)]="applicationForm.isAdult"
+              name="isAdult"
+              required
+            />
+            <label class="form-check-label small" for="isAdult">
+              Je certifie être majeur(e) <span class="text-danger">*</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="d-flex justify-content-end gap-2 mt-4">
+        <button
+          type="button"
+          class="btn btn-outline-secondary rounded-pill px-4"
+          (click)="closeModal()"
+          [disabled]="applyLoading"
+        >
+          Annuler
+        </button>
+        <button
+          type="submit"
+          class="btn btn-primary rounded-pill px-4 fw-semibold"
+          [disabled]="applyLoading || applyForm.invalid"
+        >
+          <span *ngIf="applyLoading" class="spinner-border spinner-border-sm me-2" role="status"></span>
+          <i *ngIf="!applyLoading" class="fas fa-paper-plane me-2"></i>
+          {{ applyLoading ? 'Envoi...' : 'Envoyer ma candidature' }}
+        </button>
+      </div>
+    </form>
   </div>
 </div>

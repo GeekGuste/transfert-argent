@@ -90,7 +90,7 @@ export const MENU_ITEMS: MenuItem[] = [
       }
     ],
   },
-    {
+  {
     key: 'Currency',
     // icon: 'iconoir-home-simple',
     icon: 'iconoir-money-square',
@@ -108,6 +108,21 @@ export const MENU_ITEMS: MenuItem[] = [
         label: 'MENUITEMS.CURRENCY.LIST',
         url: '/views/currency/list',
         parentKey: 'currency list',
+      }
+    ],
+  },
+  {
+    key: 'Listings',
+    // icon: 'iconoir-home-simple',
+    icon: 'iconoir-money-square',
+    label: 'MENUITEMS.LISTINGS',
+    collapsed: false,
+    subMenu: [
+      {
+        key: 'listing-list',
+        label: 'MENUITEMS.LISTINGS.LIST',
+        url: '/views/listings/list',
+        parentKey: 'listing list',
       }
     ],
   },
