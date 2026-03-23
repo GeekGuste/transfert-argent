@@ -1,220 +1,257 @@
-<div class="container mt-5">
-  <!-- Stepper navigation -->
-  <ul class="nav nav-pills mb-4">
-    <li class="nav-item me-2" *ngFor="let step of activeSteps()">
-      <button
-        class="btn"
-        [class.btn-primary]="currentStep() === step.id"
-        [class.btn-outline-secondary]="currentStep() !== step.id"
-        (click)="goToStep(step.id)"
+<div class="container bg-white p-3 mt-5 mb-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8 col-12">
+      <!-- Stepper navigation -->
+      <ul
+        class="nav nav-pills nav-justified mb-4 bg-light p-2 rounded shadow-sm flex-nowrap"
       >
-        {{ step.label }}
-      </button>
-    </li>
-  </ul>
-
-  <form [formGroup]="listingForm">
-    <!-- STEP 1 : Identité + choix -->
-    <div *ngIf="currentStep() === 1">
-      <div class="mb-3">
-        <label class="form-label">Votre besoin</label>
-        <select class="form-select" formControlName="need">
-          <option [value]="Need.VOYAGEUR">Je suis voyageur</option>
-          <option [value]="Need.CHERCHEUR">Je cherche un voyageur</option>
-        </select>
-      </div>
-
-      <div [formGroup]="identityGroup">
-        <div class="mb-3">
-          <label class="form-label">Nom</label>
-          <input type="text" class="form-control" formControlName="lastName" />
-        </div>
-        <div class="mb-3">
-          <label class="form-label">Prénom</label>
-          <input type="text" class="form-control" formControlName="firstName" />
-        </div>
-        <div class="mb-3">
-          <label class="form-label">Téléphone</label>
-          <input type="text" class="form-control" formControlName="phone" />
-        </div>
-        <div class="mb-3">
-          <label class="form-label">Email</label>
-          <input type="email" class="form-control" formControlName="email" />
-        </div>
-        <div class="form-check mt-3">
-          <input
-            type="checkbox"
-            class="form-check-input"
-            formControlName="isAdult"
-          />
-          <label class="form-check-label">Je certifie être majeur</label>
-        </div>
-      </div>
-
-      <button
-        class="btn btn-primary mt-3"
-        type="button"
-        (click)="nextStep()"
-        [disabled]="!isStepValid(1)"
-      >
-        Suivant
-      </button>
-    </div>
-
-    <!-- STEP 2 : Voyage ou Recherche -->
-    <div *ngIf="currentStep() === 2">
-      <!-- Voyageur -->
-      <div *ngIf="userType === Need.VOYAGEUR" [formGroup]="voyageurGroup">
-        <div class="mb-3">
-          <label class="form-label">Date de départ</label>
-          <input
-            type="date"
-            class="form-control"
-            formControlName="departureDate"
-          />
-        </div>
-        <div class="mb-3">
-          <label class="form-label">Date d’arrivée</label>
-          <input
-            type="date"
-            class="form-control"
-            formControlName="arrivalDate"
-          />
-        </div>
-        <div class="mb-3">
-          <label class="form-label">Kilos disponibles</label>
-          <input
-            type="number"
-            class="form-control"
-            formControlName="availableWeight"
-          />
-        </div>
-      </div>
-
-      <!-- Chercheur -->
-      <div *ngIf="userType === Need.CHERCHEUR" [formGroup]="chercheurGroup">
-        <div class="mb-3">
-          <label class="form-label">Date maximale de voyage</label>
-          <input
-            type="date"
-            class="form-control"
-            formControlName="maxTravelDate"
-          />
-        </div>
-        <div class="mb-3">
-          <label class="form-label">Kilos désirés</label>
-          <input
-            type="number"
-            class="form-control"
-            formControlName="desiredWeight"
-          />
-        </div>
-      </div>
-
-      <button class="btn btn-secondary me-2" type="button" (click)="prevStep()">
-        Précédent
-      </button>
-      <button
-        class="btn btn-primary"
-        type="button"
-        (click)="nextStep()"
-        [disabled]="!isStepValid(2)"
-      >
-        Suivant
-      </button>
-    </div>
-
-    <!-- STEP 3 : Trajet & prix -->
-    <div *ngIf="currentStep() === 3" [formGroup]="commonGroup">
-      <div class="mb-3">
-        <label class="form-label">Lieu de départ</label>
-        <input
-          type="text"
-          class="form-control"
-          formControlName="departureLocation"
-        />
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Lieu d’arrivée</label>
-        <input
-          type="text"
-          class="form-control"
-          formControlName="arrivalLocation"
-        />
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Prix au kilo</label>
-        <div class="input-group">
-          <input
-            type="number"
-            class="form-control"
-            formControlName="pricePerKg"
-          />
-          <select
-            class="form-select"
-            formControlName="currencyId"
-            style="max-width: 120px"
+        <li class="nav-item mx-1" *ngFor="let step of activeSteps()">
+          <button
+            class="btn w-100 d-flex flex-column flex-md-row align-items-center justify-content-center py-2"
+            [class.btn-primary]="currentStep() === step.id"
+            [class.btn-outline-secondary]="currentStep() !== step.id"
+            (click)="goToStep(step.id)"
+            [title]="step.label"
           >
-            <option *ngFor="let currency of currencies" [value]="currency.id">
-              {{ currency.code }}
-            </option>
-          </select>
-        </div>
-      </div>
-      <button class="btn btn-secondary me-2" type="button" (click)="prevStep()">
-        Précédent
-      </button>
-      <button
-        class="btn btn-primary"
-        type="button"
-        (click)="nextStep()"
-        [disabled]="!isStepValid(3)"
-      >
-        Suivant
-      </button>
-    </div>
+            <i [class]="step.icon" class="me-0 me-md-2"></i>
+            <span class="d-none d-md-inline">{{ step.label }}</span>
+          </button>
+        </li>
+      </ul>
 
-    <!-- STEP 4 : Paiement et conditions -->
-    <div *ngIf="currentStep() === 4">
-      <div [formGroup]="legalGroup" class="form-check mt-3">
-        <div class="mb-3">
-          <label class="form-label">Moyen de paiement</label>
-          <input
-            type="text"
-            class="form-control"
-            formControlName="paymentMethod"
-          />
-        </div>
-        <input
-          type="checkbox"
-          class="form-check-input"
-          formControlName="acceptTerms"
-        />
-        <label class="form-check-label">
-          J’accepte les
-          <a routerLink="/conditions-utilisation" target="_blank"
-            >conditions d’utilisation</a
+      <form [formGroup]="listingForm">
+        <!-- STEP 1 : Identité + choix -->
+        <div *ngIf="currentStep() === 1">
+          <div class="mb-3">
+            <label class="form-label">Votre besoin</label>
+            <select class="form-select" formControlName="need">
+              <option [value]="Need.VOYAGEUR">Je suis voyageur</option>
+              <option [value]="Need.CHERCHEUR">Je cherche un voyageur</option>
+            </select>
+          </div>
+
+          <div [formGroup]="identityGroup">
+            <div class="mb-3">
+              <label class="form-label">Nom</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="lastName"
+              />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Prénom</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="firstName"
+              />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Téléphone</label>
+              <input type="text" class="form-control" formControlName="phone" />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Email</label>
+              <input
+                type="email"
+                class="form-control"
+                formControlName="email"
+              />
+            </div>
+            <div class="form-check mt-3">
+              <input
+                type="checkbox"
+                class="form-check-input"
+                formControlName="isAdult"
+              />
+              <label class="form-check-label">Je certifie être majeur</label>
+            </div>
+          </div>
+
+          <button
+            class="btn btn-primary mt-3"
+            type="button"
+            (click)="nextStep()"
+            [disabled]="!isStepValid(1)"
           >
-        </label>
-      </div>
+            Suivant
+          </button>
+        </div>
 
-      <button class="btn btn-secondary me-2" type="button" (click)="prevStep()">
-        Précédent
-      </button>
-      <button
-        class="btn btn-success"
-        type="button"
-        (click)="submit()"
-        [disabled]="!isStepValid(4)"
-      >
-        Créer l’annonce
-      </button>
-    </div>
+        <!-- STEP 2 : Voyage ou Recherche -->
+        <div *ngIf="currentStep() === 2">
+          <!-- Voyageur -->
+          <div *ngIf="userType === Need.VOYAGEUR" [formGroup]="voyageurGroup">
+            <div class="mb-3">
+              <label class="form-label">Date de départ</label>
+              <input
+                type="date"
+                class="form-control"
+                formControlName="departureDate"
+              />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Date d’arrivée</label>
+              <input
+                type="date"
+                class="form-control"
+                formControlName="arrivalDate"
+              />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Kilos disponibles</label>
+              <input
+                type="number"
+                class="form-control"
+                formControlName="availableWeight"
+              />
+            </div>
+          </div>
 
-    <!-- STEP 5 : Confirmation -->
-    <div *ngIf="currentStep() === 5" class="text-center mt-5">
-      <h2>Félicitations ! 🎉</h2>
-      <p>Votre annonce a été créée avec succès.</p>
+          <!-- Chercheur -->
+          <div *ngIf="userType === Need.CHERCHEUR" [formGroup]="chercheurGroup">
+            <div class="mb-3">
+              <label class="form-label">Date maximale de voyage</label>
+              <input
+                type="date"
+                class="form-control"
+                formControlName="maxTravelDate"
+              />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Kilos désirés</label>
+              <input
+                type="number"
+                class="form-control"
+                formControlName="desiredWeight"
+              />
+            </div>
+          </div>
+
+          <button
+            class="btn btn-secondary me-2"
+            type="button"
+            (click)="prevStep()"
+          >
+            Précédent
+          </button>
+          <button
+            class="btn btn-primary"
+            type="button"
+            (click)="nextStep()"
+            [disabled]="!isStepValid(2)"
+          >
+            Suivant
+          </button>
+        </div>
+
+        <!-- STEP 3 : Trajet & prix -->
+        <div *ngIf="currentStep() === 3" [formGroup]="commonGroup">
+          <div class="mb-3">
+            <label class="form-label">Lieu de départ</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="departureLocation"
+            />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Lieu d’arrivée</label>
+            <input
+              type="text"
+              class="form-control"
+              formControlName="arrivalLocation"
+            />
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Prix au kilo</label>
+            <div class="input-group">
+              <input
+                type="number"
+                class="form-control"
+                formControlName="pricePerKg"
+              />
+              <select
+                class="form-select"
+                formControlName="currencyId"
+                style="max-width: 120px"
+              >
+                <option
+                  *ngFor="let currency of currencies"
+                  [value]="currency.id"
+                >
+                  {{ currency.code }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <button
+            class="btn btn-secondary me-2"
+            type="button"
+            (click)="prevStep()"
+          >
+            Précédent
+          </button>
+          <button
+            class="btn btn-primary"
+            type="button"
+            (click)="nextStep()"
+            [disabled]="!isStepValid(3)"
+          >
+            Suivant
+          </button>
+        </div>
+
+        <!-- STEP 4 : Paiement et conditions -->
+        <div *ngIf="currentStep() === 4">
+          <div [formGroup]="legalGroup" class="form-check mt-3">
+            <div class="mb-3">
+              <label class="form-label">Moyen de paiement</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="paymentMethod"
+              />
+            </div>
+            <input
+              type="checkbox"
+              class="form-check-input"
+              formControlName="acceptTerms"
+            />
+            <label class="form-check-label">
+              J’accepte les
+              <a routerLink="/conditions-utilisation" target="_blank"
+                >conditions d’utilisation</a
+              >
+            </label>
+          </div>
+
+          <button
+            class="btn btn-secondary me-2"
+            type="button"
+            (click)="prevStep()"
+          >
+            Précédent
+          </button>
+          <button
+            class="btn btn-success"
+            type="button"
+            (click)="submit()"
+            [disabled]="!isStepValid(4)"
+          >
+            Créer l’annonce
+          </button>
+        </div>
+
+        <!-- STEP 5 : Confirmation -->
+        <div *ngIf="currentStep() === 5" class="text-center mt-5">
+          <h2>Félicitations ! 🎉</h2>
+          <p>Votre annonce a été créée avec succès.</p>
+        </div>
+      </form>
     </div>
-  </form>
+    <!-- end col -->
+  </div>
+  <!-- end row -->
 </div>

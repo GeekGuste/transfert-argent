@@ -1,4 +1,4 @@
-<div class="container-fluid py-4">
+<div class="container py-4">
   <!-- Loading -->
   <div *ngIf="loading" class="d-flex justify-content-center py-5">
     <div class="spinner-border text-primary" role="status">
@@ -146,7 +146,8 @@
                 font-size: 1.1rem;
               "
             >
-              {{ listing.firstName?.charAt(0) }}{{ listing.lastName?.charAt(0) }}
+              {{ listing.firstName?.charAt(0)
+              }}{{ listing.lastName?.charAt(0) }}
             </div>
             <div>
               <h6 class="mb-0 fw-bold">
@@ -177,7 +178,7 @@
   style="
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.5);
     z-index: 1050;
     display: flex;
     align-items: center;
@@ -193,18 +194,21 @@
       border-radius: 1rem;
       width: 100%;
       max-width: 560px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
       overflow: hidden;
     "
   >
     <!-- Modal Header -->
-    <div class="d-flex justify-content-between align-items-center px-4 pt-4 pb-3 border-bottom">
+    <div
+      class="d-flex justify-content-between align-items-center px-4 pt-4 pb-3 border-bottom"
+    >
       <h5 class="mb-0 fw-bold">
-        <i class="fas fa-paper-plane text-primary me-2"></i>Postuler à cette annonce
+        <i class="fas fa-paper-plane text-primary me-2"></i>Postuler à cette
+        annonce
       </h5>
       <button
         class="btn btn-sm btn-light rounded-circle"
-        style="width:36px;height:36px;"
+        style="width: 36px; height: 36px"
         (click)="closeModal()"
       >
         <i class="fas fa-times"></i>
@@ -213,24 +217,37 @@
 
     <!-- Succès -->
     <div *ngIf="applySuccess" class="p-4 text-center">
-      <div class="mb-3" style="font-size:3rem;">🎉</div>
+      <div class="mb-3" style="font-size: 3rem">🎉</div>
       <h5 class="fw-bold text-success">Candidature envoyée !</h5>
-      <p class="text-muted mb-4">Votre demande a bien été transmise à l'annonceur. Bonne chance !</p>
-      <button class="btn btn-primary rounded-pill px-4" (click)="closeModal()">Fermer</button>
+      <p class="text-muted mb-4">
+        Votre demande a bien été transmise à l'annonceur. Bonne chance !
+      </p>
+      <button class="btn btn-primary rounded-pill px-4" (click)="closeModal()">
+        Fermer
+      </button>
     </div>
 
     <!-- Formulaire -->
-    <form *ngIf="!applySuccess" (ngSubmit)="submitApplication()" #applyForm="ngForm" class="p-4">
-
+    <form
+      *ngIf="!applySuccess"
+      (ngSubmit)="submitApplication()"
+      #applyForm="ngForm"
+      class="p-4"
+    >
       <!-- Erreur API -->
-      <div *ngIf="applyError" class="alert alert-danger border-0 rounded-3 py-2 px-3 mb-3 small">
+      <div
+        *ngIf="applyError"
+        class="alert alert-danger border-0 rounded-3 py-2 px-3 mb-3 small"
+      >
         <i class="fas fa-exclamation-circle me-1"></i>{{ applyError }}
       </div>
 
       <div class="row g-3">
         <!-- Prénom -->
         <div class="col-md-6">
-          <label class="form-label fw-semibold small">Prénom <span class="text-danger">*</span></label>
+          <label class="form-label fw-semibold small"
+            >Prénom <span class="text-danger">*</span></label
+          >
           <input
             type="text"
             class="form-control rounded-3"
@@ -243,7 +260,9 @@
 
         <!-- Nom -->
         <div class="col-md-6">
-          <label class="form-label fw-semibold small">Nom <span class="text-danger">*</span></label>
+          <label class="form-label fw-semibold small"
+            >Nom <span class="text-danger">*</span></label
+          >
           <input
             type="text"
             class="form-control rounded-3"
@@ -256,7 +275,9 @@
 
         <!-- Email -->
         <div class="col-md-6">
-          <label class="form-label fw-semibold small">Email <span class="text-danger">*</span></label>
+          <label class="form-label fw-semibold small"
+            >Email <span class="text-danger">*</span></label
+          >
           <input
             type="email"
             class="form-control rounded-3"
@@ -269,7 +290,9 @@
 
         <!-- Téléphone -->
         <div class="col-md-6">
-          <label class="form-label fw-semibold small">Téléphone <span class="text-danger">*</span></label>
+          <label class="form-label fw-semibold small"
+            >Téléphone <span class="text-danger">*</span></label
+          >
           <input
             type="tel"
             class="form-control rounded-3"
@@ -282,7 +305,9 @@
 
         <!-- Description -->
         <div class="col-12">
-          <label class="form-label fw-semibold small">Message / Description</label>
+          <label class="form-label fw-semibold small"
+            >Message / Description</label
+          >
           <textarea
             class="form-control rounded-3"
             [(ngModel)]="applicationForm.description"
@@ -325,9 +350,13 @@
           class="btn btn-primary rounded-pill px-4 fw-semibold"
           [disabled]="applyLoading || applyForm.invalid"
         >
-          <span *ngIf="applyLoading" class="spinner-border spinner-border-sm me-2" role="status"></span>
+          <span
+            *ngIf="applyLoading"
+            class="spinner-border spinner-border-sm me-2"
+            role="status"
+          ></span>
           <i *ngIf="!applyLoading" class="fas fa-paper-plane me-2"></i>
-          {{ applyLoading ? 'Envoi...' : 'Envoyer ma candidature' }}
+          {{ applyLoading ? "Envoi..." : "Envoyer ma candidature" }}
         </button>
       </div>
     </form>

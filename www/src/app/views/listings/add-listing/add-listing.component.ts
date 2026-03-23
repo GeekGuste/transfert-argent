@@ -29,19 +29,19 @@ export class AddListingComponent {
   currentStep = signal(1);
 
   stepsVoyageur = [
-    { id: 1, label: 'Identité' },
-    { id: 2, label: 'Voyage' },
-    { id: 3, label: 'Trajet & prix' },
-    { id: 4, label: 'Paiement' },
-    { id: 5, label: 'Confirmation' }
+    { id: 1, label: 'Identité', icon: 'fas fa-user' },
+    { id: 2, label: 'Voyage', icon: 'fas fa-plane' },
+    { id: 3, label: 'Trajet & prix', icon: 'fas fa-route' },
+    { id: 4, label: 'Paiement', icon: 'fas fa-credit-card' },
+    { id: 5, label: 'Confirmation', icon: 'fas fa-check-circle' }
   ];
 
   stepsChercheur = [
-    { id: 1, label: 'Identité' },
-    { id: 2, label: 'Recherche' },
-    { id: 3, label: 'Trajet & prix' },
-    { id: 4, label: 'Paiement' },
-    { id: 5, label: 'Confirmation' }
+    { id: 1, label: 'Identité', icon: 'fas fa-user' },
+    { id: 2, label: 'Recherche', icon: 'fas fa-search' },
+    { id: 3, label: 'Trajet & prix', icon: 'fas fa-route' },
+    { id: 4, label: 'Paiement', icon: 'fas fa-credit-card' },
+    { id: 5, label: 'Confirmation', icon: 'fas fa-check-circle' }
   ];
 
   activeSteps = computed(() =>
