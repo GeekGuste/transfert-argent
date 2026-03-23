@@ -1,4 +1,4 @@
-<div class="container-fluid py-4">
+<div class="container py-4">
   <div class="row mb-4 align-items-center">
     <div class="col">
       <h2 class="page-title fw-bold mb-0">Annonces récentes</h2>
@@ -149,7 +149,10 @@
                   }}
                 </small>
               </div>
-              <button class="btn btn-icon btn-light rounded-circle shadow-sm">
+              <button
+                class="btn btn-icon btn-light rounded-circle shadow-sm"
+                [routerLink]="['/forms', listing.id, 'details']"
+              >
                 <i class="fas fa-chevron-right"></i>
               </button>
             </div>

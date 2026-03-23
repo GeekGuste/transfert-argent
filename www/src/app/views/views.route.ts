@@ -45,9 +45,15 @@ export const VIEW_ROUTES: Route[] = [
     loadChildren: () =>
       import('./currency/currency.route').then((mod) => mod.CURRENCY_ROUTES),
   },
-    {
-      path: '**',
-      redirectTo: 'dashboard',
-      pathMatch: "full"
-    },
+  {
+    path: 'listings',
+    canActivate: [authGuard],
+    loadChildren: () =>
+      import('./admin/listings.route').then((mod) => mod.LISTINGS_ROUTES),
+  },
+  {
+    path: '**',
+    redirectTo: 'dashboard',
+    pathMatch: "full"
+  },
 ];

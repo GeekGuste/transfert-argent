@@ -8,425 +8,917 @@
 /* eslint-disable */
 // ReSharper disable InconsistentNaming
 
-export class Client {
-    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+import { mergeMap as _observableMergeMap, catchError as _observableCatch } from 'rxjs/operators';
+import { Observable, throwError as _observableThrow, of as _observableOf } from 'rxjs';
+import { Injectable, Inject, Optional, InjectionToken } from '@angular/core';
+import { HttpClient, HttpHeaders, HttpResponse, HttpResponseBase } from '@angular/common/http';
+
+export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
+
+export interface IGlobrelApi {
+    /**
+     * @return OK
+     */
+    countriesPOST(body: CountryDto): Observable<void>;
+    /**
+     * @return OK
+     */
+    countriesGET(): Observable<void>;
+    /**
+     * @return OK
+     */
+    servicesPOST(body: ServiceDto): Observable<void>;
+    /**
+     * @return OK
+     */
+    servicesGET(): Observable<void>;
+    /**
+     * @return OK
+     */
+    applicationsPOST(body: ApplicationInput): Observable<void>;
+    /**
+     * @return OK
+     */
+    applicationsGET(): Observable<GetApplicationsOutput>;
+    /**
+     * @return OK
+     */
+    currencyPOST(body: CurrencyDto): Observable<void>;
+    /**
+     * @return OK
+     */
+    currencyGET(): Observable<CurrencyOutput>;
+    /**
+     * @return OK
+     */
+    listingsPOST(body: ListingInput): Observable<void>;
+    /**
+     * @return OK
+     */
+    listingsGET(): Observable<GetListingsOutput>;
+    /**
+     * @return OK
+     */
+    subscriptionsPOST(body: CreateSubscriptionInput): Observable<void>;
+    /**
+     * @return OK
+     */
+    subscriptionsAll(): Observable<SubscriptionOutput[]>;
+    /**
+     * @return OK
+     */
+    applicationsDELETE(applicationId: string): Observable<void>;
+    /**
+     * @return OK
+     */
+    currencyDELETE(currencyId: string): Observable<void>;
+    /**
+     * @return OK
+     */
+    currencyPUT(currencyId: string, body: CurrencyDto): Observable<void>;
+    /**
+     * @return OK
+     */
+    listingsDELETE(listingId: string): Observable<void>;
+    /**
+     * @return OK
+     */
+    listingsGET2(listingId: string): Observable<ListingDto>;
+    /**
+     * @return OK
+     */
+    subscriptionsDELETE(subscriptionId: string): Observable<void>;
+    /**
+     * @return OK
+     */
+    subscriptionsGET(subscriptionId: string): Observable<SubscriptionOutput>;
+    /**
+     * @return OK
+     */
+    subscriptionsPUT(subscriptionId: string, body: UpdateSubscriptionInput): Observable<void>;
+    /**
+     * @return OK
+     */
+    paymentMethods(): Observable<PaymentMethodDto[]>;
+    /**
+     * @return OK
+     */
+    frequencies(): Observable<SubscriptionFrequencyItemDto[]>;
+    /**
+     * @return OK
+     */
+    removeService(subscriptionId: string, serviceId: string): Observable<void>;
+    /**
+     * @return OK
+     */
+    addService(subscriptionId: string, serviceId: string): Observable<void>;
+    /**
+     * @return OK
+     */
+    register(body: AccountRegisterDto): Observable<boolean>;
+    /**
+     * @return OK
+     */
+    login(body: AccountRequest): Observable<TokenResponseDto>;
+    /**
+     * @return OK
+     */
+    verifyEmail(body: VerifyEmailInput): Observable<boolean>;
+    /**
+     * @return OK
+     */
+    resendCode(email: string): Observable<boolean>;
+    /**
+     * @return OK
+     */
+    meGET(): Observable<void>;
+    /**
+     * @return OK
+     */
+    mePUT(body: UpdateUserDto): Observable<void>;
+    /**
+     * @return OK
+     */
+    usersAll(): Observable<ApplicationUserDto[]>;
+    /**
+     * @return OK
+     */
+    rolesAll(): Observable<string[]>;
+    /**
+     * @return OK
+     */
+    updatePassword(body: ChangePasswordDto): Observable<void>;
+    /**
+     * @return OK
+     */
+    resetPasswordGET(email: string): Observable<void>;
+    /**
+     * @return OK
+     */
+    resetPasswordPOST(body: ResetPasswordDto): Observable<boolean>;
+    /**
+     * @return OK
+     */
+    users(id: string, body: UpdateUserDto): Observable<void>;
+    /**
+     * @return OK
+     */
+    password(id: string, body: ChangePasswordDto): Observable<void>;
+    /**
+     * @return OK
+     */
+    disable(id: string): Observable<void>;
+    /**
+     * @return OK
+     */
+    enable(id: string): Observable<void>;
+    /**
+     * @return OK
+     */
+    rolesPOST(id: string, body: RoleDto): Observable<void>;
+    /**
+     * @return OK
+     */
+    rolesDELETE(id: string, role: string): Observable<void>;
+    /**
+     * @return OK
+     */
+    testAuthentication(): Observable<string>;
+    /**
+     * @return OK
+     */
+    addCountry(id: string, countryId: string): Observable<Task>;
+    /**
+     * @return OK
+     */
+    removeCountry(id: string, countryId: string): Observable<Task>;
+    /**
+     * @return OK
+     */
+    countriesPUT(id: string, body: CountryDto): Observable<void>;
+    /**
+     * @return OK
+     */
+    servicesPUT(id: string, body: ServiceDto): Observable<void>;
+}
+
+@Injectable({
+    providedIn: 'root'
+})
+export class GlobrelApi implements IGlobrelApi {
+    private http: HttpClient;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
 
-    constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
-        this.http = http ? http : window as any;
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
         this.baseUrl = baseUrl ?? "";
     }
 
     /**
      * @return OK
      */
-    countriesPOST(body: CountryDto): Promise<void> {
+    countriesPOST(body: CountryDto): Observable<void> {
         let url_ = this.baseUrl + "/countries";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
 
-        let options_: RequestInit = {
+        let options_ : any = {
             body: content_,
-            method: "POST",
-            headers: {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
                 "Content-Type": "application/json",
-            }
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processCountriesPOST(_response);
-        });
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCountriesPOST(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCountriesPOST(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
     }
 
-    protected processCountriesPOST(response: Response): Promise<void> {
+    protected processCountriesPOST(response: HttpResponseBase): Observable<void> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return response.text().then((_responseText) => {
-            return;
-            });
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<void>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
      * @return OK
      */
-    countriesGET(): Promise<void> {
+    countriesGET(): Observable<void> {
         let url_ = this.baseUrl + "/countries";
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: RequestInit = {
-            method: "GET",
-            headers: {
-            }
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processCountriesGET(_response);
-        });
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCountriesGET(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCountriesGET(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
     }
 
-    protected processCountriesGET(response: Response): Promise<void> {
+    protected processCountriesGET(response: HttpResponseBase): Observable<void> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return response.text().then((_responseText) => {
-            return;
-            });
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<void>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
      * @return OK
      */
-    servicesPOST(body: ServiceDto): Promise<void> {
+    servicesPOST(body: ServiceDto): Observable<void> {
         let url_ = this.baseUrl + "/services";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
 
-        let options_: RequestInit = {
+        let options_ : any = {
             body: content_,
-            method: "POST",
-            headers: {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
                 "Content-Type": "application/json",
-            }
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processServicesPOST(_response);
-        });
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processServicesPOST(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processServicesPOST(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
     }
 
-    protected processServicesPOST(response: Response): Promise<void> {
+    protected processServicesPOST(response: HttpResponseBase): Observable<void> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return response.text().then((_responseText) => {
-            return;
-            });
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<void>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
      * @return OK
      */
-    servicesGET(): Promise<void> {
+    servicesGET(): Observable<void> {
         let url_ = this.baseUrl + "/services";
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: RequestInit = {
-            method: "GET",
-            headers: {
-            }
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processServicesGET(_response);
-        });
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processServicesGET(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processServicesGET(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
     }
 
-    protected processServicesGET(response: Response): Promise<void> {
+    protected processServicesGET(response: HttpResponseBase): Observable<void> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return response.text().then((_responseText) => {
-            return;
-            });
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<void>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
      * @return OK
      */
-    currencyPOST(body: CurrencyDto): Promise<void> {
+    applicationsPOST(body: ApplicationInput): Observable<void> {
+        let url_ = this.baseUrl + "/applications";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processApplicationsPOST(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processApplicationsPOST(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processApplicationsPOST(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    applicationsGET(): Observable<GetApplicationsOutput> {
+        let url_ = this.baseUrl + "/applications";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processApplicationsGET(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processApplicationsGET(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<GetApplicationsOutput>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<GetApplicationsOutput>;
+        }));
+    }
+
+    protected processApplicationsGET(response: HttpResponseBase): Observable<GetApplicationsOutput> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as GetApplicationsOutput;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    currencyPOST(body: CurrencyDto): Observable<void> {
         let url_ = this.baseUrl + "/currency";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
 
-        let options_: RequestInit = {
+        let options_ : any = {
             body: content_,
-            method: "POST",
-            headers: {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
                 "Content-Type": "application/json",
-            }
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processCurrencyPOST(_response);
-        });
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCurrencyPOST(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCurrencyPOST(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
     }
 
-    protected processCurrencyPOST(response: Response): Promise<void> {
+    protected processCurrencyPOST(response: HttpResponseBase): Observable<void> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return response.text().then((_responseText) => {
-            return;
-            });
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<void>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
      * @return OK
      */
-    currencyGET(): Promise<CurrencyOutput> {
+    currencyGET(): Observable<CurrencyOutput> {
         let url_ = this.baseUrl + "/currency";
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: RequestInit = {
-            method: "GET",
-            headers: {
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
                 "Accept": "application/json"
-            }
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processCurrencyGET(_response);
-        });
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCurrencyGET(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCurrencyGET(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<CurrencyOutput>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<CurrencyOutput>;
+        }));
     }
 
-    protected processCurrencyGET(response: Response): Promise<CurrencyOutput> {
+    protected processCurrencyGET(response: HttpResponseBase): Observable<CurrencyOutput> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = CurrencyOutput.fromJS(resultData200);
-            return result200;
-            });
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as CurrencyOutput;
+            return _observableOf(result200);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<CurrencyOutput>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
      * @return OK
      */
-    listingsPOST(body: ListingInput): Promise<void> {
+    listingsPOST(body: ListingInput): Observable<void> {
         let url_ = this.baseUrl + "/listings";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
 
-        let options_: RequestInit = {
+        let options_ : any = {
             body: content_,
-            method: "POST",
-            headers: {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
                 "Content-Type": "application/json",
-            }
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processListingsPOST(_response);
-        });
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processListingsPOST(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processListingsPOST(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
     }
 
-    protected processListingsPOST(response: Response): Promise<void> {
+    protected processListingsPOST(response: HttpResponseBase): Observable<void> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return response.text().then((_responseText) => {
-            return;
-            });
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<void>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
      * @return OK
      */
-    listingsGET(): Promise<GetListingsOutput> {
+    listingsGET(): Observable<GetListingsOutput> {
         let url_ = this.baseUrl + "/listings";
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: RequestInit = {
-            method: "GET",
-            headers: {
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
                 "Accept": "application/json"
-            }
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processListingsGET(_response);
-        });
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processListingsGET(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processListingsGET(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<GetListingsOutput>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<GetListingsOutput>;
+        }));
     }
 
-    protected processListingsGET(response: Response): Promise<GetListingsOutput> {
+    protected processListingsGET(response: HttpResponseBase): Observable<GetListingsOutput> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = GetListingsOutput.fromJS(resultData200);
-            return result200;
-            });
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as GetListingsOutput;
+            return _observableOf(result200);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<GetListingsOutput>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
      * @return OK
      */
-    subscriptionsPOST(body: CreateSubscriptionInput): Promise<void> {
+    subscriptionsPOST(body: CreateSubscriptionInput): Observable<void> {
         let url_ = this.baseUrl + "/subscriptions";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
 
-        let options_: RequestInit = {
+        let options_ : any = {
             body: content_,
-            method: "POST",
-            headers: {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
                 "Content-Type": "application/json",
-            }
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processSubscriptionsPOST(_response);
-        });
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSubscriptionsPOST(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSubscriptionsPOST(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
     }
 
-    protected processSubscriptionsPOST(response: Response): Promise<void> {
+    protected processSubscriptionsPOST(response: HttpResponseBase): Observable<void> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return response.text().then((_responseText) => {
-            return;
-            });
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<void>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
      * @return OK
      */
-    subscriptionsAll(): Promise<SubscriptionOutput[]> {
+    subscriptionsAll(): Observable<SubscriptionOutput[]> {
         let url_ = this.baseUrl + "/subscriptions";
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: RequestInit = {
-            method: "GET",
-            headers: {
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
                 "Accept": "application/json"
-            }
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processSubscriptionsAll(_response);
-        });
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSubscriptionsAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSubscriptionsAll(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<SubscriptionOutput[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<SubscriptionOutput[]>;
+        }));
     }
 
-    protected processSubscriptionsAll(response: Response): Promise<SubscriptionOutput[]> {
+    protected processSubscriptionsAll(response: HttpResponseBase): Observable<SubscriptionOutput[]> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(SubscriptionOutput.fromJS(item));
-            }
-            else {
-                result200 = <any>null;
-            }
-            return result200;
-            });
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as SubscriptionOutput[];
+            return _observableOf(result200);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<SubscriptionOutput[]>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
      * @return OK
      */
-    currencyDELETE(currencyId: string): Promise<void> {
+    applicationsDELETE(applicationId: string): Observable<void> {
+        let url_ = this.baseUrl + "/applications/{applicationId}";
+        if (applicationId === undefined || applicationId === null)
+            throw new Error("The parameter 'applicationId' must be defined.");
+        url_ = url_.replace("{applicationId}", encodeURIComponent("" + applicationId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processApplicationsDELETE(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processApplicationsDELETE(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processApplicationsDELETE(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    currencyDELETE(currencyId: string): Observable<void> {
         let url_ = this.baseUrl + "/currency/{currencyId}";
         if (currencyId === undefined || currencyId === null)
             throw new Error("The parameter 'currencyId' must be defined.");
         url_ = url_.replace("{currencyId}", encodeURIComponent("" + currencyId));
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: RequestInit = {
-            method: "DELETE",
-            headers: {
-            }
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processCurrencyDELETE(_response);
-        });
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCurrencyDELETE(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCurrencyDELETE(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
     }
 
-    protected processCurrencyDELETE(response: Response): Promise<void> {
+    protected processCurrencyDELETE(response: HttpResponseBase): Observable<void> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return response.text().then((_responseText) => {
-            return;
-            });
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<void>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
      * @return OK
      */
-    currencyPUT(currencyId: string, body: CurrencyDto): Promise<void> {
+    currencyPUT(currencyId: string, body: CurrencyDto): Observable<void> {
         let url_ = this.baseUrl + "/currency/{currencyId}";
         if (currencyId === undefined || currencyId === null)
             throw new Error("The parameter 'currencyId' must be defined.");
@@ -435,114 +927,258 @@ export class Client {
 
         const content_ = JSON.stringify(body);
 
-        let options_: RequestInit = {
+        let options_ : any = {
             body: content_,
-            method: "PUT",
-            headers: {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
                 "Content-Type": "application/json",
-            }
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processCurrencyPUT(_response);
-        });
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCurrencyPUT(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCurrencyPUT(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
     }
 
-    protected processCurrencyPUT(response: Response): Promise<void> {
+    protected processCurrencyPUT(response: HttpResponseBase): Observable<void> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return response.text().then((_responseText) => {
-            return;
-            });
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<void>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
      * @return OK
      */
-    subscriptionsDELETE(subscriptionId: string): Promise<void> {
-        let url_ = this.baseUrl + "/subscriptions/{subscriptionId}";
-        if (subscriptionId === undefined || subscriptionId === null)
-            throw new Error("The parameter 'subscriptionId' must be defined.");
-        url_ = url_.replace("{subscriptionId}", encodeURIComponent("" + subscriptionId));
+    listingsDELETE(listingId: string): Observable<void> {
+        let url_ = this.baseUrl + "/listings/{listingId}";
+        if (listingId === undefined || listingId === null)
+            throw new Error("The parameter 'listingId' must be defined.");
+        url_ = url_.replace("{listingId}", encodeURIComponent("" + listingId));
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: RequestInit = {
-            method: "DELETE",
-            headers: {
-            }
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processSubscriptionsDELETE(_response);
-        });
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processListingsDELETE(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processListingsDELETE(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
     }
 
-    protected processSubscriptionsDELETE(response: Response): Promise<void> {
+    protected processListingsDELETE(response: HttpResponseBase): Observable<void> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return response.text().then((_responseText) => {
-            return;
-            });
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<void>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
      * @return OK
      */
-    subscriptionsGET(subscriptionId: string): Promise<SubscriptionOutput> {
-        let url_ = this.baseUrl + "/subscriptions/{subscriptionId}";
-        if (subscriptionId === undefined || subscriptionId === null)
-            throw new Error("The parameter 'subscriptionId' must be defined.");
-        url_ = url_.replace("{subscriptionId}", encodeURIComponent("" + subscriptionId));
+    listingsGET2(listingId: string): Observable<ListingDto> {
+        let url_ = this.baseUrl + "/listings/{listingId}";
+        if (listingId === undefined || listingId === null)
+            throw new Error("The parameter 'listingId' must be defined.");
+        url_ = url_.replace("{listingId}", encodeURIComponent("" + listingId));
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: RequestInit = {
-            method: "GET",
-            headers: {
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
                 "Accept": "application/json"
-            }
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processSubscriptionsGET(_response);
-        });
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processListingsGET2(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processListingsGET2(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ListingDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ListingDto>;
+        }));
     }
 
-    protected processSubscriptionsGET(response: Response): Promise<SubscriptionOutput> {
+    protected processListingsGET2(response: HttpResponseBase): Observable<ListingDto> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = SubscriptionOutput.fromJS(resultData200);
-            return result200;
-            });
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as ListingDto;
+            return _observableOf(result200);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<SubscriptionOutput>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
      * @return OK
      */
-    subscriptionsPUT(subscriptionId: string, body: UpdateSubscriptionInput): Promise<void> {
+    subscriptionsDELETE(subscriptionId: string): Observable<void> {
+        let url_ = this.baseUrl + "/subscriptions/{subscriptionId}";
+        if (subscriptionId === undefined || subscriptionId === null)
+            throw new Error("The parameter 'subscriptionId' must be defined.");
+        url_ = url_.replace("{subscriptionId}", encodeURIComponent("" + subscriptionId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
+        };
+
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSubscriptionsDELETE(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSubscriptionsDELETE(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processSubscriptionsDELETE(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    subscriptionsGET(subscriptionId: string): Observable<SubscriptionOutput> {
+        let url_ = this.baseUrl + "/subscriptions/{subscriptionId}";
+        if (subscriptionId === undefined || subscriptionId === null)
+            throw new Error("The parameter 'subscriptionId' must be defined.");
+        url_ = url_.replace("{subscriptionId}", encodeURIComponent("" + subscriptionId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSubscriptionsGET(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSubscriptionsGET(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<SubscriptionOutput>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<SubscriptionOutput>;
+        }));
+    }
+
+    protected processSubscriptionsGET(response: HttpResponseBase): Observable<SubscriptionOutput> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as SubscriptionOutput;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    subscriptionsPUT(subscriptionId: string, body: UpdateSubscriptionInput): Observable<void> {
         let url_ = this.baseUrl + "/subscriptions/{subscriptionId}";
         if (subscriptionId === undefined || subscriptionId === null)
             throw new Error("The parameter 'subscriptionId' must be defined.");
@@ -551,82 +1187,152 @@ export class Client {
 
         const content_ = JSON.stringify(body);
 
-        let options_: RequestInit = {
+        let options_ : any = {
             body: content_,
-            method: "PUT",
-            headers: {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
                 "Content-Type": "application/json",
-            }
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processSubscriptionsPUT(_response);
-        });
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSubscriptionsPUT(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSubscriptionsPUT(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
     }
 
-    protected processSubscriptionsPUT(response: Response): Promise<void> {
+    protected processSubscriptionsPUT(response: HttpResponseBase): Observable<void> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return response.text().then((_responseText) => {
-            return;
-            });
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<void>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
      * @return OK
      */
-    frequencies(): Promise<SubscriptionFrequencyItemDto[]> {
+    paymentMethods(): Observable<PaymentMethodDto[]> {
+        let url_ = this.baseUrl + "/paymentMethods";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processPaymentMethods(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processPaymentMethods(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PaymentMethodDto[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PaymentMethodDto[]>;
+        }));
+    }
+
+    protected processPaymentMethods(response: HttpResponseBase): Observable<PaymentMethodDto[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as PaymentMethodDto[];
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    frequencies(): Observable<SubscriptionFrequencyItemDto[]> {
         let url_ = this.baseUrl + "/subscriptions/frequencies";
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: RequestInit = {
-            method: "GET",
-            headers: {
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
                 "Accept": "application/json"
-            }
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processFrequencies(_response);
-        });
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processFrequencies(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processFrequencies(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<SubscriptionFrequencyItemDto[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<SubscriptionFrequencyItemDto[]>;
+        }));
     }
 
-    protected processFrequencies(response: Response): Promise<SubscriptionFrequencyItemDto[]> {
+    protected processFrequencies(response: HttpResponseBase): Observable<SubscriptionFrequencyItemDto[]> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(SubscriptionFrequencyItemDto.fromJS(item));
-            }
-            else {
-                result200 = <any>null;
-            }
-            return result200;
-            });
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as SubscriptionFrequencyItemDto[];
+            return _observableOf(result200);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<SubscriptionFrequencyItemDto[]>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
      * @return OK
      */
-    removeService(subscriptionId: string, serviceId: string): Promise<void> {
+    removeService(subscriptionId: string, serviceId: string): Observable<void> {
         let url_ = this.baseUrl + "/subscriptions/{subscriptionId}/remove-service/{serviceId}";
         if (subscriptionId === undefined || subscriptionId === null)
             throw new Error("The parameter 'subscriptionId' must be defined.");
@@ -636,36 +1342,50 @@ export class Client {
         url_ = url_.replace("{serviceId}", encodeURIComponent("" + serviceId));
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: RequestInit = {
-            method: "PATCH",
-            headers: {
-            }
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processRemoveService(_response);
-        });
+        return this.http.request("patch", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRemoveService(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRemoveService(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
     }
 
-    protected processRemoveService(response: Response): Promise<void> {
+    protected processRemoveService(response: HttpResponseBase): Observable<void> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return response.text().then((_responseText) => {
-            return;
-            });
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<void>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
      * @return OK
      */
-    addService(subscriptionId: string, serviceId: string): Promise<void> {
+    addService(subscriptionId: string, serviceId: string): Observable<void> {
         let url_ = this.baseUrl + "/subscriptions/{subscriptionId}/add-service/{serviceId}";
         if (subscriptionId === undefined || subscriptionId === null)
             throw new Error("The parameter 'subscriptionId' must be defined.");
@@ -675,161 +1395,212 @@ export class Client {
         url_ = url_.replace("{serviceId}", encodeURIComponent("" + serviceId));
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: RequestInit = {
-            method: "PATCH",
-            headers: {
-            }
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processAddService(_response);
-        });
+        return this.http.request("patch", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processAddService(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processAddService(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
     }
 
-    protected processAddService(response: Response): Promise<void> {
+    protected processAddService(response: HttpResponseBase): Observable<void> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return response.text().then((_responseText) => {
-            return;
-            });
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<void>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
      * @return OK
      */
-    register(body: AccountRegisterDto): Promise<boolean> {
+    register(body: AccountRegisterDto): Observable<boolean> {
         let url_ = this.baseUrl + "/users/register";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
 
-        let options_: RequestInit = {
+        let options_ : any = {
             body: content_,
-            method: "POST",
-            headers: {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
                 "Content-Type": "application/json",
                 "Accept": "application/json"
-            }
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processRegister(_response);
-        });
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRegister(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRegister(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<boolean>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<boolean>;
+        }));
     }
 
-    protected processRegister(response: Response): Promise<boolean> {
+    protected processRegister(response: HttpResponseBase): Observable<boolean> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                result200 = resultData200 !== undefined ? resultData200 : <any>null;
-    
-            return result200;
-            });
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as boolean;
+            return _observableOf(result200);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<boolean>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
      * @return OK
      */
-    login(body: AccountRequest): Promise<TokenResponseDto> {
+    login(body: AccountRequest): Observable<TokenResponseDto> {
         let url_ = this.baseUrl + "/users/login";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
 
-        let options_: RequestInit = {
+        let options_ : any = {
             body: content_,
-            method: "POST",
-            headers: {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
                 "Content-Type": "application/json",
                 "Accept": "application/json"
-            }
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processLogin(_response);
-        });
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processLogin(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processLogin(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<TokenResponseDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<TokenResponseDto>;
+        }));
     }
 
-    protected processLogin(response: Response): Promise<TokenResponseDto> {
+    protected processLogin(response: HttpResponseBase): Observable<TokenResponseDto> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = TokenResponseDto.fromJS(resultData200);
-            return result200;
-            });
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as TokenResponseDto;
+            return _observableOf(result200);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<TokenResponseDto>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
      * @return OK
      */
-    verifyEmail(body: VerifyEmailInput): Promise<boolean> {
+    verifyEmail(body: VerifyEmailInput): Observable<boolean> {
         let url_ = this.baseUrl + "/users/verify-email";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
 
-        let options_: RequestInit = {
+        let options_ : any = {
             body: content_,
-            method: "POST",
-            headers: {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
                 "Content-Type": "application/json",
                 "Accept": "application/json"
-            }
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processVerifyEmail(_response);
-        });
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processVerifyEmail(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processVerifyEmail(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<boolean>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<boolean>;
+        }));
     }
 
-    protected processVerifyEmail(response: Response): Promise<boolean> {
+    protected processVerifyEmail(response: HttpResponseBase): Observable<boolean> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                result200 = resultData200 !== undefined ? resultData200 : <any>null;
-    
-            return result200;
-            });
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as boolean;
+            return _observableOf(result200);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<boolean>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
      * @return OK
      */
-    resendCode(email: string): Promise<boolean> {
+    resendCode(email: string): Observable<boolean> {
         let url_ = this.baseUrl + "/users/resend-code?";
         if (email === undefined || email === null)
             throw new Error("The parameter 'email' must be defined and cannot be null.");
@@ -837,236 +1608,302 @@ export class Client {
             url_ += "email=" + encodeURIComponent("" + email) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: RequestInit = {
-            method: "GET",
-            headers: {
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
                 "Accept": "application/json"
-            }
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processResendCode(_response);
-        });
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processResendCode(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processResendCode(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<boolean>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<boolean>;
+        }));
     }
 
-    protected processResendCode(response: Response): Promise<boolean> {
+    protected processResendCode(response: HttpResponseBase): Observable<boolean> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                result200 = resultData200 !== undefined ? resultData200 : <any>null;
-    
-            return result200;
-            });
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as boolean;
+            return _observableOf(result200);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<boolean>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
      * @return OK
      */
-    meGET(): Promise<void> {
+    meGET(): Observable<void> {
         let url_ = this.baseUrl + "/users/me";
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: RequestInit = {
-            method: "GET",
-            headers: {
-            }
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processMeGET(_response);
-        });
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processMeGET(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processMeGET(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
     }
 
-    protected processMeGET(response: Response): Promise<void> {
+    protected processMeGET(response: HttpResponseBase): Observable<void> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return response.text().then((_responseText) => {
-            return;
-            });
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<void>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
      * @return OK
      */
-    mePUT(body: UpdateUserDto): Promise<void> {
+    mePUT(body: UpdateUserDto): Observable<void> {
         let url_ = this.baseUrl + "/users/me";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
 
-        let options_: RequestInit = {
+        let options_ : any = {
             body: content_,
-            method: "PUT",
-            headers: {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
                 "Content-Type": "application/json",
-            }
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processMePUT(_response);
-        });
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processMePUT(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processMePUT(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
     }
 
-    protected processMePUT(response: Response): Promise<void> {
+    protected processMePUT(response: HttpResponseBase): Observable<void> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return response.text().then((_responseText) => {
-            return;
-            });
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<void>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
      * @return OK
      */
-    usersAll(): Promise<ApplicationUserDto[]> {
+    usersAll(): Observable<ApplicationUserDto[]> {
         let url_ = this.baseUrl + "/users/users";
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: RequestInit = {
-            method: "GET",
-            headers: {
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
                 "Accept": "application/json"
-            }
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processUsersAll(_response);
-        });
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUsersAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUsersAll(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ApplicationUserDto[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ApplicationUserDto[]>;
+        }));
     }
 
-    protected processUsersAll(response: Response): Promise<ApplicationUserDto[]> {
+    protected processUsersAll(response: HttpResponseBase): Observable<ApplicationUserDto[]> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(ApplicationUserDto.fromJS(item));
-            }
-            else {
-                result200 = <any>null;
-            }
-            return result200;
-            });
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as ApplicationUserDto[];
+            return _observableOf(result200);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<ApplicationUserDto[]>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
      * @return OK
      */
-    rolesAll(): Promise<string[]> {
+    rolesAll(): Observable<string[]> {
         let url_ = this.baseUrl + "/users/users/roles";
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: RequestInit = {
-            method: "GET",
-            headers: {
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
                 "Accept": "application/json"
-            }
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processRolesAll(_response);
-        });
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRolesAll(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRolesAll(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<string[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<string[]>;
+        }));
     }
 
-    protected processRolesAll(response: Response): Promise<string[]> {
+    protected processRolesAll(response: HttpResponseBase): Observable<string[]> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            if (Array.isArray(resultData200)) {
-                result200 = [] as any;
-                for (let item of resultData200)
-                    result200!.push(item);
-            }
-            else {
-                result200 = <any>null;
-            }
-            return result200;
-            });
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as string[];
+            return _observableOf(result200);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<string[]>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
      * @return OK
      */
-    updatePassword(body: ChangePasswordDto): Promise<void> {
+    updatePassword(body: ChangePasswordDto): Observable<void> {
         let url_ = this.baseUrl + "/users/me/update-password";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
 
-        let options_: RequestInit = {
+        let options_ : any = {
             body: content_,
-            method: "PUT",
-            headers: {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
                 "Content-Type": "application/json",
-            }
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processUpdatePassword(_response);
-        });
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdatePassword(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdatePassword(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
     }
 
-    protected processUpdatePassword(response: Response): Promise<void> {
+    protected processUpdatePassword(response: HttpResponseBase): Observable<void> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return response.text().then((_responseText) => {
-            return;
-            });
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<void>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
      * @return OK
      */
-    resetPasswordGET(email: string): Promise<void> {
+    resetPasswordGET(email: string): Observable<void> {
         let url_ = this.baseUrl + "/users/me/reset-password?";
         if (email === undefined || email === null)
             throw new Error("The parameter 'email' must be defined and cannot be null.");
@@ -1074,78 +1911,104 @@ export class Client {
             url_ += "email=" + encodeURIComponent("" + email) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: RequestInit = {
-            method: "GET",
-            headers: {
-            }
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processResetPasswordGET(_response);
-        });
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processResetPasswordGET(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processResetPasswordGET(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
     }
 
-    protected processResetPasswordGET(response: Response): Promise<void> {
+    protected processResetPasswordGET(response: HttpResponseBase): Observable<void> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return response.text().then((_responseText) => {
-            return;
-            });
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<void>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
      * @return OK
      */
-    resetPasswordPOST(body: ResetPasswordDto): Promise<boolean> {
+    resetPasswordPOST(body: ResetPasswordDto): Observable<boolean> {
         let url_ = this.baseUrl + "/users/me/reset-password";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
 
-        let options_: RequestInit = {
+        let options_ : any = {
             body: content_,
-            method: "POST",
-            headers: {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
                 "Content-Type": "application/json",
                 "Accept": "application/json"
-            }
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processResetPasswordPOST(_response);
-        });
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processResetPasswordPOST(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processResetPasswordPOST(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<boolean>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<boolean>;
+        }));
     }
 
-    protected processResetPasswordPOST(response: Response): Promise<boolean> {
+    protected processResetPasswordPOST(response: HttpResponseBase): Observable<boolean> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-                result200 = resultData200 !== undefined ? resultData200 : <any>null;
-    
-            return result200;
-            });
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as boolean;
+            return _observableOf(result200);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<boolean>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
      * @return OK
      */
-    users(id: string, body: UpdateUserDto): Promise<void> {
+    users(id: string, body: UpdateUserDto): Observable<void> {
         let url_ = this.baseUrl + "/users/users/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -1154,38 +2017,52 @@ export class Client {
 
         const content_ = JSON.stringify(body);
 
-        let options_: RequestInit = {
+        let options_ : any = {
             body: content_,
-            method: "PUT",
-            headers: {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
                 "Content-Type": "application/json",
-            }
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processUsers(_response);
-        });
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUsers(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUsers(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
     }
 
-    protected processUsers(response: Response): Promise<void> {
+    protected processUsers(response: HttpResponseBase): Observable<void> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return response.text().then((_responseText) => {
-            return;
-            });
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<void>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
      * @return OK
      */
-    password(id: string, body: ChangePasswordDto): Promise<void> {
+    password(id: string, body: ChangePasswordDto): Observable<void> {
         let url_ = this.baseUrl + "/users/users/{id}/password";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -1194,110 +2071,152 @@ export class Client {
 
         const content_ = JSON.stringify(body);
 
-        let options_: RequestInit = {
+        let options_ : any = {
             body: content_,
-            method: "PUT",
-            headers: {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
                 "Content-Type": "application/json",
-            }
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processPassword(_response);
-        });
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processPassword(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processPassword(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
     }
 
-    protected processPassword(response: Response): Promise<void> {
+    protected processPassword(response: HttpResponseBase): Observable<void> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return response.text().then((_responseText) => {
-            return;
-            });
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<void>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
      * @return OK
      */
-    disable(id: string): Promise<void> {
+    disable(id: string): Observable<void> {
         let url_ = this.baseUrl + "/users/users/{id}/disable";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: RequestInit = {
-            method: "POST",
-            headers: {
-            }
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processDisable(_response);
-        });
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDisable(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDisable(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
     }
 
-    protected processDisable(response: Response): Promise<void> {
+    protected processDisable(response: HttpResponseBase): Observable<void> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return response.text().then((_responseText) => {
-            return;
-            });
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<void>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
      * @return OK
      */
-    enable(id: string): Promise<void> {
+    enable(id: string): Observable<void> {
         let url_ = this.baseUrl + "/users/users/{id}/enable";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: RequestInit = {
-            method: "POST",
-            headers: {
-            }
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processEnable(_response);
-        });
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processEnable(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processEnable(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
     }
 
-    protected processEnable(response: Response): Promise<void> {
+    protected processEnable(response: HttpResponseBase): Observable<void> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return response.text().then((_responseText) => {
-            return;
-            });
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<void>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
      * @return OK
      */
-    rolesPOST(id: string, body: RoleDto): Promise<void> {
+    rolesPOST(id: string, body: RoleDto): Observable<void> {
         let url_ = this.baseUrl + "/users/users/{id}/roles";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -1306,38 +2225,52 @@ export class Client {
 
         const content_ = JSON.stringify(body);
 
-        let options_: RequestInit = {
+        let options_ : any = {
             body: content_,
-            method: "POST",
-            headers: {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
                 "Content-Type": "application/json",
-            }
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processRolesPOST(_response);
-        });
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRolesPOST(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRolesPOST(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
     }
 
-    protected processRolesPOST(response: Response): Promise<void> {
+    protected processRolesPOST(response: HttpResponseBase): Observable<void> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return response.text().then((_responseText) => {
-            return;
-            });
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<void>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
      * @return OK
      */
-    rolesDELETE(id: string, role: string): Promise<void> {
+    rolesDELETE(id: string, role: string): Observable<void> {
         let url_ = this.baseUrl + "/users/users/{id}/roles/{role}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -1347,74 +2280,100 @@ export class Client {
         url_ = url_.replace("{role}", encodeURIComponent("" + role));
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: RequestInit = {
-            method: "DELETE",
-            headers: {
-            }
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processRolesDELETE(_response);
-        });
+        return this.http.request("delete", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRolesDELETE(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRolesDELETE(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
     }
 
-    protected processRolesDELETE(response: Response): Promise<void> {
+    protected processRolesDELETE(response: HttpResponseBase): Observable<void> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return response.text().then((_responseText) => {
-            return;
-            });
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<void>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
      * @return OK
      */
-    testAuthentication(): Promise<string> {
+    testAuthentication(): Observable<string> {
         let url_ = this.baseUrl + "/users/test-authentication";
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: RequestInit = {
-            method: "GET",
-            headers: {
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
                 "Accept": "text/plain"
-            }
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processTestAuthentication(_response);
-        });
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processTestAuthentication(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processTestAuthentication(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<string>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<string>;
+        }));
     }
 
-    protected processTestAuthentication(response: Response): Promise<string> {
+    protected processTestAuthentication(response: HttpResponseBase): Observable<string> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
-            let resultData200 = _responseText === "" ? null : _responseText;
-                result200 = resultData200 !== undefined ? resultData200 : <any>null;
-    
-            return result200;
-            });
+            result200 = _responseText === "" ? null : _responseText as string;
+            return _observableOf(result200);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<string>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
      * @return OK
      */
-    addCountry(id: string, countryId: string): Promise<Task> {
+    addCountry(id: string, countryId: string): Observable<Task> {
         let url_ = this.baseUrl + "/services/{id}/add-country?";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -1425,40 +2384,53 @@ export class Client {
             url_ += "countryId=" + encodeURIComponent("" + countryId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: RequestInit = {
-            method: "PATCH",
-            headers: {
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
                 "Accept": "application/json"
-            }
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processAddCountry(_response);
-        });
+        return this.http.request("patch", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processAddCountry(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processAddCountry(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Task>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Task>;
+        }));
     }
 
-    protected processAddCountry(response: Response): Promise<Task> {
+    protected processAddCountry(response: HttpResponseBase): Observable<Task> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = Task.fromJS(resultData200);
-            return result200;
-            });
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as Task;
+            return _observableOf(result200);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<Task>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
      * @return OK
      */
-    removeCountry(id: string, countryId: string): Promise<Task> {
+    removeCountry(id: string, countryId: string): Observable<Task> {
         let url_ = this.baseUrl + "/services/{id}/remove-country?";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -1469,40 +2441,53 @@ export class Client {
             url_ += "countryId=" + encodeURIComponent("" + countryId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
-        let options_: RequestInit = {
-            method: "PATCH",
-            headers: {
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
                 "Accept": "application/json"
-            }
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processRemoveCountry(_response);
-        });
+        return this.http.request("patch", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRemoveCountry(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRemoveCountry(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Task>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Task>;
+        }));
     }
 
-    protected processRemoveCountry(response: Response): Promise<Task> {
+    protected processRemoveCountry(response: HttpResponseBase): Observable<Task> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = Task.fromJS(resultData200);
-            return result200;
-            });
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as Task;
+            return _observableOf(result200);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<Task>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
      * @return OK
      */
-    countriesPUT(id: string, body: CountryDto): Promise<void> {
+    countriesPUT(id: string, body: CountryDto): Observable<void> {
         let url_ = this.baseUrl + "/countries/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -1511,38 +2496,52 @@ export class Client {
 
         const content_ = JSON.stringify(body);
 
-        let options_: RequestInit = {
+        let options_ : any = {
             body: content_,
-            method: "PUT",
-            headers: {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
                 "Content-Type": "application/json",
-            }
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processCountriesPUT(_response);
-        });
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCountriesPUT(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCountriesPUT(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
     }
 
-    protected processCountriesPUT(response: Response): Promise<void> {
+    protected processCountriesPUT(response: HttpResponseBase): Observable<void> {
         const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
         if (status === 200) {
-            return response.text().then((_responseText) => {
-            return;
-            });
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
         } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
+            }));
         }
-        return Promise.resolve<void>(null as any);
+        return _observableOf(null as any);
     }
 
     /**
      * @return OK
      */
-    servicesPUT(id: string, body: ServiceDto): Promise<void> {
+    servicesPUT(id: string, body: ServiceDto): Observable<void> {
         let url_ = this.baseUrl + "/services/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -1551,425 +2550,127 @@ export class Client {
 
         const content_ = JSON.stringify(body);
 
-        let options_: RequestInit = {
+        let options_ : any = {
             body: content_,
-            method: "PUT",
-            headers: {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
                 "Content-Type": "application/json",
-            }
+            })
         };
 
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processServicesPUT(_response);
-        });
-    }
-
-    protected processServicesPUT(response: Response): Promise<void> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            return;
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<void>(null as any);
-    }
-}
-
-export class AccountRegisterDto implements IAccountRegisterDto {
-    email?: string | undefined;
-    password?: string | undefined;
-    firstName?: string | undefined;
-    lastName?: string | undefined;
-    phone?: string | undefined;
-    birthDay?: Date;
-
-    constructor(data?: IAccountRegisterDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.email = _data["email"];
-            this.password = _data["password"];
-            this.firstName = _data["firstName"];
-            this.lastName = _data["lastName"];
-            this.phone = _data["phone"];
-            this.birthDay = _data["birthDay"] ? new Date(_data["birthDay"].toString()) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): AccountRegisterDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new AccountRegisterDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["email"] = this.email;
-        data["password"] = this.password;
-        data["firstName"] = this.firstName;
-        data["lastName"] = this.lastName;
-        data["phone"] = this.phone;
-        data["birthDay"] = this.birthDay ? this.birthDay.toISOString() : <any>undefined;
-        return data;
-    }
-}
-
-export interface IAccountRegisterDto {
-    email?: string | undefined;
-    password?: string | undefined;
-    firstName?: string | undefined;
-    lastName?: string | undefined;
-    phone?: string | undefined;
-    birthDay?: Date;
-}
-
-export class AccountRequest implements IAccountRequest {
-    email?: string | undefined;
-    password?: string | undefined;
-
-    constructor(data?: IAccountRequest) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.email = _data["email"];
-            this.password = _data["password"];
-        }
-    }
-
-    static fromJS(data: any): AccountRequest {
-        data = typeof data === 'object' ? data : {};
-        let result = new AccountRequest();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["email"] = this.email;
-        data["password"] = this.password;
-        return data;
-    }
-}
-
-export interface IAccountRequest {
-    email?: string | undefined;
-    password?: string | undefined;
-}
-
-export class AggregateException implements IAggregateException {
-    targetSite?: MethodBase;
-    readonly data?: { [key: string]: any; } | undefined;
-    innerException?: Exception;
-    helpLink?: string | undefined;
-    source?: string | undefined;
-    hResult?: number;
-    readonly stackTrace?: string | undefined;
-    readonly innerExceptions?: Exception[] | undefined;
-    readonly message?: string | undefined;
-
-    constructor(data?: IAggregateException) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.targetSite = _data["targetSite"] ? MethodBase.fromJS(_data["targetSite"]) : <any>undefined;
-            if (_data["data"]) {
-                (<any>this).data = {} as any;
-                for (let key in _data["data"]) {
-                    if (_data["data"].hasOwnProperty(key))
-                        (<any>(<any>this).data)![key] = _data["data"][key];
+        return this.http.request("put", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processServicesPUT(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processServicesPUT(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
                 }
-            }
-            this.innerException = _data["innerException"] ? Exception.fromJS(_data["innerException"]) : <any>undefined;
-            this.helpLink = _data["helpLink"];
-            this.source = _data["source"];
-            this.hResult = _data["hResult"];
-            (<any>this).stackTrace = _data["stackTrace"];
-            if (Array.isArray(_data["innerExceptions"])) {
-                (<any>this).innerExceptions = [] as any;
-                for (let item of _data["innerExceptions"])
-                    (<any>this).innerExceptions!.push(Exception.fromJS(item));
-            }
-            (<any>this).message = _data["message"];
-        }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
     }
 
-    static fromJS(data: any): AggregateException {
-        data = typeof data === 'object' ? data : {};
-        let result = new AggregateException();
-        result.init(data);
-        return result;
-    }
+    protected processServicesPUT(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
 
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["targetSite"] = this.targetSite ? this.targetSite.toJSON() : <any>undefined;
-        if (this.data) {
-            data["data"] = {};
-            for (let key in this.data) {
-                if (this.data.hasOwnProperty(key))
-                    (<any>data["data"])[key] = (<any>this.data)[key];
-            }
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
         }
-        data["innerException"] = this.innerException ? this.innerException.toJSON() : <any>undefined;
-        data["helpLink"] = this.helpLink;
-        data["source"] = this.source;
-        data["hResult"] = this.hResult;
-        data["stackTrace"] = this.stackTrace;
-        if (Array.isArray(this.innerExceptions)) {
-            data["innerExceptions"] = [];
-            for (let item of this.innerExceptions)
-                data["innerExceptions"].push(item ? item.toJSON() : <any>undefined);
-        }
-        data["message"] = this.message;
-        return data;
+        return _observableOf(null as any);
     }
 }
 
-export interface IAggregateException {
-    targetSite?: MethodBase;
-    data?: { [key: string]: any; } | undefined;
-    innerException?: Exception;
-    helpLink?: string | undefined;
-    source?: string | undefined;
-    hResult?: number;
-    stackTrace?: string | undefined;
-    innerExceptions?: Exception[] | undefined;
-    message?: string | undefined;
+export interface AccountRegisterDto {
+    email: string | undefined;
+    password: string | undefined;
+    firstName: string | undefined;
+    lastName: string | undefined;
+    phone: string | undefined;
+    birthDay: Date;
 }
 
-export class ApplicationUserDto implements IApplicationUserDto {
-    id?: string | undefined;
-    userName?: string | undefined;
-    firstName?: string | undefined;
-    lastName?: string | undefined;
-    isEnabled?: boolean;
-    phone?: string | undefined;
-    birthDay?: Date;
-    roles?: RoleDto[] | undefined;
-
-    constructor(data?: IApplicationUserDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.userName = _data["userName"];
-            this.firstName = _data["firstName"];
-            this.lastName = _data["lastName"];
-            this.isEnabled = _data["isEnabled"];
-            this.phone = _data["phone"];
-            this.birthDay = _data["birthDay"] ? new Date(_data["birthDay"].toString()) : <any>undefined;
-            if (Array.isArray(_data["roles"])) {
-                this.roles = [] as any;
-                for (let item of _data["roles"])
-                    this.roles!.push(RoleDto.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): ApplicationUserDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new ApplicationUserDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["userName"] = this.userName;
-        data["firstName"] = this.firstName;
-        data["lastName"] = this.lastName;
-        data["isEnabled"] = this.isEnabled;
-        data["phone"] = this.phone;
-        data["birthDay"] = this.birthDay ? this.birthDay.toISOString() : <any>undefined;
-        if (Array.isArray(this.roles)) {
-            data["roles"] = [];
-            for (let item of this.roles)
-                data["roles"].push(item ? item.toJSON() : <any>undefined);
-        }
-        return data;
-    }
+export interface AccountRequest {
+    email: string | undefined;
+    password: string | undefined;
 }
 
-export interface IApplicationUserDto {
-    id?: string | undefined;
-    userName?: string | undefined;
-    firstName?: string | undefined;
-    lastName?: string | undefined;
-    isEnabled?: boolean;
-    phone?: string | undefined;
-    birthDay?: Date;
-    roles?: RoleDto[] | undefined;
+export interface AggregateException {
+    targetSite: MethodBase;
+    readonly data: { [key: string]: any; } | undefined;
+    innerException: Exception;
+    helpLink: string | undefined;
+    source: string | undefined;
+    hResult: number;
+    readonly stackTrace: string | undefined;
+    readonly innerExceptions: Exception[] | undefined;
+    readonly message: string | undefined;
 }
 
-export class Assembly implements IAssembly {
-    readonly definedTypes?: TypeInfo[] | undefined;
-    readonly exportedTypes?: Type[] | undefined;
-    readonly codeBase?: string | undefined;
-    entryPoint?: MethodInfo;
-    readonly fullName?: string | undefined;
-    readonly imageRuntimeVersion?: string | undefined;
-    readonly isDynamic?: boolean;
-    readonly location?: string | undefined;
-    readonly reflectionOnly?: boolean;
-    readonly isCollectible?: boolean;
-    readonly isFullyTrusted?: boolean;
-    readonly customAttributes?: CustomAttributeData[] | undefined;
-    readonly escapedCodeBase?: string | undefined;
-    manifestModule?: Module;
-    readonly modules?: Module[] | undefined;
-    readonly globalAssemblyCache?: boolean;
-    readonly hostContext?: number;
-    securityRuleSet?: SecurityRuleSet;
-
-    constructor(data?: IAssembly) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["definedTypes"])) {
-                (<any>this).definedTypes = [] as any;
-                for (let item of _data["definedTypes"])
-                    (<any>this).definedTypes!.push(TypeInfo.fromJS(item));
-            }
-            if (Array.isArray(_data["exportedTypes"])) {
-                (<any>this).exportedTypes = [] as any;
-                for (let item of _data["exportedTypes"])
-                    (<any>this).exportedTypes!.push(Type.fromJS(item));
-            }
-            (<any>this).codeBase = _data["codeBase"];
-            this.entryPoint = _data["entryPoint"] ? MethodInfo.fromJS(_data["entryPoint"]) : <any>undefined;
-            (<any>this).fullName = _data["fullName"];
-            (<any>this).imageRuntimeVersion = _data["imageRuntimeVersion"];
-            (<any>this).isDynamic = _data["isDynamic"];
-            (<any>this).location = _data["location"];
-            (<any>this).reflectionOnly = _data["reflectionOnly"];
-            (<any>this).isCollectible = _data["isCollectible"];
-            (<any>this).isFullyTrusted = _data["isFullyTrusted"];
-            if (Array.isArray(_data["customAttributes"])) {
-                (<any>this).customAttributes = [] as any;
-                for (let item of _data["customAttributes"])
-                    (<any>this).customAttributes!.push(CustomAttributeData.fromJS(item));
-            }
-            (<any>this).escapedCodeBase = _data["escapedCodeBase"];
-            this.manifestModule = _data["manifestModule"] ? Module.fromJS(_data["manifestModule"]) : <any>undefined;
-            if (Array.isArray(_data["modules"])) {
-                (<any>this).modules = [] as any;
-                for (let item of _data["modules"])
-                    (<any>this).modules!.push(Module.fromJS(item));
-            }
-            (<any>this).globalAssemblyCache = _data["globalAssemblyCache"];
-            (<any>this).hostContext = _data["hostContext"];
-            this.securityRuleSet = _data["securityRuleSet"];
-        }
-    }
-
-    static fromJS(data: any): Assembly {
-        data = typeof data === 'object' ? data : {};
-        let result = new Assembly();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.definedTypes)) {
-            data["definedTypes"] = [];
-            for (let item of this.definedTypes)
-                data["definedTypes"].push(item ? item.toJSON() : <any>undefined);
-        }
-        if (Array.isArray(this.exportedTypes)) {
-            data["exportedTypes"] = [];
-            for (let item of this.exportedTypes)
-                data["exportedTypes"].push(item ? item.toJSON() : <any>undefined);
-        }
-        data["codeBase"] = this.codeBase;
-        data["entryPoint"] = this.entryPoint ? this.entryPoint.toJSON() : <any>undefined;
-        data["fullName"] = this.fullName;
-        data["imageRuntimeVersion"] = this.imageRuntimeVersion;
-        data["isDynamic"] = this.isDynamic;
-        data["location"] = this.location;
-        data["reflectionOnly"] = this.reflectionOnly;
-        data["isCollectible"] = this.isCollectible;
-        data["isFullyTrusted"] = this.isFullyTrusted;
-        if (Array.isArray(this.customAttributes)) {
-            data["customAttributes"] = [];
-            for (let item of this.customAttributes)
-                data["customAttributes"].push(item ? item.toJSON() : <any>undefined);
-        }
-        data["escapedCodeBase"] = this.escapedCodeBase;
-        data["manifestModule"] = this.manifestModule ? this.manifestModule.toJSON() : <any>undefined;
-        if (Array.isArray(this.modules)) {
-            data["modules"] = [];
-            for (let item of this.modules)
-                data["modules"].push(item ? item.toJSON() : <any>undefined);
-        }
-        data["globalAssemblyCache"] = this.globalAssemblyCache;
-        data["hostContext"] = this.hostContext;
-        data["securityRuleSet"] = this.securityRuleSet;
-        return data;
-    }
+export interface ApplicationDto {
+    id: string | undefined;
+    lastName: string | undefined;
+    firstName: string | undefined;
+    phone: string | undefined;
+    email: string | undefined;
+    isAdult: boolean;
+    dateCreation: Date;
+    listingId: string | undefined;
+    description: string | undefined;
 }
 
-export interface IAssembly {
-    definedTypes?: TypeInfo[] | undefined;
-    exportedTypes?: Type[] | undefined;
-    codeBase?: string | undefined;
-    entryPoint?: MethodInfo;
-    fullName?: string | undefined;
-    imageRuntimeVersion?: string | undefined;
-    isDynamic?: boolean;
-    location?: string | undefined;
-    reflectionOnly?: boolean;
-    isCollectible?: boolean;
-    isFullyTrusted?: boolean;
-    customAttributes?: CustomAttributeData[] | undefined;
-    escapedCodeBase?: string | undefined;
-    manifestModule?: Module;
-    modules?: Module[] | undefined;
-    globalAssemblyCache?: boolean;
-    hostContext?: number;
-    securityRuleSet?: SecurityRuleSet;
+export interface ApplicationInput {
+    lastName: string | undefined;
+    firstName: string | undefined;
+    phone: string | undefined;
+    email: string | undefined;
+    isAdult: boolean;
+    description: string | undefined;
+    listingId: string | undefined;
+}
+
+export interface ApplicationUserDto {
+    id: string | undefined;
+    userName: string | undefined;
+    firstName: string | undefined;
+    lastName: string | undefined;
+    isEnabled: boolean;
+    phone: string | undefined;
+    birthDay: Date;
+    roles: RoleDto[] | undefined;
+}
+
+export interface Assembly {
+    readonly definedTypes: TypeInfo[] | undefined;
+    readonly exportedTypes: Type[] | undefined;
+    readonly codeBase: string | undefined;
+    entryPoint: MethodInfo;
+    readonly fullName: string | undefined;
+    readonly imageRuntimeVersion: string | undefined;
+    readonly isDynamic: boolean;
+    readonly location: string | undefined;
+    readonly reflectionOnly: boolean;
+    readonly isCollectible: boolean;
+    readonly isFullyTrusted: boolean;
+    readonly customAttributes: CustomAttributeData[] | undefined;
+    readonly escapedCodeBase: string | undefined;
+    manifestModule: Module;
+    readonly modules: Module[] | undefined;
+    readonly globalAssemblyCache: boolean;
+    readonly hostContext: number;
+    securityRuleSet: SecurityRuleSet;
 }
 
 export enum CallingConventions {
@@ -1980,556 +2681,87 @@ export enum CallingConventions {
     _64 = 64,
 }
 
-export class ChangePasswordDto implements IChangePasswordDto {
-    newPassword?: string | undefined;
-
-    constructor(data?: IChangePasswordDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.newPassword = _data["newPassword"];
-        }
-    }
-
-    static fromJS(data: any): ChangePasswordDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new ChangePasswordDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["newPassword"] = this.newPassword;
-        return data;
-    }
+export interface ChangePasswordDto {
+    newPassword: string | undefined;
 }
 
-export interface IChangePasswordDto {
-    newPassword?: string | undefined;
+export interface ConstructorInfo {
+    readonly name: string | undefined;
+    declaringType: Type;
+    reflectedType: Type;
+    module: Module;
+    readonly customAttributes: CustomAttributeData[] | undefined;
+    readonly isCollectible: boolean;
+    readonly metadataToken: number;
+    attributes: MethodAttributes;
+    methodImplementationFlags: MethodImplAttributes;
+    callingConvention: CallingConventions;
+    readonly isAbstract: boolean;
+    readonly isConstructor: boolean;
+    readonly isFinal: boolean;
+    readonly isHideBySig: boolean;
+    readonly isSpecialName: boolean;
+    readonly isStatic: boolean;
+    readonly isVirtual: boolean;
+    readonly isAssembly: boolean;
+    readonly isFamily: boolean;
+    readonly isFamilyAndAssembly: boolean;
+    readonly isFamilyOrAssembly: boolean;
+    readonly isPrivate: boolean;
+    readonly isPublic: boolean;
+    readonly isConstructedGenericMethod: boolean;
+    readonly isGenericMethod: boolean;
+    readonly isGenericMethodDefinition: boolean;
+    readonly containsGenericParameters: boolean;
+    methodHandle: RuntimeMethodHandle;
+    readonly isSecurityCritical: boolean;
+    readonly isSecuritySafeCritical: boolean;
+    readonly isSecurityTransparent: boolean;
+    memberType: MemberTypes;
 }
 
-export class ConstructorInfo implements IConstructorInfo {
-    readonly name?: string | undefined;
-    declaringType?: Type;
-    reflectedType?: Type;
-    module?: Module;
-    readonly customAttributes?: CustomAttributeData[] | undefined;
-    readonly isCollectible?: boolean;
-    readonly metadataToken?: number;
-    attributes?: MethodAttributes;
-    methodImplementationFlags?: MethodImplAttributes;
-    callingConvention?: CallingConventions;
-    readonly isAbstract?: boolean;
-    readonly isConstructor?: boolean;
-    readonly isFinal?: boolean;
-    readonly isHideBySig?: boolean;
-    readonly isSpecialName?: boolean;
-    readonly isStatic?: boolean;
-    readonly isVirtual?: boolean;
-    readonly isAssembly?: boolean;
-    readonly isFamily?: boolean;
-    readonly isFamilyAndAssembly?: boolean;
-    readonly isFamilyOrAssembly?: boolean;
-    readonly isPrivate?: boolean;
-    readonly isPublic?: boolean;
-    readonly isConstructedGenericMethod?: boolean;
-    readonly isGenericMethod?: boolean;
-    readonly isGenericMethodDefinition?: boolean;
-    readonly containsGenericParameters?: boolean;
-    methodHandle?: RuntimeMethodHandle;
-    readonly isSecurityCritical?: boolean;
-    readonly isSecuritySafeCritical?: boolean;
-    readonly isSecurityTransparent?: boolean;
-    memberType?: MemberTypes;
-
-    constructor(data?: IConstructorInfo) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            (<any>this).name = _data["name"];
-            this.declaringType = _data["declaringType"] ? Type.fromJS(_data["declaringType"]) : <any>undefined;
-            this.reflectedType = _data["reflectedType"] ? Type.fromJS(_data["reflectedType"]) : <any>undefined;
-            this.module = _data["module"] ? Module.fromJS(_data["module"]) : <any>undefined;
-            if (Array.isArray(_data["customAttributes"])) {
-                (<any>this).customAttributes = [] as any;
-                for (let item of _data["customAttributes"])
-                    (<any>this).customAttributes!.push(CustomAttributeData.fromJS(item));
-            }
-            (<any>this).isCollectible = _data["isCollectible"];
-            (<any>this).metadataToken = _data["metadataToken"];
-            this.attributes = _data["attributes"];
-            this.methodImplementationFlags = _data["methodImplementationFlags"];
-            this.callingConvention = _data["callingConvention"];
-            (<any>this).isAbstract = _data["isAbstract"];
-            (<any>this).isConstructor = _data["isConstructor"];
-            (<any>this).isFinal = _data["isFinal"];
-            (<any>this).isHideBySig = _data["isHideBySig"];
-            (<any>this).isSpecialName = _data["isSpecialName"];
-            (<any>this).isStatic = _data["isStatic"];
-            (<any>this).isVirtual = _data["isVirtual"];
-            (<any>this).isAssembly = _data["isAssembly"];
-            (<any>this).isFamily = _data["isFamily"];
-            (<any>this).isFamilyAndAssembly = _data["isFamilyAndAssembly"];
-            (<any>this).isFamilyOrAssembly = _data["isFamilyOrAssembly"];
-            (<any>this).isPrivate = _data["isPrivate"];
-            (<any>this).isPublic = _data["isPublic"];
-            (<any>this).isConstructedGenericMethod = _data["isConstructedGenericMethod"];
-            (<any>this).isGenericMethod = _data["isGenericMethod"];
-            (<any>this).isGenericMethodDefinition = _data["isGenericMethodDefinition"];
-            (<any>this).containsGenericParameters = _data["containsGenericParameters"];
-            this.methodHandle = _data["methodHandle"] ? RuntimeMethodHandle.fromJS(_data["methodHandle"]) : <any>undefined;
-            (<any>this).isSecurityCritical = _data["isSecurityCritical"];
-            (<any>this).isSecuritySafeCritical = _data["isSecuritySafeCritical"];
-            (<any>this).isSecurityTransparent = _data["isSecurityTransparent"];
-            this.memberType = _data["memberType"];
-        }
-    }
-
-    static fromJS(data: any): ConstructorInfo {
-        data = typeof data === 'object' ? data : {};
-        let result = new ConstructorInfo();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["name"] = this.name;
-        data["declaringType"] = this.declaringType ? this.declaringType.toJSON() : <any>undefined;
-        data["reflectedType"] = this.reflectedType ? this.reflectedType.toJSON() : <any>undefined;
-        data["module"] = this.module ? this.module.toJSON() : <any>undefined;
-        if (Array.isArray(this.customAttributes)) {
-            data["customAttributes"] = [];
-            for (let item of this.customAttributes)
-                data["customAttributes"].push(item ? item.toJSON() : <any>undefined);
-        }
-        data["isCollectible"] = this.isCollectible;
-        data["metadataToken"] = this.metadataToken;
-        data["attributes"] = this.attributes;
-        data["methodImplementationFlags"] = this.methodImplementationFlags;
-        data["callingConvention"] = this.callingConvention;
-        data["isAbstract"] = this.isAbstract;
-        data["isConstructor"] = this.isConstructor;
-        data["isFinal"] = this.isFinal;
-        data["isHideBySig"] = this.isHideBySig;
-        data["isSpecialName"] = this.isSpecialName;
-        data["isStatic"] = this.isStatic;
-        data["isVirtual"] = this.isVirtual;
-        data["isAssembly"] = this.isAssembly;
-        data["isFamily"] = this.isFamily;
-        data["isFamilyAndAssembly"] = this.isFamilyAndAssembly;
-        data["isFamilyOrAssembly"] = this.isFamilyOrAssembly;
-        data["isPrivate"] = this.isPrivate;
-        data["isPublic"] = this.isPublic;
-        data["isConstructedGenericMethod"] = this.isConstructedGenericMethod;
-        data["isGenericMethod"] = this.isGenericMethod;
-        data["isGenericMethodDefinition"] = this.isGenericMethodDefinition;
-        data["containsGenericParameters"] = this.containsGenericParameters;
-        data["methodHandle"] = this.methodHandle ? this.methodHandle.toJSON() : <any>undefined;
-        data["isSecurityCritical"] = this.isSecurityCritical;
-        data["isSecuritySafeCritical"] = this.isSecuritySafeCritical;
-        data["isSecurityTransparent"] = this.isSecurityTransparent;
-        data["memberType"] = this.memberType;
-        return data;
-    }
+export interface CountryDto {
+    id: string | undefined;
+    name: string | undefined;
+    code: string | undefined;
+    isEnabled: boolean;
 }
 
-export interface IConstructorInfo {
-    name?: string | undefined;
-    declaringType?: Type;
-    reflectedType?: Type;
-    module?: Module;
-    customAttributes?: CustomAttributeData[] | undefined;
-    isCollectible?: boolean;
-    metadataToken?: number;
-    attributes?: MethodAttributes;
-    methodImplementationFlags?: MethodImplAttributes;
-    callingConvention?: CallingConventions;
-    isAbstract?: boolean;
-    isConstructor?: boolean;
-    isFinal?: boolean;
-    isHideBySig?: boolean;
-    isSpecialName?: boolean;
-    isStatic?: boolean;
-    isVirtual?: boolean;
-    isAssembly?: boolean;
-    isFamily?: boolean;
-    isFamilyAndAssembly?: boolean;
-    isFamilyOrAssembly?: boolean;
-    isPrivate?: boolean;
-    isPublic?: boolean;
-    isConstructedGenericMethod?: boolean;
-    isGenericMethod?: boolean;
-    isGenericMethodDefinition?: boolean;
-    containsGenericParameters?: boolean;
-    methodHandle?: RuntimeMethodHandle;
-    isSecurityCritical?: boolean;
-    isSecuritySafeCritical?: boolean;
-    isSecurityTransparent?: boolean;
-    memberType?: MemberTypes;
+export interface CreateSubscriptionInput {
+    name: string | undefined;
+    amount: number;
+    currencyId: string | undefined;
+    frequency: SubscriptionFrequencyDto;
+    serviceIds: string[] | undefined;
 }
 
-export class CountryDto implements ICountryDto {
-    id?: string | undefined;
-    name?: string | undefined;
-    code?: string | undefined;
-    isEnabled?: boolean;
-
-    constructor(data?: ICountryDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.name = _data["name"];
-            this.code = _data["code"];
-            this.isEnabled = _data["isEnabled"];
-        }
-    }
-
-    static fromJS(data: any): CountryDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new CountryDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["name"] = this.name;
-        data["code"] = this.code;
-        data["isEnabled"] = this.isEnabled;
-        return data;
-    }
+export interface CurrencyDto {
+    code: string | undefined;
+    label: string | undefined;
+    symbol: string | undefined;
 }
 
-export interface ICountryDto {
-    id?: string | undefined;
-    name?: string | undefined;
-    code?: string | undefined;
-    isEnabled?: boolean;
+export interface CurrencyOutput {
+    currencies: GetCurrencyDto[] | undefined;
 }
 
-export class CreateSubscriptionInput implements ICreateSubscriptionInput {
-    name?: string | undefined;
-    amount?: number;
-    currencyId?: string | undefined;
-    frequency?: SubscriptionFrequencyDto;
-    serviceIds?: string[] | undefined;
-
-    constructor(data?: ICreateSubscriptionInput) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.name = _data["name"];
-            this.amount = _data["amount"];
-            this.currencyId = _data["currencyId"];
-            this.frequency = _data["frequency"];
-            if (Array.isArray(_data["serviceIds"])) {
-                this.serviceIds = [] as any;
-                for (let item of _data["serviceIds"])
-                    this.serviceIds!.push(item);
-            }
-        }
-    }
-
-    static fromJS(data: any): CreateSubscriptionInput {
-        data = typeof data === 'object' ? data : {};
-        let result = new CreateSubscriptionInput();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["name"] = this.name;
-        data["amount"] = this.amount;
-        data["currencyId"] = this.currencyId;
-        data["frequency"] = this.frequency;
-        if (Array.isArray(this.serviceIds)) {
-            data["serviceIds"] = [];
-            for (let item of this.serviceIds)
-                data["serviceIds"].push(item);
-        }
-        return data;
-    }
+export interface CustomAttributeData {
+    attributeType: Type;
+    constructor: ConstructorInfo;
+    readonly constructorArguments: CustomAttributeTypedArgument[] | undefined;
+    readonly namedArguments: CustomAttributeNamedArgument[] | undefined;
 }
 
-export interface ICreateSubscriptionInput {
-    name?: string | undefined;
-    amount?: number;
-    currencyId?: string | undefined;
-    frequency?: SubscriptionFrequencyDto;
-    serviceIds?: string[] | undefined;
+export interface CustomAttributeNamedArgument {
+    memberInfo: MemberInfo;
+    typedValue: CustomAttributeTypedArgument;
+    readonly memberName: string | undefined;
+    readonly isField: boolean;
 }
 
-export class CurrencyDto implements ICurrencyDto {
-    code?: string | undefined;
-    label?: string | undefined;
-    symbol?: string | undefined;
-
-    constructor(data?: ICurrencyDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.code = _data["code"];
-            this.label = _data["label"];
-            this.symbol = _data["symbol"];
-        }
-    }
-
-    static fromJS(data: any): CurrencyDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new CurrencyDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["code"] = this.code;
-        data["label"] = this.label;
-        data["symbol"] = this.symbol;
-        return data;
-    }
-}
-
-export interface ICurrencyDto {
-    code?: string | undefined;
-    label?: string | undefined;
-    symbol?: string | undefined;
-}
-
-export class CurrencyOutput implements ICurrencyOutput {
-    currencies?: GetCurrencyDto[] | undefined;
-
-    constructor(data?: ICurrencyOutput) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["currencies"])) {
-                this.currencies = [] as any;
-                for (let item of _data["currencies"])
-                    this.currencies!.push(GetCurrencyDto.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): CurrencyOutput {
-        data = typeof data === 'object' ? data : {};
-        let result = new CurrencyOutput();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.currencies)) {
-            data["currencies"] = [];
-            for (let item of this.currencies)
-                data["currencies"].push(item ? item.toJSON() : <any>undefined);
-        }
-        return data;
-    }
-}
-
-export interface ICurrencyOutput {
-    currencies?: GetCurrencyDto[] | undefined;
-}
-
-export class CustomAttributeData implements ICustomAttributeData {
-    attributeType?: Type;
-    constructor_?: ConstructorInfo;
-    readonly constructorArguments?: CustomAttributeTypedArgument[] | undefined;
-    readonly namedArguments?: CustomAttributeNamedArgument[] | undefined;
-
-    constructor(data?: ICustomAttributeData) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.attributeType = _data["attributeType"] ? Type.fromJS(_data["attributeType"]) : <any>undefined;
-            this.constructor_ = _data["constructor"] ? ConstructorInfo.fromJS(_data["constructor"]) : <any>undefined;
-            if (Array.isArray(_data["constructorArguments"])) {
-                (<any>this).constructorArguments = [] as any;
-                for (let item of _data["constructorArguments"])
-                    (<any>this).constructorArguments!.push(CustomAttributeTypedArgument.fromJS(item));
-            }
-            if (Array.isArray(_data["namedArguments"])) {
-                (<any>this).namedArguments = [] as any;
-                for (let item of _data["namedArguments"])
-                    (<any>this).namedArguments!.push(CustomAttributeNamedArgument.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): CustomAttributeData {
-        data = typeof data === 'object' ? data : {};
-        let result = new CustomAttributeData();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["attributeType"] = this.attributeType ? this.attributeType.toJSON() : <any>undefined;
-        data["constructor"] = this.constructor_ ? this.constructor_.toJSON() : <any>undefined;
-        if (Array.isArray(this.constructorArguments)) {
-            data["constructorArguments"] = [];
-            for (let item of this.constructorArguments)
-                data["constructorArguments"].push(item ? item.toJSON() : <any>undefined);
-        }
-        if (Array.isArray(this.namedArguments)) {
-            data["namedArguments"] = [];
-            for (let item of this.namedArguments)
-                data["namedArguments"].push(item ? item.toJSON() : <any>undefined);
-        }
-        return data;
-    }
-}
-
-export interface ICustomAttributeData {
-    attributeType?: Type;
-    constructor_?: ConstructorInfo;
-    constructorArguments?: CustomAttributeTypedArgument[] | undefined;
-    namedArguments?: CustomAttributeNamedArgument[] | undefined;
-}
-
-export class CustomAttributeNamedArgument implements ICustomAttributeNamedArgument {
-    memberInfo?: MemberInfo;
-    typedValue?: CustomAttributeTypedArgument;
-    readonly memberName?: string | undefined;
-    readonly isField?: boolean;
-
-    constructor(data?: ICustomAttributeNamedArgument) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.memberInfo = _data["memberInfo"] ? MemberInfo.fromJS(_data["memberInfo"]) : <any>undefined;
-            this.typedValue = _data["typedValue"] ? CustomAttributeTypedArgument.fromJS(_data["typedValue"]) : <any>undefined;
-            (<any>this).memberName = _data["memberName"];
-            (<any>this).isField = _data["isField"];
-        }
-    }
-
-    static fromJS(data: any): CustomAttributeNamedArgument {
-        data = typeof data === 'object' ? data : {};
-        let result = new CustomAttributeNamedArgument();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["memberInfo"] = this.memberInfo ? this.memberInfo.toJSON() : <any>undefined;
-        data["typedValue"] = this.typedValue ? this.typedValue.toJSON() : <any>undefined;
-        data["memberName"] = this.memberName;
-        data["isField"] = this.isField;
-        return data;
-    }
-}
-
-export interface ICustomAttributeNamedArgument {
-    memberInfo?: MemberInfo;
-    typedValue?: CustomAttributeTypedArgument;
-    memberName?: string | undefined;
-    isField?: boolean;
-}
-
-export class CustomAttributeTypedArgument implements ICustomAttributeTypedArgument {
-    argumentType?: Type;
-    value?: any | undefined;
-
-    constructor(data?: ICustomAttributeTypedArgument) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.argumentType = _data["argumentType"] ? Type.fromJS(_data["argumentType"]) : <any>undefined;
-            this.value = _data["value"];
-        }
-    }
-
-    static fromJS(data: any): CustomAttributeTypedArgument {
-        data = typeof data === 'object' ? data : {};
-        let result = new CustomAttributeTypedArgument();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["argumentType"] = this.argumentType ? this.argumentType.toJSON() : <any>undefined;
-        data["value"] = this.value;
-        return data;
-    }
-}
-
-export interface ICustomAttributeTypedArgument {
-    argumentType?: Type;
-    value?: any | undefined;
+export interface CustomAttributeTypedArgument {
+    argumentType: Type;
+    value: any | undefined;
 }
 
 export enum EventAttributes {
@@ -2538,180 +2770,33 @@ export enum EventAttributes {
     _1024 = 1024,
 }
 
-export class EventInfo implements IEventInfo {
-    readonly name?: string | undefined;
-    declaringType?: Type;
-    reflectedType?: Type;
-    module?: Module;
-    readonly customAttributes?: CustomAttributeData[] | undefined;
-    readonly isCollectible?: boolean;
-    readonly metadataToken?: number;
-    memberType?: MemberTypes;
-    attributes?: EventAttributes;
-    readonly isSpecialName?: boolean;
-    addMethod?: MethodInfo;
-    removeMethod?: MethodInfo;
-    raiseMethod?: MethodInfo;
-    readonly isMulticast?: boolean;
-    eventHandlerType?: Type;
-
-    constructor(data?: IEventInfo) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            (<any>this).name = _data["name"];
-            this.declaringType = _data["declaringType"] ? Type.fromJS(_data["declaringType"]) : <any>undefined;
-            this.reflectedType = _data["reflectedType"] ? Type.fromJS(_data["reflectedType"]) : <any>undefined;
-            this.module = _data["module"] ? Module.fromJS(_data["module"]) : <any>undefined;
-            if (Array.isArray(_data["customAttributes"])) {
-                (<any>this).customAttributes = [] as any;
-                for (let item of _data["customAttributes"])
-                    (<any>this).customAttributes!.push(CustomAttributeData.fromJS(item));
-            }
-            (<any>this).isCollectible = _data["isCollectible"];
-            (<any>this).metadataToken = _data["metadataToken"];
-            this.memberType = _data["memberType"];
-            this.attributes = _data["attributes"];
-            (<any>this).isSpecialName = _data["isSpecialName"];
-            this.addMethod = _data["addMethod"] ? MethodInfo.fromJS(_data["addMethod"]) : <any>undefined;
-            this.removeMethod = _data["removeMethod"] ? MethodInfo.fromJS(_data["removeMethod"]) : <any>undefined;
-            this.raiseMethod = _data["raiseMethod"] ? MethodInfo.fromJS(_data["raiseMethod"]) : <any>undefined;
-            (<any>this).isMulticast = _data["isMulticast"];
-            this.eventHandlerType = _data["eventHandlerType"] ? Type.fromJS(_data["eventHandlerType"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): EventInfo {
-        data = typeof data === 'object' ? data : {};
-        let result = new EventInfo();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["name"] = this.name;
-        data["declaringType"] = this.declaringType ? this.declaringType.toJSON() : <any>undefined;
-        data["reflectedType"] = this.reflectedType ? this.reflectedType.toJSON() : <any>undefined;
-        data["module"] = this.module ? this.module.toJSON() : <any>undefined;
-        if (Array.isArray(this.customAttributes)) {
-            data["customAttributes"] = [];
-            for (let item of this.customAttributes)
-                data["customAttributes"].push(item ? item.toJSON() : <any>undefined);
-        }
-        data["isCollectible"] = this.isCollectible;
-        data["metadataToken"] = this.metadataToken;
-        data["memberType"] = this.memberType;
-        data["attributes"] = this.attributes;
-        data["isSpecialName"] = this.isSpecialName;
-        data["addMethod"] = this.addMethod ? this.addMethod.toJSON() : <any>undefined;
-        data["removeMethod"] = this.removeMethod ? this.removeMethod.toJSON() : <any>undefined;
-        data["raiseMethod"] = this.raiseMethod ? this.raiseMethod.toJSON() : <any>undefined;
-        data["isMulticast"] = this.isMulticast;
-        data["eventHandlerType"] = this.eventHandlerType ? this.eventHandlerType.toJSON() : <any>undefined;
-        return data;
-    }
+export interface EventInfo {
+    readonly name: string | undefined;
+    declaringType: Type;
+    reflectedType: Type;
+    module: Module;
+    readonly customAttributes: CustomAttributeData[] | undefined;
+    readonly isCollectible: boolean;
+    readonly metadataToken: number;
+    memberType: MemberTypes;
+    attributes: EventAttributes;
+    readonly isSpecialName: boolean;
+    addMethod: MethodInfo;
+    removeMethod: MethodInfo;
+    raiseMethod: MethodInfo;
+    readonly isMulticast: boolean;
+    eventHandlerType: Type;
 }
 
-export interface IEventInfo {
-    name?: string | undefined;
-    declaringType?: Type;
-    reflectedType?: Type;
-    module?: Module;
-    customAttributes?: CustomAttributeData[] | undefined;
-    isCollectible?: boolean;
-    metadataToken?: number;
-    memberType?: MemberTypes;
-    attributes?: EventAttributes;
-    isSpecialName?: boolean;
-    addMethod?: MethodInfo;
-    removeMethod?: MethodInfo;
-    raiseMethod?: MethodInfo;
-    isMulticast?: boolean;
-    eventHandlerType?: Type;
-}
-
-export class Exception implements IException {
-    targetSite?: MethodBase;
-    readonly message?: string | undefined;
-    readonly data?: { [key: string]: any; } | undefined;
-    innerException?: Exception;
-    helpLink?: string | undefined;
-    source?: string | undefined;
-    hResult?: number;
-    readonly stackTrace?: string | undefined;
-
-    constructor(data?: IException) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.targetSite = _data["targetSite"] ? MethodBase.fromJS(_data["targetSite"]) : <any>undefined;
-            (<any>this).message = _data["message"];
-            if (_data["data"]) {
-                (<any>this).data = {} as any;
-                for (let key in _data["data"]) {
-                    if (_data["data"].hasOwnProperty(key))
-                        (<any>(<any>this).data)![key] = _data["data"][key];
-                }
-            }
-            this.innerException = _data["innerException"] ? Exception.fromJS(_data["innerException"]) : <any>undefined;
-            this.helpLink = _data["helpLink"];
-            this.source = _data["source"];
-            this.hResult = _data["hResult"];
-            (<any>this).stackTrace = _data["stackTrace"];
-        }
-    }
-
-    static fromJS(data: any): Exception {
-        data = typeof data === 'object' ? data : {};
-        let result = new Exception();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["targetSite"] = this.targetSite ? this.targetSite.toJSON() : <any>undefined;
-        data["message"] = this.message;
-        if (this.data) {
-            data["data"] = {};
-            for (let key in this.data) {
-                if (this.data.hasOwnProperty(key))
-                    (<any>data["data"])[key] = (<any>this.data)[key];
-            }
-        }
-        data["innerException"] = this.innerException ? this.innerException.toJSON() : <any>undefined;
-        data["helpLink"] = this.helpLink;
-        data["source"] = this.source;
-        data["hResult"] = this.hResult;
-        data["stackTrace"] = this.stackTrace;
-        return data;
-    }
-}
-
-export interface IException {
-    targetSite?: MethodBase;
-    message?: string | undefined;
-    data?: { [key: string]: any; } | undefined;
-    innerException?: Exception;
-    helpLink?: string | undefined;
-    source?: string | undefined;
-    hResult?: number;
-    stackTrace?: string | undefined;
+export interface Exception {
+    targetSite: MethodBase;
+    readonly message: string | undefined;
+    readonly data: { [key: string]: any; } | undefined;
+    innerException: Exception;
+    helpLink: string | undefined;
+    source: string | undefined;
+    hResult: number;
+    readonly stackTrace: string | undefined;
 }
 
 export enum FieldAttributes {
@@ -2736,148 +2821,33 @@ export enum FieldAttributes {
     _38144 = 38144,
 }
 
-export class FieldInfo implements IFieldInfo {
-    readonly name?: string | undefined;
-    declaringType?: Type;
-    reflectedType?: Type;
-    module?: Module;
-    readonly customAttributes?: CustomAttributeData[] | undefined;
-    readonly isCollectible?: boolean;
-    readonly metadataToken?: number;
-    memberType?: MemberTypes;
-    attributes?: FieldAttributes;
-    fieldType?: Type;
-    readonly isInitOnly?: boolean;
-    readonly isLiteral?: boolean;
-    readonly isNotSerialized?: boolean;
-    readonly isPinvokeImpl?: boolean;
-    readonly isSpecialName?: boolean;
-    readonly isStatic?: boolean;
-    readonly isAssembly?: boolean;
-    readonly isFamily?: boolean;
-    readonly isFamilyAndAssembly?: boolean;
-    readonly isFamilyOrAssembly?: boolean;
-    readonly isPrivate?: boolean;
-    readonly isPublic?: boolean;
-    readonly isSecurityCritical?: boolean;
-    readonly isSecuritySafeCritical?: boolean;
-    readonly isSecurityTransparent?: boolean;
-    fieldHandle?: RuntimeFieldHandle;
-
-    constructor(data?: IFieldInfo) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            (<any>this).name = _data["name"];
-            this.declaringType = _data["declaringType"] ? Type.fromJS(_data["declaringType"]) : <any>undefined;
-            this.reflectedType = _data["reflectedType"] ? Type.fromJS(_data["reflectedType"]) : <any>undefined;
-            this.module = _data["module"] ? Module.fromJS(_data["module"]) : <any>undefined;
-            if (Array.isArray(_data["customAttributes"])) {
-                (<any>this).customAttributes = [] as any;
-                for (let item of _data["customAttributes"])
-                    (<any>this).customAttributes!.push(CustomAttributeData.fromJS(item));
-            }
-            (<any>this).isCollectible = _data["isCollectible"];
-            (<any>this).metadataToken = _data["metadataToken"];
-            this.memberType = _data["memberType"];
-            this.attributes = _data["attributes"];
-            this.fieldType = _data["fieldType"] ? Type.fromJS(_data["fieldType"]) : <any>undefined;
-            (<any>this).isInitOnly = _data["isInitOnly"];
-            (<any>this).isLiteral = _data["isLiteral"];
-            (<any>this).isNotSerialized = _data["isNotSerialized"];
-            (<any>this).isPinvokeImpl = _data["isPinvokeImpl"];
-            (<any>this).isSpecialName = _data["isSpecialName"];
-            (<any>this).isStatic = _data["isStatic"];
-            (<any>this).isAssembly = _data["isAssembly"];
-            (<any>this).isFamily = _data["isFamily"];
-            (<any>this).isFamilyAndAssembly = _data["isFamilyAndAssembly"];
-            (<any>this).isFamilyOrAssembly = _data["isFamilyOrAssembly"];
-            (<any>this).isPrivate = _data["isPrivate"];
-            (<any>this).isPublic = _data["isPublic"];
-            (<any>this).isSecurityCritical = _data["isSecurityCritical"];
-            (<any>this).isSecuritySafeCritical = _data["isSecuritySafeCritical"];
-            (<any>this).isSecurityTransparent = _data["isSecurityTransparent"];
-            this.fieldHandle = _data["fieldHandle"] ? RuntimeFieldHandle.fromJS(_data["fieldHandle"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): FieldInfo {
-        data = typeof data === 'object' ? data : {};
-        let result = new FieldInfo();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["name"] = this.name;
-        data["declaringType"] = this.declaringType ? this.declaringType.toJSON() : <any>undefined;
-        data["reflectedType"] = this.reflectedType ? this.reflectedType.toJSON() : <any>undefined;
-        data["module"] = this.module ? this.module.toJSON() : <any>undefined;
-        if (Array.isArray(this.customAttributes)) {
-            data["customAttributes"] = [];
-            for (let item of this.customAttributes)
-                data["customAttributes"].push(item ? item.toJSON() : <any>undefined);
-        }
-        data["isCollectible"] = this.isCollectible;
-        data["metadataToken"] = this.metadataToken;
-        data["memberType"] = this.memberType;
-        data["attributes"] = this.attributes;
-        data["fieldType"] = this.fieldType ? this.fieldType.toJSON() : <any>undefined;
-        data["isInitOnly"] = this.isInitOnly;
-        data["isLiteral"] = this.isLiteral;
-        data["isNotSerialized"] = this.isNotSerialized;
-        data["isPinvokeImpl"] = this.isPinvokeImpl;
-        data["isSpecialName"] = this.isSpecialName;
-        data["isStatic"] = this.isStatic;
-        data["isAssembly"] = this.isAssembly;
-        data["isFamily"] = this.isFamily;
-        data["isFamilyAndAssembly"] = this.isFamilyAndAssembly;
-        data["isFamilyOrAssembly"] = this.isFamilyOrAssembly;
-        data["isPrivate"] = this.isPrivate;
-        data["isPublic"] = this.isPublic;
-        data["isSecurityCritical"] = this.isSecurityCritical;
-        data["isSecuritySafeCritical"] = this.isSecuritySafeCritical;
-        data["isSecurityTransparent"] = this.isSecurityTransparent;
-        data["fieldHandle"] = this.fieldHandle ? this.fieldHandle.toJSON() : <any>undefined;
-        return data;
-    }
-}
-
-export interface IFieldInfo {
-    name?: string | undefined;
-    declaringType?: Type;
-    reflectedType?: Type;
-    module?: Module;
-    customAttributes?: CustomAttributeData[] | undefined;
-    isCollectible?: boolean;
-    metadataToken?: number;
-    memberType?: MemberTypes;
-    attributes?: FieldAttributes;
-    fieldType?: Type;
-    isInitOnly?: boolean;
-    isLiteral?: boolean;
-    isNotSerialized?: boolean;
-    isPinvokeImpl?: boolean;
-    isSpecialName?: boolean;
-    isStatic?: boolean;
-    isAssembly?: boolean;
-    isFamily?: boolean;
-    isFamilyAndAssembly?: boolean;
-    isFamilyOrAssembly?: boolean;
-    isPrivate?: boolean;
-    isPublic?: boolean;
-    isSecurityCritical?: boolean;
-    isSecuritySafeCritical?: boolean;
-    isSecurityTransparent?: boolean;
-    fieldHandle?: RuntimeFieldHandle;
+export interface FieldInfo {
+    readonly name: string | undefined;
+    declaringType: Type;
+    reflectedType: Type;
+    module: Module;
+    readonly customAttributes: CustomAttributeData[] | undefined;
+    readonly isCollectible: boolean;
+    readonly metadataToken: number;
+    memberType: MemberTypes;
+    attributes: FieldAttributes;
+    fieldType: Type;
+    readonly isInitOnly: boolean;
+    readonly isLiteral: boolean;
+    readonly isNotSerialized: boolean;
+    readonly isPinvokeImpl: boolean;
+    readonly isSpecialName: boolean;
+    readonly isStatic: boolean;
+    readonly isAssembly: boolean;
+    readonly isFamily: boolean;
+    readonly isFamilyAndAssembly: boolean;
+    readonly isFamilyOrAssembly: boolean;
+    readonly isPrivate: boolean;
+    readonly isPublic: boolean;
+    readonly isSecurityCritical: boolean;
+    readonly isSecuritySafeCritical: boolean;
+    readonly isSecurityTransparent: boolean;
+    fieldHandle: RuntimeFieldHandle;
 }
 
 export enum GenericParameterAttributes {
@@ -2892,156 +2862,25 @@ export enum GenericParameterAttributes {
     _32 = 32,
 }
 
-export class GetCurrencyDto implements IGetCurrencyDto {
-    code?: string | undefined;
-    label?: string | undefined;
-    symbol?: string | undefined;
-    id?: string | undefined;
-
-    constructor(data?: IGetCurrencyDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.code = _data["code"];
-            this.label = _data["label"];
-            this.symbol = _data["symbol"];
-            this.id = _data["id"];
-        }
-    }
-
-    static fromJS(data: any): GetCurrencyDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new GetCurrencyDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["code"] = this.code;
-        data["label"] = this.label;
-        data["symbol"] = this.symbol;
-        data["id"] = this.id;
-        return data;
-    }
+export interface GetApplicationsOutput {
+    applications: ApplicationDto[] | undefined;
 }
 
-export interface IGetCurrencyDto {
-    code?: string | undefined;
-    label?: string | undefined;
-    symbol?: string | undefined;
-    id?: string | undefined;
+export interface GetCurrencyDto {
+    code: string | undefined;
+    label: string | undefined;
+    symbol: string | undefined;
+    id: string | undefined;
 }
 
-export class GetListingsOutput implements IGetListingsOutput {
-    listings?: ListingDto[] | undefined;
-
-    constructor(data?: IGetListingsOutput) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["listings"])) {
-                this.listings = [] as any;
-                for (let item of _data["listings"])
-                    this.listings!.push(ListingDto.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): GetListingsOutput {
-        data = typeof data === 'object' ? data : {};
-        let result = new GetListingsOutput();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.listings)) {
-            data["listings"] = [];
-            for (let item of this.listings)
-                data["listings"].push(item ? item.toJSON() : <any>undefined);
-        }
-        return data;
-    }
+export interface GetListingsOutput {
+    listings: ListingDto[] | undefined;
 }
 
-export interface IGetListingsOutput {
-    listings?: ListingDto[] | undefined;
+export interface ICustomAttributeProvider {
 }
 
-export class ICustomAttributeProvider implements IICustomAttributeProvider {
-
-    constructor(data?: IICustomAttributeProvider) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-    }
-
-    static fromJS(data: any): ICustomAttributeProvider {
-        data = typeof data === 'object' ? data : {};
-        let result = new ICustomAttributeProvider();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        return data;
-    }
-}
-
-export interface IICustomAttributeProvider {
-}
-
-export class IntPtr implements IIntPtr {
-
-    constructor(data?: IIntPtr) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-    }
-
-    static fromJS(data: any): IntPtr {
-        data = typeof data === 'object' ? data : {};
-        let result = new IntPtr();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        return data;
-    }
-}
-
-export interface IIntPtr {
+export interface IntPtr {
 }
 
 export enum LayoutKind {
@@ -3050,280 +2889,58 @@ export enum LayoutKind {
     _3 = 3,
 }
 
-export class ListingDto implements IListingDto {
-    id?: string | undefined;
-    need?: NeedDto;
-    lastName?: string | undefined;
-    firstName?: string | undefined;
-    phone?: string | undefined;
-    email?: string | undefined;
-    isAdult?: boolean;
-    departureDate?: Date | undefined;
-    arrivalDate?: Date | undefined;
-    availableWeightInGrams?: number | undefined;
-    maxTravelDate?: string | undefined;
-    desiredWeightInGrams?: number | undefined;
-    departureLocation?: string | undefined;
-    arrivalLocation?: string | undefined;
-    pricePerGram?: number;
-    currencyId?: string | undefined;
-    serviceId?: string | undefined;
-    paymentMethod?: string | undefined;
-
-    constructor(data?: IListingDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.need = _data["need"] ? NeedDto.fromJS(_data["need"]) : <any>undefined;
-            this.lastName = _data["lastName"];
-            this.firstName = _data["firstName"];
-            this.phone = _data["phone"];
-            this.email = _data["email"];
-            this.isAdult = _data["isAdult"];
-            this.departureDate = _data["departureDate"] ? new Date(_data["departureDate"].toString()) : <any>undefined;
-            this.arrivalDate = _data["arrivalDate"] ? new Date(_data["arrivalDate"].toString()) : <any>undefined;
-            this.availableWeightInGrams = _data["availableWeightInGrams"];
-            this.maxTravelDate = _data["maxTravelDate"];
-            this.desiredWeightInGrams = _data["desiredWeightInGrams"];
-            this.departureLocation = _data["departureLocation"];
-            this.arrivalLocation = _data["arrivalLocation"];
-            this.pricePerGram = _data["pricePerGram"];
-            this.currencyId = _data["currencyId"];
-            this.serviceId = _data["serviceId"];
-            this.paymentMethod = _data["paymentMethod"];
-        }
-    }
-
-    static fromJS(data: any): ListingDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new ListingDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["need"] = this.need ? this.need.toJSON() : <any>undefined;
-        data["lastName"] = this.lastName;
-        data["firstName"] = this.firstName;
-        data["phone"] = this.phone;
-        data["email"] = this.email;
-        data["isAdult"] = this.isAdult;
-        data["departureDate"] = this.departureDate ? this.departureDate.toISOString() : <any>undefined;
-        data["arrivalDate"] = this.arrivalDate ? this.arrivalDate.toISOString() : <any>undefined;
-        data["availableWeightInGrams"] = this.availableWeightInGrams;
-        data["maxTravelDate"] = this.maxTravelDate;
-        data["desiredWeightInGrams"] = this.desiredWeightInGrams;
-        data["departureLocation"] = this.departureLocation;
-        data["arrivalLocation"] = this.arrivalLocation;
-        data["pricePerGram"] = this.pricePerGram;
-        data["currencyId"] = this.currencyId;
-        data["serviceId"] = this.serviceId;
-        data["paymentMethod"] = this.paymentMethod;
-        return data;
-    }
+export interface ListingDto {
+    id: string | undefined;
+    need: NeedDto;
+    lastName: string | undefined;
+    firstName: string | undefined;
+    phone: string | undefined;
+    email: string | undefined;
+    isAdult: boolean;
+    departureDate: Date | undefined;
+    arrivalDate: Date | undefined;
+    availableWeightInGrams: number | undefined;
+    maxTravelDate: Date | undefined;
+    desiredWeightInGrams: number | undefined;
+    departureLocation: string | undefined;
+    arrivalLocation: string | undefined;
+    pricePerGram: number;
+    currencyId: string | undefined;
+    serviceId: string | undefined;
+    paymentMethod: string | undefined;
+    applicationsNumber: number;
+    applications: ApplicationDto[] | undefined;
 }
 
-export interface IListingDto {
-    id?: string | undefined;
-    need?: NeedDto;
-    lastName?: string | undefined;
-    firstName?: string | undefined;
-    phone?: string | undefined;
-    email?: string | undefined;
-    isAdult?: boolean;
-    departureDate?: Date | undefined;
-    arrivalDate?: Date | undefined;
-    availableWeightInGrams?: number | undefined;
-    maxTravelDate?: string | undefined;
-    desiredWeightInGrams?: number | undefined;
-    departureLocation?: string | undefined;
-    arrivalLocation?: string | undefined;
-    pricePerGram?: number;
-    currencyId?: string | undefined;
-    serviceId?: string | undefined;
-    paymentMethod?: string | undefined;
+export interface ListingInput {
+    need: NeedEnumDto;
+    lastName: string | undefined;
+    firstName: string | undefined;
+    phone: string | undefined;
+    email: string | undefined;
+    isAdult: boolean;
+    departureDate: Date | undefined;
+    arrivalDate: Date | undefined;
+    availableWeightInGrams: number | undefined;
+    maxTravelDate: Date | undefined;
+    desiredWeightInGrams: number | undefined;
+    departureLocation: string | undefined;
+    arrivalLocation: string | undefined;
+    pricePerGram: number;
+    currencyId: string | undefined;
+    serviceId: string | undefined;
+    paymentMethod: string | undefined;
 }
 
-export class ListingInput implements IListingInput {
-    need?: NeedEnumDto;
-    lastName?: string | undefined;
-    firstName?: string | undefined;
-    phone?: string | undefined;
-    email?: string | undefined;
-    isAdult?: boolean;
-    departureDate?: Date | undefined;
-    arrivalDate?: Date | undefined;
-    availableWeightInGrams?: number | undefined;
-    maxTravelDate?: string | undefined;
-    desiredWeightInGrams?: number | undefined;
-    departureLocation?: string | undefined;
-    arrivalLocation?: string | undefined;
-    pricePerGram?: number;
-    currencyId?: string | undefined;
-    serviceId?: string | undefined;
-    paymentMethod?: string | undefined;
-
-    constructor(data?: IListingInput) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.need = _data["need"];
-            this.lastName = _data["lastName"];
-            this.firstName = _data["firstName"];
-            this.phone = _data["phone"];
-            this.email = _data["email"];
-            this.isAdult = _data["isAdult"];
-            this.departureDate = _data["departureDate"] ? new Date(_data["departureDate"].toString()) : <any>undefined;
-            this.arrivalDate = _data["arrivalDate"] ? new Date(_data["arrivalDate"].toString()) : <any>undefined;
-            this.availableWeightInGrams = _data["availableWeightInGrams"];
-            this.maxTravelDate = _data["maxTravelDate"];
-            this.desiredWeightInGrams = _data["desiredWeightInGrams"];
-            this.departureLocation = _data["departureLocation"];
-            this.arrivalLocation = _data["arrivalLocation"];
-            this.pricePerGram = _data["pricePerGram"];
-            this.currencyId = _data["currencyId"];
-            this.serviceId = _data["serviceId"];
-            this.paymentMethod = _data["paymentMethod"];
-        }
-    }
-
-    static fromJS(data: any): ListingInput {
-        data = typeof data === 'object' ? data : {};
-        let result = new ListingInput();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["need"] = this.need;
-        data["lastName"] = this.lastName;
-        data["firstName"] = this.firstName;
-        data["phone"] = this.phone;
-        data["email"] = this.email;
-        data["isAdult"] = this.isAdult;
-        data["departureDate"] = this.departureDate ? this.departureDate.toISOString() : <any>undefined;
-        data["arrivalDate"] = this.arrivalDate ? this.arrivalDate.toISOString() : <any>undefined;
-        data["availableWeightInGrams"] = this.availableWeightInGrams;
-        data["maxTravelDate"] = this.maxTravelDate;
-        data["desiredWeightInGrams"] = this.desiredWeightInGrams;
-        data["departureLocation"] = this.departureLocation;
-        data["arrivalLocation"] = this.arrivalLocation;
-        data["pricePerGram"] = this.pricePerGram;
-        data["currencyId"] = this.currencyId;
-        data["serviceId"] = this.serviceId;
-        data["paymentMethod"] = this.paymentMethod;
-        return data;
-    }
-}
-
-export interface IListingInput {
-    need?: NeedEnumDto;
-    lastName?: string | undefined;
-    firstName?: string | undefined;
-    phone?: string | undefined;
-    email?: string | undefined;
-    isAdult?: boolean;
-    departureDate?: Date | undefined;
-    arrivalDate?: Date | undefined;
-    availableWeightInGrams?: number | undefined;
-    maxTravelDate?: string | undefined;
-    desiredWeightInGrams?: number | undefined;
-    departureLocation?: string | undefined;
-    arrivalLocation?: string | undefined;
-    pricePerGram?: number;
-    currencyId?: string | undefined;
-    serviceId?: string | undefined;
-    paymentMethod?: string | undefined;
-}
-
-export class MemberInfo implements IMemberInfo {
-    memberType?: MemberTypes;
-    readonly name?: string | undefined;
-    declaringType?: Type;
-    reflectedType?: Type;
-    module?: Module;
-    readonly customAttributes?: CustomAttributeData[] | undefined;
-    readonly isCollectible?: boolean;
-    readonly metadataToken?: number;
-
-    constructor(data?: IMemberInfo) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.memberType = _data["memberType"];
-            (<any>this).name = _data["name"];
-            this.declaringType = _data["declaringType"] ? Type.fromJS(_data["declaringType"]) : <any>undefined;
-            this.reflectedType = _data["reflectedType"] ? Type.fromJS(_data["reflectedType"]) : <any>undefined;
-            this.module = _data["module"] ? Module.fromJS(_data["module"]) : <any>undefined;
-            if (Array.isArray(_data["customAttributes"])) {
-                (<any>this).customAttributes = [] as any;
-                for (let item of _data["customAttributes"])
-                    (<any>this).customAttributes!.push(CustomAttributeData.fromJS(item));
-            }
-            (<any>this).isCollectible = _data["isCollectible"];
-            (<any>this).metadataToken = _data["metadataToken"];
-        }
-    }
-
-    static fromJS(data: any): MemberInfo {
-        data = typeof data === 'object' ? data : {};
-        let result = new MemberInfo();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["memberType"] = this.memberType;
-        data["name"] = this.name;
-        data["declaringType"] = this.declaringType ? this.declaringType.toJSON() : <any>undefined;
-        data["reflectedType"] = this.reflectedType ? this.reflectedType.toJSON() : <any>undefined;
-        data["module"] = this.module ? this.module.toJSON() : <any>undefined;
-        if (Array.isArray(this.customAttributes)) {
-            data["customAttributes"] = [];
-            for (let item of this.customAttributes)
-                data["customAttributes"].push(item ? item.toJSON() : <any>undefined);
-        }
-        data["isCollectible"] = this.isCollectible;
-        data["metadataToken"] = this.metadataToken;
-        return data;
-    }
-}
-
-export interface IMemberInfo {
-    memberType?: MemberTypes;
-    name?: string | undefined;
-    declaringType?: Type;
-    reflectedType?: Type;
-    module?: Module;
-    customAttributes?: CustomAttributeData[] | undefined;
-    isCollectible?: boolean;
-    metadataToken?: number;
+export interface MemberInfo {
+    memberType: MemberTypes;
+    readonly name: string | undefined;
+    declaringType: Type;
+    reflectedType: Type;
+    module: Module;
+    readonly customAttributes: CustomAttributeData[] | undefined;
+    readonly isCollectible: boolean;
+    readonly metadataToken: number;
 }
 
 export enum MemberTypes {
@@ -3363,172 +2980,39 @@ export enum MethodAttributes {
     _53248 = 53248,
 }
 
-export class MethodBase implements IMethodBase {
-    memberType?: MemberTypes;
-    readonly name?: string | undefined;
-    declaringType?: Type;
-    reflectedType?: Type;
-    module?: Module;
-    readonly customAttributes?: CustomAttributeData[] | undefined;
-    readonly isCollectible?: boolean;
-    readonly metadataToken?: number;
-    attributes?: MethodAttributes;
-    methodImplementationFlags?: MethodImplAttributes;
-    callingConvention?: CallingConventions;
-    readonly isAbstract?: boolean;
-    readonly isConstructor?: boolean;
-    readonly isFinal?: boolean;
-    readonly isHideBySig?: boolean;
-    readonly isSpecialName?: boolean;
-    readonly isStatic?: boolean;
-    readonly isVirtual?: boolean;
-    readonly isAssembly?: boolean;
-    readonly isFamily?: boolean;
-    readonly isFamilyAndAssembly?: boolean;
-    readonly isFamilyOrAssembly?: boolean;
-    readonly isPrivate?: boolean;
-    readonly isPublic?: boolean;
-    readonly isConstructedGenericMethod?: boolean;
-    readonly isGenericMethod?: boolean;
-    readonly isGenericMethodDefinition?: boolean;
-    readonly containsGenericParameters?: boolean;
-    methodHandle?: RuntimeMethodHandle;
-    readonly isSecurityCritical?: boolean;
-    readonly isSecuritySafeCritical?: boolean;
-    readonly isSecurityTransparent?: boolean;
-
-    constructor(data?: IMethodBase) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.memberType = _data["memberType"];
-            (<any>this).name = _data["name"];
-            this.declaringType = _data["declaringType"] ? Type.fromJS(_data["declaringType"]) : <any>undefined;
-            this.reflectedType = _data["reflectedType"] ? Type.fromJS(_data["reflectedType"]) : <any>undefined;
-            this.module = _data["module"] ? Module.fromJS(_data["module"]) : <any>undefined;
-            if (Array.isArray(_data["customAttributes"])) {
-                (<any>this).customAttributes = [] as any;
-                for (let item of _data["customAttributes"])
-                    (<any>this).customAttributes!.push(CustomAttributeData.fromJS(item));
-            }
-            (<any>this).isCollectible = _data["isCollectible"];
-            (<any>this).metadataToken = _data["metadataToken"];
-            this.attributes = _data["attributes"];
-            this.methodImplementationFlags = _data["methodImplementationFlags"];
-            this.callingConvention = _data["callingConvention"];
-            (<any>this).isAbstract = _data["isAbstract"];
-            (<any>this).isConstructor = _data["isConstructor"];
-            (<any>this).isFinal = _data["isFinal"];
-            (<any>this).isHideBySig = _data["isHideBySig"];
-            (<any>this).isSpecialName = _data["isSpecialName"];
-            (<any>this).isStatic = _data["isStatic"];
-            (<any>this).isVirtual = _data["isVirtual"];
-            (<any>this).isAssembly = _data["isAssembly"];
-            (<any>this).isFamily = _data["isFamily"];
-            (<any>this).isFamilyAndAssembly = _data["isFamilyAndAssembly"];
-            (<any>this).isFamilyOrAssembly = _data["isFamilyOrAssembly"];
-            (<any>this).isPrivate = _data["isPrivate"];
-            (<any>this).isPublic = _data["isPublic"];
-            (<any>this).isConstructedGenericMethod = _data["isConstructedGenericMethod"];
-            (<any>this).isGenericMethod = _data["isGenericMethod"];
-            (<any>this).isGenericMethodDefinition = _data["isGenericMethodDefinition"];
-            (<any>this).containsGenericParameters = _data["containsGenericParameters"];
-            this.methodHandle = _data["methodHandle"] ? RuntimeMethodHandle.fromJS(_data["methodHandle"]) : <any>undefined;
-            (<any>this).isSecurityCritical = _data["isSecurityCritical"];
-            (<any>this).isSecuritySafeCritical = _data["isSecuritySafeCritical"];
-            (<any>this).isSecurityTransparent = _data["isSecurityTransparent"];
-        }
-    }
-
-    static fromJS(data: any): MethodBase {
-        data = typeof data === 'object' ? data : {};
-        let result = new MethodBase();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["memberType"] = this.memberType;
-        data["name"] = this.name;
-        data["declaringType"] = this.declaringType ? this.declaringType.toJSON() : <any>undefined;
-        data["reflectedType"] = this.reflectedType ? this.reflectedType.toJSON() : <any>undefined;
-        data["module"] = this.module ? this.module.toJSON() : <any>undefined;
-        if (Array.isArray(this.customAttributes)) {
-            data["customAttributes"] = [];
-            for (let item of this.customAttributes)
-                data["customAttributes"].push(item ? item.toJSON() : <any>undefined);
-        }
-        data["isCollectible"] = this.isCollectible;
-        data["metadataToken"] = this.metadataToken;
-        data["attributes"] = this.attributes;
-        data["methodImplementationFlags"] = this.methodImplementationFlags;
-        data["callingConvention"] = this.callingConvention;
-        data["isAbstract"] = this.isAbstract;
-        data["isConstructor"] = this.isConstructor;
-        data["isFinal"] = this.isFinal;
-        data["isHideBySig"] = this.isHideBySig;
-        data["isSpecialName"] = this.isSpecialName;
-        data["isStatic"] = this.isStatic;
-        data["isVirtual"] = this.isVirtual;
-        data["isAssembly"] = this.isAssembly;
-        data["isFamily"] = this.isFamily;
-        data["isFamilyAndAssembly"] = this.isFamilyAndAssembly;
-        data["isFamilyOrAssembly"] = this.isFamilyOrAssembly;
-        data["isPrivate"] = this.isPrivate;
-        data["isPublic"] = this.isPublic;
-        data["isConstructedGenericMethod"] = this.isConstructedGenericMethod;
-        data["isGenericMethod"] = this.isGenericMethod;
-        data["isGenericMethodDefinition"] = this.isGenericMethodDefinition;
-        data["containsGenericParameters"] = this.containsGenericParameters;
-        data["methodHandle"] = this.methodHandle ? this.methodHandle.toJSON() : <any>undefined;
-        data["isSecurityCritical"] = this.isSecurityCritical;
-        data["isSecuritySafeCritical"] = this.isSecuritySafeCritical;
-        data["isSecurityTransparent"] = this.isSecurityTransparent;
-        return data;
-    }
-}
-
-export interface IMethodBase {
-    memberType?: MemberTypes;
-    name?: string | undefined;
-    declaringType?: Type;
-    reflectedType?: Type;
-    module?: Module;
-    customAttributes?: CustomAttributeData[] | undefined;
-    isCollectible?: boolean;
-    metadataToken?: number;
-    attributes?: MethodAttributes;
-    methodImplementationFlags?: MethodImplAttributes;
-    callingConvention?: CallingConventions;
-    isAbstract?: boolean;
-    isConstructor?: boolean;
-    isFinal?: boolean;
-    isHideBySig?: boolean;
-    isSpecialName?: boolean;
-    isStatic?: boolean;
-    isVirtual?: boolean;
-    isAssembly?: boolean;
-    isFamily?: boolean;
-    isFamilyAndAssembly?: boolean;
-    isFamilyOrAssembly?: boolean;
-    isPrivate?: boolean;
-    isPublic?: boolean;
-    isConstructedGenericMethod?: boolean;
-    isGenericMethod?: boolean;
-    isGenericMethodDefinition?: boolean;
-    containsGenericParameters?: boolean;
-    methodHandle?: RuntimeMethodHandle;
-    isSecurityCritical?: boolean;
-    isSecuritySafeCritical?: boolean;
-    isSecurityTransparent?: boolean;
+export interface MethodBase {
+    memberType: MemberTypes;
+    readonly name: string | undefined;
+    declaringType: Type;
+    reflectedType: Type;
+    module: Module;
+    readonly customAttributes: CustomAttributeData[] | undefined;
+    readonly isCollectible: boolean;
+    readonly metadataToken: number;
+    attributes: MethodAttributes;
+    methodImplementationFlags: MethodImplAttributes;
+    callingConvention: CallingConventions;
+    readonly isAbstract: boolean;
+    readonly isConstructor: boolean;
+    readonly isFinal: boolean;
+    readonly isHideBySig: boolean;
+    readonly isSpecialName: boolean;
+    readonly isStatic: boolean;
+    readonly isVirtual: boolean;
+    readonly isAssembly: boolean;
+    readonly isFamily: boolean;
+    readonly isFamilyAndAssembly: boolean;
+    readonly isFamilyOrAssembly: boolean;
+    readonly isPrivate: boolean;
+    readonly isPublic: boolean;
+    readonly isConstructedGenericMethod: boolean;
+    readonly isGenericMethod: boolean;
+    readonly isGenericMethodDefinition: boolean;
+    readonly containsGenericParameters: boolean;
+    methodHandle: RuntimeMethodHandle;
+    readonly isSecurityCritical: boolean;
+    readonly isSecuritySafeCritical: boolean;
+    readonly isSecurityTransparent: boolean;
 }
 
 export enum MethodImplAttributes {
@@ -3548,336 +3032,63 @@ export enum MethodImplAttributes {
     _65535 = 65535,
 }
 
-export class MethodInfo implements IMethodInfo {
-    readonly name?: string | undefined;
-    declaringType?: Type;
-    reflectedType?: Type;
-    module?: Module;
-    readonly customAttributes?: CustomAttributeData[] | undefined;
-    readonly isCollectible?: boolean;
-    readonly metadataToken?: number;
-    attributes?: MethodAttributes;
-    methodImplementationFlags?: MethodImplAttributes;
-    callingConvention?: CallingConventions;
-    readonly isAbstract?: boolean;
-    readonly isConstructor?: boolean;
-    readonly isFinal?: boolean;
-    readonly isHideBySig?: boolean;
-    readonly isSpecialName?: boolean;
-    readonly isStatic?: boolean;
-    readonly isVirtual?: boolean;
-    readonly isAssembly?: boolean;
-    readonly isFamily?: boolean;
-    readonly isFamilyAndAssembly?: boolean;
-    readonly isFamilyOrAssembly?: boolean;
-    readonly isPrivate?: boolean;
-    readonly isPublic?: boolean;
-    readonly isConstructedGenericMethod?: boolean;
-    readonly isGenericMethod?: boolean;
-    readonly isGenericMethodDefinition?: boolean;
-    readonly containsGenericParameters?: boolean;
-    methodHandle?: RuntimeMethodHandle;
-    readonly isSecurityCritical?: boolean;
-    readonly isSecuritySafeCritical?: boolean;
-    readonly isSecurityTransparent?: boolean;
-    memberType?: MemberTypes;
-    returnParameter?: ParameterInfo;
-    returnType?: Type;
-    returnTypeCustomAttributes?: ICustomAttributeProvider;
-
-    constructor(data?: IMethodInfo) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            (<any>this).name = _data["name"];
-            this.declaringType = _data["declaringType"] ? Type.fromJS(_data["declaringType"]) : <any>undefined;
-            this.reflectedType = _data["reflectedType"] ? Type.fromJS(_data["reflectedType"]) : <any>undefined;
-            this.module = _data["module"] ? Module.fromJS(_data["module"]) : <any>undefined;
-            if (Array.isArray(_data["customAttributes"])) {
-                (<any>this).customAttributes = [] as any;
-                for (let item of _data["customAttributes"])
-                    (<any>this).customAttributes!.push(CustomAttributeData.fromJS(item));
-            }
-            (<any>this).isCollectible = _data["isCollectible"];
-            (<any>this).metadataToken = _data["metadataToken"];
-            this.attributes = _data["attributes"];
-            this.methodImplementationFlags = _data["methodImplementationFlags"];
-            this.callingConvention = _data["callingConvention"];
-            (<any>this).isAbstract = _data["isAbstract"];
-            (<any>this).isConstructor = _data["isConstructor"];
-            (<any>this).isFinal = _data["isFinal"];
-            (<any>this).isHideBySig = _data["isHideBySig"];
-            (<any>this).isSpecialName = _data["isSpecialName"];
-            (<any>this).isStatic = _data["isStatic"];
-            (<any>this).isVirtual = _data["isVirtual"];
-            (<any>this).isAssembly = _data["isAssembly"];
-            (<any>this).isFamily = _data["isFamily"];
-            (<any>this).isFamilyAndAssembly = _data["isFamilyAndAssembly"];
-            (<any>this).isFamilyOrAssembly = _data["isFamilyOrAssembly"];
-            (<any>this).isPrivate = _data["isPrivate"];
-            (<any>this).isPublic = _data["isPublic"];
-            (<any>this).isConstructedGenericMethod = _data["isConstructedGenericMethod"];
-            (<any>this).isGenericMethod = _data["isGenericMethod"];
-            (<any>this).isGenericMethodDefinition = _data["isGenericMethodDefinition"];
-            (<any>this).containsGenericParameters = _data["containsGenericParameters"];
-            this.methodHandle = _data["methodHandle"] ? RuntimeMethodHandle.fromJS(_data["methodHandle"]) : <any>undefined;
-            (<any>this).isSecurityCritical = _data["isSecurityCritical"];
-            (<any>this).isSecuritySafeCritical = _data["isSecuritySafeCritical"];
-            (<any>this).isSecurityTransparent = _data["isSecurityTransparent"];
-            this.memberType = _data["memberType"];
-            this.returnParameter = _data["returnParameter"] ? ParameterInfo.fromJS(_data["returnParameter"]) : <any>undefined;
-            this.returnType = _data["returnType"] ? Type.fromJS(_data["returnType"]) : <any>undefined;
-            this.returnTypeCustomAttributes = _data["returnTypeCustomAttributes"] ? ICustomAttributeProvider.fromJS(_data["returnTypeCustomAttributes"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): MethodInfo {
-        data = typeof data === 'object' ? data : {};
-        let result = new MethodInfo();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["name"] = this.name;
-        data["declaringType"] = this.declaringType ? this.declaringType.toJSON() : <any>undefined;
-        data["reflectedType"] = this.reflectedType ? this.reflectedType.toJSON() : <any>undefined;
-        data["module"] = this.module ? this.module.toJSON() : <any>undefined;
-        if (Array.isArray(this.customAttributes)) {
-            data["customAttributes"] = [];
-            for (let item of this.customAttributes)
-                data["customAttributes"].push(item ? item.toJSON() : <any>undefined);
-        }
-        data["isCollectible"] = this.isCollectible;
-        data["metadataToken"] = this.metadataToken;
-        data["attributes"] = this.attributes;
-        data["methodImplementationFlags"] = this.methodImplementationFlags;
-        data["callingConvention"] = this.callingConvention;
-        data["isAbstract"] = this.isAbstract;
-        data["isConstructor"] = this.isConstructor;
-        data["isFinal"] = this.isFinal;
-        data["isHideBySig"] = this.isHideBySig;
-        data["isSpecialName"] = this.isSpecialName;
-        data["isStatic"] = this.isStatic;
-        data["isVirtual"] = this.isVirtual;
-        data["isAssembly"] = this.isAssembly;
-        data["isFamily"] = this.isFamily;
-        data["isFamilyAndAssembly"] = this.isFamilyAndAssembly;
-        data["isFamilyOrAssembly"] = this.isFamilyOrAssembly;
-        data["isPrivate"] = this.isPrivate;
-        data["isPublic"] = this.isPublic;
-        data["isConstructedGenericMethod"] = this.isConstructedGenericMethod;
-        data["isGenericMethod"] = this.isGenericMethod;
-        data["isGenericMethodDefinition"] = this.isGenericMethodDefinition;
-        data["containsGenericParameters"] = this.containsGenericParameters;
-        data["methodHandle"] = this.methodHandle ? this.methodHandle.toJSON() : <any>undefined;
-        data["isSecurityCritical"] = this.isSecurityCritical;
-        data["isSecuritySafeCritical"] = this.isSecuritySafeCritical;
-        data["isSecurityTransparent"] = this.isSecurityTransparent;
-        data["memberType"] = this.memberType;
-        data["returnParameter"] = this.returnParameter ? this.returnParameter.toJSON() : <any>undefined;
-        data["returnType"] = this.returnType ? this.returnType.toJSON() : <any>undefined;
-        data["returnTypeCustomAttributes"] = this.returnTypeCustomAttributes ? this.returnTypeCustomAttributes.toJSON() : <any>undefined;
-        return data;
-    }
+export interface MethodInfo {
+    readonly name: string | undefined;
+    declaringType: Type;
+    reflectedType: Type;
+    module: Module;
+    readonly customAttributes: CustomAttributeData[] | undefined;
+    readonly isCollectible: boolean;
+    readonly metadataToken: number;
+    attributes: MethodAttributes;
+    methodImplementationFlags: MethodImplAttributes;
+    callingConvention: CallingConventions;
+    readonly isAbstract: boolean;
+    readonly isConstructor: boolean;
+    readonly isFinal: boolean;
+    readonly isHideBySig: boolean;
+    readonly isSpecialName: boolean;
+    readonly isStatic: boolean;
+    readonly isVirtual: boolean;
+    readonly isAssembly: boolean;
+    readonly isFamily: boolean;
+    readonly isFamilyAndAssembly: boolean;
+    readonly isFamilyOrAssembly: boolean;
+    readonly isPrivate: boolean;
+    readonly isPublic: boolean;
+    readonly isConstructedGenericMethod: boolean;
+    readonly isGenericMethod: boolean;
+    readonly isGenericMethodDefinition: boolean;
+    readonly containsGenericParameters: boolean;
+    methodHandle: RuntimeMethodHandle;
+    readonly isSecurityCritical: boolean;
+    readonly isSecuritySafeCritical: boolean;
+    readonly isSecurityTransparent: boolean;
+    memberType: MemberTypes;
+    returnParameter: ParameterInfo;
+    returnType: Type;
+    returnTypeCustomAttributes: ICustomAttributeProvider;
 }
 
-export interface IMethodInfo {
-    name?: string | undefined;
-    declaringType?: Type;
-    reflectedType?: Type;
-    module?: Module;
-    customAttributes?: CustomAttributeData[] | undefined;
-    isCollectible?: boolean;
-    metadataToken?: number;
-    attributes?: MethodAttributes;
-    methodImplementationFlags?: MethodImplAttributes;
-    callingConvention?: CallingConventions;
-    isAbstract?: boolean;
-    isConstructor?: boolean;
-    isFinal?: boolean;
-    isHideBySig?: boolean;
-    isSpecialName?: boolean;
-    isStatic?: boolean;
-    isVirtual?: boolean;
-    isAssembly?: boolean;
-    isFamily?: boolean;
-    isFamilyAndAssembly?: boolean;
-    isFamilyOrAssembly?: boolean;
-    isPrivate?: boolean;
-    isPublic?: boolean;
-    isConstructedGenericMethod?: boolean;
-    isGenericMethod?: boolean;
-    isGenericMethodDefinition?: boolean;
-    containsGenericParameters?: boolean;
-    methodHandle?: RuntimeMethodHandle;
-    isSecurityCritical?: boolean;
-    isSecuritySafeCritical?: boolean;
-    isSecurityTransparent?: boolean;
-    memberType?: MemberTypes;
-    returnParameter?: ParameterInfo;
-    returnType?: Type;
-    returnTypeCustomAttributes?: ICustomAttributeProvider;
+export interface Module {
+    assembly: Assembly;
+    readonly fullyQualifiedName: string | undefined;
+    readonly name: string | undefined;
+    readonly mdStreamVersion: number;
+    readonly moduleVersionId: string;
+    readonly scopeName: string | undefined;
+    moduleHandle: ModuleHandle;
+    readonly customAttributes: CustomAttributeData[] | undefined;
+    readonly metadataToken: number;
 }
 
-export class Module implements IModule {
-    assembly?: Assembly;
-    readonly fullyQualifiedName?: string | undefined;
-    readonly name?: string | undefined;
-    readonly mdStreamVersion?: number;
-    readonly moduleVersionId?: string;
-    readonly scopeName?: string | undefined;
-    moduleHandle?: ModuleHandle;
-    readonly customAttributes?: CustomAttributeData[] | undefined;
-    readonly metadataToken?: number;
-
-    constructor(data?: IModule) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.assembly = _data["assembly"] ? Assembly.fromJS(_data["assembly"]) : <any>undefined;
-            (<any>this).fullyQualifiedName = _data["fullyQualifiedName"];
-            (<any>this).name = _data["name"];
-            (<any>this).mdStreamVersion = _data["mdStreamVersion"];
-            (<any>this).moduleVersionId = _data["moduleVersionId"];
-            (<any>this).scopeName = _data["scopeName"];
-            this.moduleHandle = _data["moduleHandle"] ? ModuleHandle.fromJS(_data["moduleHandle"]) : <any>undefined;
-            if (Array.isArray(_data["customAttributes"])) {
-                (<any>this).customAttributes = [] as any;
-                for (let item of _data["customAttributes"])
-                    (<any>this).customAttributes!.push(CustomAttributeData.fromJS(item));
-            }
-            (<any>this).metadataToken = _data["metadataToken"];
-        }
-    }
-
-    static fromJS(data: any): Module {
-        data = typeof data === 'object' ? data : {};
-        let result = new Module();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["assembly"] = this.assembly ? this.assembly.toJSON() : <any>undefined;
-        data["fullyQualifiedName"] = this.fullyQualifiedName;
-        data["name"] = this.name;
-        data["mdStreamVersion"] = this.mdStreamVersion;
-        data["moduleVersionId"] = this.moduleVersionId;
-        data["scopeName"] = this.scopeName;
-        data["moduleHandle"] = this.moduleHandle ? this.moduleHandle.toJSON() : <any>undefined;
-        if (Array.isArray(this.customAttributes)) {
-            data["customAttributes"] = [];
-            for (let item of this.customAttributes)
-                data["customAttributes"].push(item ? item.toJSON() : <any>undefined);
-        }
-        data["metadataToken"] = this.metadataToken;
-        return data;
-    }
+export interface ModuleHandle {
+    readonly mdStreamVersion: number;
 }
 
-export interface IModule {
-    assembly?: Assembly;
-    fullyQualifiedName?: string | undefined;
-    name?: string | undefined;
-    mdStreamVersion?: number;
-    moduleVersionId?: string;
-    scopeName?: string | undefined;
-    moduleHandle?: ModuleHandle;
-    customAttributes?: CustomAttributeData[] | undefined;
-    metadataToken?: number;
-}
-
-export class ModuleHandle implements IModuleHandle {
-    readonly mdStreamVersion?: number;
-
-    constructor(data?: IModuleHandle) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            (<any>this).mdStreamVersion = _data["mdStreamVersion"];
-        }
-    }
-
-    static fromJS(data: any): ModuleHandle {
-        data = typeof data === 'object' ? data : {};
-        let result = new ModuleHandle();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["mdStreamVersion"] = this.mdStreamVersion;
-        return data;
-    }
-}
-
-export interface IModuleHandle {
-    mdStreamVersion?: number;
-}
-
-export class NeedDto implements INeedDto {
-    key?: NeedEnumDto;
-    label?: string | undefined;
-
-    constructor(data?: INeedDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.key = _data["key"];
-            this.label = _data["label"];
-        }
-    }
-
-    static fromJS(data: any): NeedDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new NeedDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["key"] = this.key;
-        data["label"] = this.label;
-        return data;
-    }
-}
-
-export interface INeedDto {
-    key?: NeedEnumDto;
-    label?: string | undefined;
+export interface NeedDto {
+    key: NeedEnumDto;
+    label: string | undefined;
 }
 
 export enum NeedEnumDto {
@@ -3899,104 +3110,37 @@ export enum ParameterAttributes {
     _61440 = 61440,
 }
 
-export class ParameterInfo implements IParameterInfo {
-    attributes?: ParameterAttributes;
-    member?: MemberInfo;
-    readonly name?: string | undefined;
-    parameterType?: Type;
-    readonly position?: number;
-    readonly isIn?: boolean;
-    readonly isLcid?: boolean;
-    readonly isOptional?: boolean;
-    readonly isOut?: boolean;
-    readonly isRetval?: boolean;
-    readonly defaultValue?: any | undefined;
-    readonly rawDefaultValue?: any | undefined;
-    readonly hasDefaultValue?: boolean;
-    readonly customAttributes?: CustomAttributeData[] | undefined;
-    readonly metadataToken?: number;
-
-    constructor(data?: IParameterInfo) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.attributes = _data["attributes"];
-            this.member = _data["member"] ? MemberInfo.fromJS(_data["member"]) : <any>undefined;
-            (<any>this).name = _data["name"];
-            this.parameterType = _data["parameterType"] ? Type.fromJS(_data["parameterType"]) : <any>undefined;
-            (<any>this).position = _data["position"];
-            (<any>this).isIn = _data["isIn"];
-            (<any>this).isLcid = _data["isLcid"];
-            (<any>this).isOptional = _data["isOptional"];
-            (<any>this).isOut = _data["isOut"];
-            (<any>this).isRetval = _data["isRetval"];
-            (<any>this).defaultValue = _data["defaultValue"];
-            (<any>this).rawDefaultValue = _data["rawDefaultValue"];
-            (<any>this).hasDefaultValue = _data["hasDefaultValue"];
-            if (Array.isArray(_data["customAttributes"])) {
-                (<any>this).customAttributes = [] as any;
-                for (let item of _data["customAttributes"])
-                    (<any>this).customAttributes!.push(CustomAttributeData.fromJS(item));
-            }
-            (<any>this).metadataToken = _data["metadataToken"];
-        }
-    }
-
-    static fromJS(data: any): ParameterInfo {
-        data = typeof data === 'object' ? data : {};
-        let result = new ParameterInfo();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["attributes"] = this.attributes;
-        data["member"] = this.member ? this.member.toJSON() : <any>undefined;
-        data["name"] = this.name;
-        data["parameterType"] = this.parameterType ? this.parameterType.toJSON() : <any>undefined;
-        data["position"] = this.position;
-        data["isIn"] = this.isIn;
-        data["isLcid"] = this.isLcid;
-        data["isOptional"] = this.isOptional;
-        data["isOut"] = this.isOut;
-        data["isRetval"] = this.isRetval;
-        data["defaultValue"] = this.defaultValue;
-        data["rawDefaultValue"] = this.rawDefaultValue;
-        data["hasDefaultValue"] = this.hasDefaultValue;
-        if (Array.isArray(this.customAttributes)) {
-            data["customAttributes"] = [];
-            for (let item of this.customAttributes)
-                data["customAttributes"].push(item ? item.toJSON() : <any>undefined);
-        }
-        data["metadataToken"] = this.metadataToken;
-        return data;
-    }
+export interface ParameterInfo {
+    attributes: ParameterAttributes;
+    member: MemberInfo;
+    readonly name: string | undefined;
+    parameterType: Type;
+    readonly position: number;
+    readonly isIn: boolean;
+    readonly isLcid: boolean;
+    readonly isOptional: boolean;
+    readonly isOut: boolean;
+    readonly isRetval: boolean;
+    readonly defaultValue: any | undefined;
+    readonly rawDefaultValue: any | undefined;
+    readonly hasDefaultValue: boolean;
+    readonly customAttributes: CustomAttributeData[] | undefined;
+    readonly metadataToken: number;
 }
 
-export interface IParameterInfo {
-    attributes?: ParameterAttributes;
-    member?: MemberInfo;
-    name?: string | undefined;
-    parameterType?: Type;
-    position?: number;
-    isIn?: boolean;
-    isLcid?: boolean;
-    isOptional?: boolean;
-    isOut?: boolean;
-    isRetval?: boolean;
-    defaultValue?: any | undefined;
-    rawDefaultValue?: any | undefined;
-    hasDefaultValue?: boolean;
-    customAttributes?: CustomAttributeData[] | undefined;
-    metadataToken?: number;
+export interface PaymentMethodDto {
+    key: PaymentMethodEnumDto;
+    label: string | undefined;
+}
+
+export enum PaymentMethodEnumDto {
+    _0 = 0,
+    _1 = 1,
+    _2 = 2,
+    _3 = 3,
+    _4 = 4,
+    _5 = 5,
+    _6 = 6,
 }
 
 export enum PropertyAttributes {
@@ -4010,292 +3154,44 @@ export enum PropertyAttributes {
     _62464 = 62464,
 }
 
-export class PropertyInfo implements IPropertyInfo {
-    readonly name?: string | undefined;
-    declaringType?: Type;
-    reflectedType?: Type;
-    module?: Module;
-    readonly customAttributes?: CustomAttributeData[] | undefined;
-    readonly isCollectible?: boolean;
-    readonly metadataToken?: number;
-    memberType?: MemberTypes;
-    propertyType?: Type;
-    attributes?: PropertyAttributes;
-    readonly isSpecialName?: boolean;
-    readonly canRead?: boolean;
-    readonly canWrite?: boolean;
-    getMethod?: MethodInfo;
-    setMethod?: MethodInfo;
-
-    constructor(data?: IPropertyInfo) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            (<any>this).name = _data["name"];
-            this.declaringType = _data["declaringType"] ? Type.fromJS(_data["declaringType"]) : <any>undefined;
-            this.reflectedType = _data["reflectedType"] ? Type.fromJS(_data["reflectedType"]) : <any>undefined;
-            this.module = _data["module"] ? Module.fromJS(_data["module"]) : <any>undefined;
-            if (Array.isArray(_data["customAttributes"])) {
-                (<any>this).customAttributes = [] as any;
-                for (let item of _data["customAttributes"])
-                    (<any>this).customAttributes!.push(CustomAttributeData.fromJS(item));
-            }
-            (<any>this).isCollectible = _data["isCollectible"];
-            (<any>this).metadataToken = _data["metadataToken"];
-            this.memberType = _data["memberType"];
-            this.propertyType = _data["propertyType"] ? Type.fromJS(_data["propertyType"]) : <any>undefined;
-            this.attributes = _data["attributes"];
-            (<any>this).isSpecialName = _data["isSpecialName"];
-            (<any>this).canRead = _data["canRead"];
-            (<any>this).canWrite = _data["canWrite"];
-            this.getMethod = _data["getMethod"] ? MethodInfo.fromJS(_data["getMethod"]) : <any>undefined;
-            this.setMethod = _data["setMethod"] ? MethodInfo.fromJS(_data["setMethod"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): PropertyInfo {
-        data = typeof data === 'object' ? data : {};
-        let result = new PropertyInfo();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["name"] = this.name;
-        data["declaringType"] = this.declaringType ? this.declaringType.toJSON() : <any>undefined;
-        data["reflectedType"] = this.reflectedType ? this.reflectedType.toJSON() : <any>undefined;
-        data["module"] = this.module ? this.module.toJSON() : <any>undefined;
-        if (Array.isArray(this.customAttributes)) {
-            data["customAttributes"] = [];
-            for (let item of this.customAttributes)
-                data["customAttributes"].push(item ? item.toJSON() : <any>undefined);
-        }
-        data["isCollectible"] = this.isCollectible;
-        data["metadataToken"] = this.metadataToken;
-        data["memberType"] = this.memberType;
-        data["propertyType"] = this.propertyType ? this.propertyType.toJSON() : <any>undefined;
-        data["attributes"] = this.attributes;
-        data["isSpecialName"] = this.isSpecialName;
-        data["canRead"] = this.canRead;
-        data["canWrite"] = this.canWrite;
-        data["getMethod"] = this.getMethod ? this.getMethod.toJSON() : <any>undefined;
-        data["setMethod"] = this.setMethod ? this.setMethod.toJSON() : <any>undefined;
-        return data;
-    }
+export interface PropertyInfo {
+    readonly name: string | undefined;
+    declaringType: Type;
+    reflectedType: Type;
+    module: Module;
+    readonly customAttributes: CustomAttributeData[] | undefined;
+    readonly isCollectible: boolean;
+    readonly metadataToken: number;
+    memberType: MemberTypes;
+    propertyType: Type;
+    attributes: PropertyAttributes;
+    readonly isSpecialName: boolean;
+    readonly canRead: boolean;
+    readonly canWrite: boolean;
+    getMethod: MethodInfo;
+    setMethod: MethodInfo;
 }
 
-export interface IPropertyInfo {
-    name?: string | undefined;
-    declaringType?: Type;
-    reflectedType?: Type;
-    module?: Module;
-    customAttributes?: CustomAttributeData[] | undefined;
-    isCollectible?: boolean;
-    metadataToken?: number;
-    memberType?: MemberTypes;
-    propertyType?: Type;
-    attributes?: PropertyAttributes;
-    isSpecialName?: boolean;
-    canRead?: boolean;
-    canWrite?: boolean;
-    getMethod?: MethodInfo;
-    setMethod?: MethodInfo;
+export interface ResetPasswordDto {
+    newPassword: string | undefined;
+    email: string | undefined;
+    code: string | undefined;
 }
 
-export class ResetPasswordDto implements IResetPasswordDto {
-    newPassword?: string | undefined;
-    email?: string | undefined;
-    code?: string | undefined;
-
-    constructor(data?: IResetPasswordDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.newPassword = _data["newPassword"];
-            this.email = _data["email"];
-            this.code = _data["code"];
-        }
-    }
-
-    static fromJS(data: any): ResetPasswordDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new ResetPasswordDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["newPassword"] = this.newPassword;
-        data["email"] = this.email;
-        data["code"] = this.code;
-        return data;
-    }
+export interface RoleDto {
+    role: string | undefined;
 }
 
-export interface IResetPasswordDto {
-    newPassword?: string | undefined;
-    email?: string | undefined;
-    code?: string | undefined;
+export interface RuntimeFieldHandle {
+    value: IntPtr;
 }
 
-export class RoleDto implements IRoleDto {
-    role?: string | undefined;
-
-    constructor(data?: IRoleDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.role = _data["role"];
-        }
-    }
-
-    static fromJS(data: any): RoleDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new RoleDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["role"] = this.role;
-        return data;
-    }
+export interface RuntimeMethodHandle {
+    value: IntPtr;
 }
 
-export interface IRoleDto {
-    role?: string | undefined;
-}
-
-export class RuntimeFieldHandle implements IRuntimeFieldHandle {
-    value?: IntPtr;
-
-    constructor(data?: IRuntimeFieldHandle) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.value = _data["value"] ? IntPtr.fromJS(_data["value"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): RuntimeFieldHandle {
-        data = typeof data === 'object' ? data : {};
-        let result = new RuntimeFieldHandle();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["value"] = this.value ? this.value.toJSON() : <any>undefined;
-        return data;
-    }
-}
-
-export interface IRuntimeFieldHandle {
-    value?: IntPtr;
-}
-
-export class RuntimeMethodHandle implements IRuntimeMethodHandle {
-    value?: IntPtr;
-
-    constructor(data?: IRuntimeMethodHandle) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.value = _data["value"] ? IntPtr.fromJS(_data["value"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): RuntimeMethodHandle {
-        data = typeof data === 'object' ? data : {};
-        let result = new RuntimeMethodHandle();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["value"] = this.value ? this.value.toJSON() : <any>undefined;
-        return data;
-    }
-}
-
-export interface IRuntimeMethodHandle {
-    value?: IntPtr;
-}
-
-export class RuntimeTypeHandle implements IRuntimeTypeHandle {
-    value?: IntPtr;
-
-    constructor(data?: IRuntimeTypeHandle) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.value = _data["value"] ? IntPtr.fromJS(_data["value"]) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): RuntimeTypeHandle {
-        data = typeof data === 'object' ? data : {};
-        let result = new RuntimeTypeHandle();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["value"] = this.value ? this.value.toJSON() : <any>undefined;
-        return data;
-    }
-}
-
-export interface IRuntimeTypeHandle {
-    value?: IntPtr;
+export interface RuntimeTypeHandle {
+    value: IntPtr;
 }
 
 export enum SecurityRuleSet {
@@ -4304,104 +3200,17 @@ export enum SecurityRuleSet {
     _2 = 2,
 }
 
-export class ServiceDto implements IServiceDto {
-    id?: string | undefined;
-    name?: string | undefined;
-    description?: string | undefined;
-    isEnabled?: boolean;
-    countries?: CountryDto[] | undefined;
-
-    constructor(data?: IServiceDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.name = _data["name"];
-            this.description = _data["description"];
-            this.isEnabled = _data["isEnabled"];
-            if (Array.isArray(_data["countries"])) {
-                this.countries = [] as any;
-                for (let item of _data["countries"])
-                    this.countries!.push(CountryDto.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): ServiceDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new ServiceDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["name"] = this.name;
-        data["description"] = this.description;
-        data["isEnabled"] = this.isEnabled;
-        if (Array.isArray(this.countries)) {
-            data["countries"] = [];
-            for (let item of this.countries)
-                data["countries"].push(item ? item.toJSON() : <any>undefined);
-        }
-        return data;
-    }
+export interface ServiceDto {
+    id: string | undefined;
+    name: string | undefined;
+    description: string | undefined;
+    isEnabled: boolean;
+    countries: CountryDto[] | undefined;
 }
 
-export interface IServiceDto {
-    id?: string | undefined;
-    name?: string | undefined;
-    description?: string | undefined;
-    isEnabled?: boolean;
-    countries?: CountryDto[] | undefined;
-}
-
-export class StructLayoutAttribute implements IStructLayoutAttribute {
-    readonly typeId?: any | undefined;
-    value?: LayoutKind;
-
-    constructor(data?: IStructLayoutAttribute) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            (<any>this).typeId = _data["typeId"];
-            this.value = _data["value"];
-        }
-    }
-
-    static fromJS(data: any): StructLayoutAttribute {
-        data = typeof data === 'object' ? data : {};
-        let result = new StructLayoutAttribute();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["typeId"] = this.typeId;
-        data["value"] = this.value;
-        return data;
-    }
-}
-
-export interface IStructLayoutAttribute {
-    typeId?: any | undefined;
-    value?: LayoutKind;
+export interface StructLayoutAttribute {
+    readonly typeId: any | undefined;
+    value: LayoutKind;
 }
 
 export enum SubscriptionFrequencyDto {
@@ -4411,176 +3220,30 @@ export enum SubscriptionFrequencyDto {
     YEARLY = "YEARLY",
 }
 
-export class SubscriptionFrequencyItemDto implements ISubscriptionFrequencyItemDto {
-    label?: string | undefined;
-    frequency?: SubscriptionFrequencyDto;
-
-    constructor(data?: ISubscriptionFrequencyItemDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.label = _data["label"];
-            this.frequency = _data["frequency"];
-        }
-    }
-
-    static fromJS(data: any): SubscriptionFrequencyItemDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new SubscriptionFrequencyItemDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["label"] = this.label;
-        data["frequency"] = this.frequency;
-        return data;
-    }
+export interface SubscriptionFrequencyItemDto {
+    label: string | undefined;
+    frequency: SubscriptionFrequencyDto;
 }
 
-export interface ISubscriptionFrequencyItemDto {
-    label?: string | undefined;
-    frequency?: SubscriptionFrequencyDto;
+export interface SubscriptionOutput {
+    id: string | undefined;
+    name: string | undefined;
+    amount: number;
+    currency: CurrencyDto;
+    frequency: SubscriptionFrequencyDto;
+    services: ServiceDto[] | undefined;
 }
 
-export class SubscriptionOutput implements ISubscriptionOutput {
-    id?: string | undefined;
-    name?: string | undefined;
-    amount?: number;
-    currency?: CurrencyDto;
-    frequency?: SubscriptionFrequencyDto;
-    services?: ServiceDto[] | undefined;
-
-    constructor(data?: ISubscriptionOutput) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.name = _data["name"];
-            this.amount = _data["amount"];
-            this.currency = _data["currency"] ? CurrencyDto.fromJS(_data["currency"]) : <any>undefined;
-            this.frequency = _data["frequency"];
-            if (Array.isArray(_data["services"])) {
-                this.services = [] as any;
-                for (let item of _data["services"])
-                    this.services!.push(ServiceDto.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): SubscriptionOutput {
-        data = typeof data === 'object' ? data : {};
-        let result = new SubscriptionOutput();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["name"] = this.name;
-        data["amount"] = this.amount;
-        data["currency"] = this.currency ? this.currency.toJSON() : <any>undefined;
-        data["frequency"] = this.frequency;
-        if (Array.isArray(this.services)) {
-            data["services"] = [];
-            for (let item of this.services)
-                data["services"].push(item ? item.toJSON() : <any>undefined);
-        }
-        return data;
-    }
-}
-
-export interface ISubscriptionOutput {
-    id?: string | undefined;
-    name?: string | undefined;
-    amount?: number;
-    currency?: CurrencyDto;
-    frequency?: SubscriptionFrequencyDto;
-    services?: ServiceDto[] | undefined;
-}
-
-export class Task implements ITask {
-    readonly id?: number;
-    exception?: AggregateException;
-    status?: TaskStatus;
-    readonly isCanceled?: boolean;
-    readonly isCompleted?: boolean;
-    readonly isCompletedSuccessfully?: boolean;
-    creationOptions?: TaskCreationOptions;
-    readonly asyncState?: any | undefined;
-    readonly isFaulted?: boolean;
-
-    constructor(data?: ITask) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            (<any>this).id = _data["id"];
-            this.exception = _data["exception"] ? AggregateException.fromJS(_data["exception"]) : <any>undefined;
-            this.status = _data["status"];
-            (<any>this).isCanceled = _data["isCanceled"];
-            (<any>this).isCompleted = _data["isCompleted"];
-            (<any>this).isCompletedSuccessfully = _data["isCompletedSuccessfully"];
-            this.creationOptions = _data["creationOptions"];
-            (<any>this).asyncState = _data["asyncState"];
-            (<any>this).isFaulted = _data["isFaulted"];
-        }
-    }
-
-    static fromJS(data: any): Task {
-        data = typeof data === 'object' ? data : {};
-        let result = new Task();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["exception"] = this.exception ? this.exception.toJSON() : <any>undefined;
-        data["status"] = this.status;
-        data["isCanceled"] = this.isCanceled;
-        data["isCompleted"] = this.isCompleted;
-        data["isCompletedSuccessfully"] = this.isCompletedSuccessfully;
-        data["creationOptions"] = this.creationOptions;
-        data["asyncState"] = this.asyncState;
-        data["isFaulted"] = this.isFaulted;
-        return data;
-    }
-}
-
-export interface ITask {
-    id?: number;
-    exception?: AggregateException;
-    status?: TaskStatus;
-    isCanceled?: boolean;
-    isCompleted?: boolean;
-    isCompletedSuccessfully?: boolean;
-    creationOptions?: TaskCreationOptions;
-    asyncState?: any | undefined;
-    isFaulted?: boolean;
+export interface Task {
+    readonly id: number;
+    exception: AggregateException;
+    status: TaskStatus;
+    readonly isCanceled: boolean;
+    readonly isCompleted: boolean;
+    readonly isCompletedSuccessfully: boolean;
+    creationOptions: TaskCreationOptions;
+    readonly asyncState: any | undefined;
+    readonly isFaulted: boolean;
 }
 
 export enum TaskCreationOptions {
@@ -4604,384 +3267,85 @@ export enum TaskStatus {
     _7 = 7,
 }
 
-export class TokenResponseDto implements ITokenResponseDto {
-    accessToken?: string | undefined;
-    refreshToken?: string | undefined;
-
-    constructor(data?: ITokenResponseDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.accessToken = _data["accessToken"];
-            this.refreshToken = _data["refreshToken"];
-        }
-    }
-
-    static fromJS(data: any): TokenResponseDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new TokenResponseDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["accessToken"] = this.accessToken;
-        data["refreshToken"] = this.refreshToken;
-        return data;
-    }
+export interface TokenResponseDto {
+    accessToken: string | undefined;
+    refreshToken: string | undefined;
 }
 
-export interface ITokenResponseDto {
-    accessToken?: string | undefined;
-    refreshToken?: string | undefined;
-}
-
-export class Type implements IType {
-    readonly name?: string | undefined;
-    readonly customAttributes?: CustomAttributeData[] | undefined;
-    readonly isCollectible?: boolean;
-    readonly metadataToken?: number;
-    memberType?: MemberTypes;
-    readonly namespace?: string | undefined;
-    readonly assemblyQualifiedName?: string | undefined;
-    readonly fullName?: string | undefined;
-    assembly?: Assembly;
-    module?: Module;
-    readonly isInterface?: boolean;
-    readonly isNested?: boolean;
-    declaringType?: Type;
-    declaringMethod?: MethodBase;
-    reflectedType?: Type;
-    underlyingSystemType?: Type;
-    readonly isTypeDefinition?: boolean;
-    readonly isArray?: boolean;
-    readonly isByRef?: boolean;
-    readonly isPointer?: boolean;
-    readonly isConstructedGenericType?: boolean;
-    readonly isGenericParameter?: boolean;
-    readonly isGenericTypeParameter?: boolean;
-    readonly isGenericMethodParameter?: boolean;
-    readonly isGenericType?: boolean;
-    readonly isGenericTypeDefinition?: boolean;
-    readonly isSZArray?: boolean;
-    readonly isVariableBoundArray?: boolean;
-    readonly isByRefLike?: boolean;
-    readonly isFunctionPointer?: boolean;
-    readonly isUnmanagedFunctionPointer?: boolean;
-    readonly hasElementType?: boolean;
-    readonly genericTypeArguments?: Type[] | undefined;
-    readonly genericParameterPosition?: number;
-    genericParameterAttributes?: GenericParameterAttributes;
-    attributes?: TypeAttributes;
-    readonly isAbstract?: boolean;
-    readonly isImport?: boolean;
-    readonly isSealed?: boolean;
-    readonly isSpecialName?: boolean;
-    readonly isClass?: boolean;
-    readonly isNestedAssembly?: boolean;
-    readonly isNestedFamANDAssem?: boolean;
-    readonly isNestedFamily?: boolean;
-    readonly isNestedFamORAssem?: boolean;
-    readonly isNestedPrivate?: boolean;
-    readonly isNestedPublic?: boolean;
-    readonly isNotPublic?: boolean;
-    readonly isPublic?: boolean;
-    readonly isAutoLayout?: boolean;
-    readonly isExplicitLayout?: boolean;
-    readonly isLayoutSequential?: boolean;
-    readonly isAnsiClass?: boolean;
-    readonly isAutoClass?: boolean;
-    readonly isUnicodeClass?: boolean;
-    readonly isCOMObject?: boolean;
-    readonly isContextful?: boolean;
-    readonly isEnum?: boolean;
-    readonly isMarshalByRef?: boolean;
-    readonly isPrimitive?: boolean;
-    readonly isValueType?: boolean;
-    readonly isSignatureType?: boolean;
-    readonly isSecurityCritical?: boolean;
-    readonly isSecuritySafeCritical?: boolean;
-    readonly isSecurityTransparent?: boolean;
-    structLayoutAttribute?: StructLayoutAttribute;
-    typeInitializer?: ConstructorInfo;
-    typeHandle?: RuntimeTypeHandle;
-    readonly guid?: string;
-    baseType?: Type;
-    readonly isSerializable?: boolean;
-    readonly containsGenericParameters?: boolean;
-    readonly isVisible?: boolean;
-
-    constructor(data?: IType) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            (<any>this).name = _data["name"];
-            if (Array.isArray(_data["customAttributes"])) {
-                (<any>this).customAttributes = [] as any;
-                for (let item of _data["customAttributes"])
-                    (<any>this).customAttributes!.push(CustomAttributeData.fromJS(item));
-            }
-            (<any>this).isCollectible = _data["isCollectible"];
-            (<any>this).metadataToken = _data["metadataToken"];
-            this.memberType = _data["memberType"];
-            (<any>this).namespace = _data["namespace"];
-            (<any>this).assemblyQualifiedName = _data["assemblyQualifiedName"];
-            (<any>this).fullName = _data["fullName"];
-            this.assembly = _data["assembly"] ? Assembly.fromJS(_data["assembly"]) : <any>undefined;
-            this.module = _data["module"] ? Module.fromJS(_data["module"]) : <any>undefined;
-            (<any>this).isInterface = _data["isInterface"];
-            (<any>this).isNested = _data["isNested"];
-            this.declaringType = _data["declaringType"] ? Type.fromJS(_data["declaringType"]) : <any>undefined;
-            this.declaringMethod = _data["declaringMethod"] ? MethodBase.fromJS(_data["declaringMethod"]) : <any>undefined;
-            this.reflectedType = _data["reflectedType"] ? Type.fromJS(_data["reflectedType"]) : <any>undefined;
-            this.underlyingSystemType = _data["underlyingSystemType"] ? Type.fromJS(_data["underlyingSystemType"]) : <any>undefined;
-            (<any>this).isTypeDefinition = _data["isTypeDefinition"];
-            (<any>this).isArray = _data["isArray"];
-            (<any>this).isByRef = _data["isByRef"];
-            (<any>this).isPointer = _data["isPointer"];
-            (<any>this).isConstructedGenericType = _data["isConstructedGenericType"];
-            (<any>this).isGenericParameter = _data["isGenericParameter"];
-            (<any>this).isGenericTypeParameter = _data["isGenericTypeParameter"];
-            (<any>this).isGenericMethodParameter = _data["isGenericMethodParameter"];
-            (<any>this).isGenericType = _data["isGenericType"];
-            (<any>this).isGenericTypeDefinition = _data["isGenericTypeDefinition"];
-            (<any>this).isSZArray = _data["isSZArray"];
-            (<any>this).isVariableBoundArray = _data["isVariableBoundArray"];
-            (<any>this).isByRefLike = _data["isByRefLike"];
-            (<any>this).isFunctionPointer = _data["isFunctionPointer"];
-            (<any>this).isUnmanagedFunctionPointer = _data["isUnmanagedFunctionPointer"];
-            (<any>this).hasElementType = _data["hasElementType"];
-            if (Array.isArray(_data["genericTypeArguments"])) {
-                (<any>this).genericTypeArguments = [] as any;
-                for (let item of _data["genericTypeArguments"])
-                    (<any>this).genericTypeArguments!.push(Type.fromJS(item));
-            }
-            (<any>this).genericParameterPosition = _data["genericParameterPosition"];
-            this.genericParameterAttributes = _data["genericParameterAttributes"];
-            this.attributes = _data["attributes"];
-            (<any>this).isAbstract = _data["isAbstract"];
-            (<any>this).isImport = _data["isImport"];
-            (<any>this).isSealed = _data["isSealed"];
-            (<any>this).isSpecialName = _data["isSpecialName"];
-            (<any>this).isClass = _data["isClass"];
-            (<any>this).isNestedAssembly = _data["isNestedAssembly"];
-            (<any>this).isNestedFamANDAssem = _data["isNestedFamANDAssem"];
-            (<any>this).isNestedFamily = _data["isNestedFamily"];
-            (<any>this).isNestedFamORAssem = _data["isNestedFamORAssem"];
-            (<any>this).isNestedPrivate = _data["isNestedPrivate"];
-            (<any>this).isNestedPublic = _data["isNestedPublic"];
-            (<any>this).isNotPublic = _data["isNotPublic"];
-            (<any>this).isPublic = _data["isPublic"];
-            (<any>this).isAutoLayout = _data["isAutoLayout"];
-            (<any>this).isExplicitLayout = _data["isExplicitLayout"];
-            (<any>this).isLayoutSequential = _data["isLayoutSequential"];
-            (<any>this).isAnsiClass = _data["isAnsiClass"];
-            (<any>this).isAutoClass = _data["isAutoClass"];
-            (<any>this).isUnicodeClass = _data["isUnicodeClass"];
-            (<any>this).isCOMObject = _data["isCOMObject"];
-            (<any>this).isContextful = _data["isContextful"];
-            (<any>this).isEnum = _data["isEnum"];
-            (<any>this).isMarshalByRef = _data["isMarshalByRef"];
-            (<any>this).isPrimitive = _data["isPrimitive"];
-            (<any>this).isValueType = _data["isValueType"];
-            (<any>this).isSignatureType = _data["isSignatureType"];
-            (<any>this).isSecurityCritical = _data["isSecurityCritical"];
-            (<any>this).isSecuritySafeCritical = _data["isSecuritySafeCritical"];
-            (<any>this).isSecurityTransparent = _data["isSecurityTransparent"];
-            this.structLayoutAttribute = _data["structLayoutAttribute"] ? StructLayoutAttribute.fromJS(_data["structLayoutAttribute"]) : <any>undefined;
-            this.typeInitializer = _data["typeInitializer"] ? ConstructorInfo.fromJS(_data["typeInitializer"]) : <any>undefined;
-            this.typeHandle = _data["typeHandle"] ? RuntimeTypeHandle.fromJS(_data["typeHandle"]) : <any>undefined;
-            (<any>this).guid = _data["guid"];
-            this.baseType = _data["baseType"] ? Type.fromJS(_data["baseType"]) : <any>undefined;
-            (<any>this).isSerializable = _data["isSerializable"];
-            (<any>this).containsGenericParameters = _data["containsGenericParameters"];
-            (<any>this).isVisible = _data["isVisible"];
-        }
-    }
-
-    static fromJS(data: any): Type {
-        data = typeof data === 'object' ? data : {};
-        let result = new Type();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["name"] = this.name;
-        if (Array.isArray(this.customAttributes)) {
-            data["customAttributes"] = [];
-            for (let item of this.customAttributes)
-                data["customAttributes"].push(item ? item.toJSON() : <any>undefined);
-        }
-        data["isCollectible"] = this.isCollectible;
-        data["metadataToken"] = this.metadataToken;
-        data["memberType"] = this.memberType;
-        data["namespace"] = this.namespace;
-        data["assemblyQualifiedName"] = this.assemblyQualifiedName;
-        data["fullName"] = this.fullName;
-        data["assembly"] = this.assembly ? this.assembly.toJSON() : <any>undefined;
-        data["module"] = this.module ? this.module.toJSON() : <any>undefined;
-        data["isInterface"] = this.isInterface;
-        data["isNested"] = this.isNested;
-        data["declaringType"] = this.declaringType ? this.declaringType.toJSON() : <any>undefined;
-        data["declaringMethod"] = this.declaringMethod ? this.declaringMethod.toJSON() : <any>undefined;
-        data["reflectedType"] = this.reflectedType ? this.reflectedType.toJSON() : <any>undefined;
-        data["underlyingSystemType"] = this.underlyingSystemType ? this.underlyingSystemType.toJSON() : <any>undefined;
-        data["isTypeDefinition"] = this.isTypeDefinition;
-        data["isArray"] = this.isArray;
-        data["isByRef"] = this.isByRef;
-        data["isPointer"] = this.isPointer;
-        data["isConstructedGenericType"] = this.isConstructedGenericType;
-        data["isGenericParameter"] = this.isGenericParameter;
-        data["isGenericTypeParameter"] = this.isGenericTypeParameter;
-        data["isGenericMethodParameter"] = this.isGenericMethodParameter;
-        data["isGenericType"] = this.isGenericType;
-        data["isGenericTypeDefinition"] = this.isGenericTypeDefinition;
-        data["isSZArray"] = this.isSZArray;
-        data["isVariableBoundArray"] = this.isVariableBoundArray;
-        data["isByRefLike"] = this.isByRefLike;
-        data["isFunctionPointer"] = this.isFunctionPointer;
-        data["isUnmanagedFunctionPointer"] = this.isUnmanagedFunctionPointer;
-        data["hasElementType"] = this.hasElementType;
-        if (Array.isArray(this.genericTypeArguments)) {
-            data["genericTypeArguments"] = [];
-            for (let item of this.genericTypeArguments)
-                data["genericTypeArguments"].push(item ? item.toJSON() : <any>undefined);
-        }
-        data["genericParameterPosition"] = this.genericParameterPosition;
-        data["genericParameterAttributes"] = this.genericParameterAttributes;
-        data["attributes"] = this.attributes;
-        data["isAbstract"] = this.isAbstract;
-        data["isImport"] = this.isImport;
-        data["isSealed"] = this.isSealed;
-        data["isSpecialName"] = this.isSpecialName;
-        data["isClass"] = this.isClass;
-        data["isNestedAssembly"] = this.isNestedAssembly;
-        data["isNestedFamANDAssem"] = this.isNestedFamANDAssem;
-        data["isNestedFamily"] = this.isNestedFamily;
-        data["isNestedFamORAssem"] = this.isNestedFamORAssem;
-        data["isNestedPrivate"] = this.isNestedPrivate;
-        data["isNestedPublic"] = this.isNestedPublic;
-        data["isNotPublic"] = this.isNotPublic;
-        data["isPublic"] = this.isPublic;
-        data["isAutoLayout"] = this.isAutoLayout;
-        data["isExplicitLayout"] = this.isExplicitLayout;
-        data["isLayoutSequential"] = this.isLayoutSequential;
-        data["isAnsiClass"] = this.isAnsiClass;
-        data["isAutoClass"] = this.isAutoClass;
-        data["isUnicodeClass"] = this.isUnicodeClass;
-        data["isCOMObject"] = this.isCOMObject;
-        data["isContextful"] = this.isContextful;
-        data["isEnum"] = this.isEnum;
-        data["isMarshalByRef"] = this.isMarshalByRef;
-        data["isPrimitive"] = this.isPrimitive;
-        data["isValueType"] = this.isValueType;
-        data["isSignatureType"] = this.isSignatureType;
-        data["isSecurityCritical"] = this.isSecurityCritical;
-        data["isSecuritySafeCritical"] = this.isSecuritySafeCritical;
-        data["isSecurityTransparent"] = this.isSecurityTransparent;
-        data["structLayoutAttribute"] = this.structLayoutAttribute ? this.structLayoutAttribute.toJSON() : <any>undefined;
-        data["typeInitializer"] = this.typeInitializer ? this.typeInitializer.toJSON() : <any>undefined;
-        data["typeHandle"] = this.typeHandle ? this.typeHandle.toJSON() : <any>undefined;
-        data["guid"] = this.guid;
-        data["baseType"] = this.baseType ? this.baseType.toJSON() : <any>undefined;
-        data["isSerializable"] = this.isSerializable;
-        data["containsGenericParameters"] = this.containsGenericParameters;
-        data["isVisible"] = this.isVisible;
-        return data;
-    }
-}
-
-export interface IType {
-    name?: string | undefined;
-    customAttributes?: CustomAttributeData[] | undefined;
-    isCollectible?: boolean;
-    metadataToken?: number;
-    memberType?: MemberTypes;
-    namespace?: string | undefined;
-    assemblyQualifiedName?: string | undefined;
-    fullName?: string | undefined;
-    assembly?: Assembly;
-    module?: Module;
-    isInterface?: boolean;
-    isNested?: boolean;
-    declaringType?: Type;
-    declaringMethod?: MethodBase;
-    reflectedType?: Type;
-    underlyingSystemType?: Type;
-    isTypeDefinition?: boolean;
-    isArray?: boolean;
-    isByRef?: boolean;
-    isPointer?: boolean;
-    isConstructedGenericType?: boolean;
-    isGenericParameter?: boolean;
-    isGenericTypeParameter?: boolean;
-    isGenericMethodParameter?: boolean;
-    isGenericType?: boolean;
-    isGenericTypeDefinition?: boolean;
-    isSZArray?: boolean;
-    isVariableBoundArray?: boolean;
-    isByRefLike?: boolean;
-    isFunctionPointer?: boolean;
-    isUnmanagedFunctionPointer?: boolean;
-    hasElementType?: boolean;
-    genericTypeArguments?: Type[] | undefined;
-    genericParameterPosition?: number;
-    genericParameterAttributes?: GenericParameterAttributes;
-    attributes?: TypeAttributes;
-    isAbstract?: boolean;
-    isImport?: boolean;
-    isSealed?: boolean;
-    isSpecialName?: boolean;
-    isClass?: boolean;
-    isNestedAssembly?: boolean;
-    isNestedFamANDAssem?: boolean;
-    isNestedFamily?: boolean;
-    isNestedFamORAssem?: boolean;
-    isNestedPrivate?: boolean;
-    isNestedPublic?: boolean;
-    isNotPublic?: boolean;
-    isPublic?: boolean;
-    isAutoLayout?: boolean;
-    isExplicitLayout?: boolean;
-    isLayoutSequential?: boolean;
-    isAnsiClass?: boolean;
-    isAutoClass?: boolean;
-    isUnicodeClass?: boolean;
-    isCOMObject?: boolean;
-    isContextful?: boolean;
-    isEnum?: boolean;
-    isMarshalByRef?: boolean;
-    isPrimitive?: boolean;
-    isValueType?: boolean;
-    isSignatureType?: boolean;
-    isSecurityCritical?: boolean;
-    isSecuritySafeCritical?: boolean;
-    isSecurityTransparent?: boolean;
-    structLayoutAttribute?: StructLayoutAttribute;
-    typeInitializer?: ConstructorInfo;
-    typeHandle?: RuntimeTypeHandle;
-    guid?: string;
-    baseType?: Type;
-    isSerializable?: boolean;
-    containsGenericParameters?: boolean;
-    isVisible?: boolean;
+export interface Type {
+    readonly name: string | undefined;
+    readonly customAttributes: CustomAttributeData[] | undefined;
+    readonly isCollectible: boolean;
+    readonly metadataToken: number;
+    memberType: MemberTypes;
+    readonly namespace: string | undefined;
+    readonly assemblyQualifiedName: string | undefined;
+    readonly fullName: string | undefined;
+    assembly: Assembly;
+    module: Module;
+    readonly isInterface: boolean;
+    readonly isNested: boolean;
+    declaringType: Type;
+    declaringMethod: MethodBase;
+    reflectedType: Type;
+    underlyingSystemType: Type;
+    readonly isTypeDefinition: boolean;
+    readonly isArray: boolean;
+    readonly isByRef: boolean;
+    readonly isPointer: boolean;
+    readonly isConstructedGenericType: boolean;
+    readonly isGenericParameter: boolean;
+    readonly isGenericTypeParameter: boolean;
+    readonly isGenericMethodParameter: boolean;
+    readonly isGenericType: boolean;
+    readonly isGenericTypeDefinition: boolean;
+    readonly isSZArray: boolean;
+    readonly isVariableBoundArray: boolean;
+    readonly isByRefLike: boolean;
+    readonly isFunctionPointer: boolean;
+    readonly isUnmanagedFunctionPointer: boolean;
+    readonly hasElementType: boolean;
+    readonly genericTypeArguments: Type[] | undefined;
+    readonly genericParameterPosition: number;
+    genericParameterAttributes: GenericParameterAttributes;
+    attributes: TypeAttributes;
+    readonly isAbstract: boolean;
+    readonly isImport: boolean;
+    readonly isSealed: boolean;
+    readonly isSpecialName: boolean;
+    readonly isClass: boolean;
+    readonly isNestedAssembly: boolean;
+    readonly isNestedFamANDAssem: boolean;
+    readonly isNestedFamily: boolean;
+    readonly isNestedFamORAssem: boolean;
+    readonly isNestedPrivate: boolean;
+    readonly isNestedPublic: boolean;
+    readonly isNotPublic: boolean;
+    readonly isPublic: boolean;
+    readonly isAutoLayout: boolean;
+    readonly isExplicitLayout: boolean;
+    readonly isLayoutSequential: boolean;
+    readonly isAnsiClass: boolean;
+    readonly isAutoClass: boolean;
+    readonly isUnicodeClass: boolean;
+    readonly isCOMObject: boolean;
+    readonly isContextful: boolean;
+    readonly isEnum: boolean;
+    readonly isMarshalByRef: boolean;
+    readonly isPrimitive: boolean;
+    readonly isValueType: boolean;
+    readonly isSignatureType: boolean;
+    readonly isSecurityCritical: boolean;
+    readonly isSecuritySafeCritical: boolean;
+    readonly isSecurityTransparent: boolean;
+    structLayoutAttribute: StructLayoutAttribute;
+    typeInitializer: ConstructorInfo;
+    typeHandle: RuntimeTypeHandle;
+    readonly guid: string;
+    baseType: Type;
+    readonly isSerializable: boolean;
+    readonly containsGenericParameters: boolean;
+    readonly isVisible: boolean;
 }
 
 export enum TypeAttributes {
@@ -5013,592 +3377,112 @@ export enum TypeAttributes {
     _12582912 = 12582912,
 }
 
-export class TypeInfo implements ITypeInfo {
-    readonly name?: string | undefined;
-    readonly customAttributes?: CustomAttributeData[] | undefined;
-    readonly isCollectible?: boolean;
-    readonly metadataToken?: number;
-    memberType?: MemberTypes;
-    readonly namespace?: string | undefined;
-    readonly assemblyQualifiedName?: string | undefined;
-    readonly fullName?: string | undefined;
-    assembly?: Assembly;
-    module?: Module;
-    readonly isInterface?: boolean;
-    readonly isNested?: boolean;
-    declaringType?: Type;
-    declaringMethod?: MethodBase;
-    reflectedType?: Type;
-    underlyingSystemType?: Type;
-    readonly isTypeDefinition?: boolean;
-    readonly isArray?: boolean;
-    readonly isByRef?: boolean;
-    readonly isPointer?: boolean;
-    readonly isConstructedGenericType?: boolean;
-    readonly isGenericParameter?: boolean;
-    readonly isGenericTypeParameter?: boolean;
-    readonly isGenericMethodParameter?: boolean;
-    readonly isGenericType?: boolean;
-    readonly isGenericTypeDefinition?: boolean;
-    readonly isSZArray?: boolean;
-    readonly isVariableBoundArray?: boolean;
-    readonly isByRefLike?: boolean;
-    readonly isFunctionPointer?: boolean;
-    readonly isUnmanagedFunctionPointer?: boolean;
-    readonly hasElementType?: boolean;
-    readonly genericTypeArguments?: Type[] | undefined;
-    readonly genericParameterPosition?: number;
-    genericParameterAttributes?: GenericParameterAttributes;
-    attributes?: TypeAttributes;
-    readonly isAbstract?: boolean;
-    readonly isImport?: boolean;
-    readonly isSealed?: boolean;
-    readonly isSpecialName?: boolean;
-    readonly isClass?: boolean;
-    readonly isNestedAssembly?: boolean;
-    readonly isNestedFamANDAssem?: boolean;
-    readonly isNestedFamily?: boolean;
-    readonly isNestedFamORAssem?: boolean;
-    readonly isNestedPrivate?: boolean;
-    readonly isNestedPublic?: boolean;
-    readonly isNotPublic?: boolean;
-    readonly isPublic?: boolean;
-    readonly isAutoLayout?: boolean;
-    readonly isExplicitLayout?: boolean;
-    readonly isLayoutSequential?: boolean;
-    readonly isAnsiClass?: boolean;
-    readonly isAutoClass?: boolean;
-    readonly isUnicodeClass?: boolean;
-    readonly isCOMObject?: boolean;
-    readonly isContextful?: boolean;
-    readonly isEnum?: boolean;
-    readonly isMarshalByRef?: boolean;
-    readonly isPrimitive?: boolean;
-    readonly isValueType?: boolean;
-    readonly isSignatureType?: boolean;
-    readonly isSecurityCritical?: boolean;
-    readonly isSecuritySafeCritical?: boolean;
-    readonly isSecurityTransparent?: boolean;
-    structLayoutAttribute?: StructLayoutAttribute;
-    typeInitializer?: ConstructorInfo;
-    typeHandle?: RuntimeTypeHandle;
-    readonly guid?: string;
-    baseType?: Type;
-    readonly isSerializable?: boolean;
-    readonly containsGenericParameters?: boolean;
-    readonly isVisible?: boolean;
-    readonly genericTypeParameters?: Type[] | undefined;
-    readonly declaredConstructors?: ConstructorInfo[] | undefined;
-    readonly declaredEvents?: EventInfo[] | undefined;
-    readonly declaredFields?: FieldInfo[] | undefined;
-    readonly declaredMembers?: MemberInfo[] | undefined;
-    readonly declaredMethods?: MethodInfo[] | undefined;
-    readonly declaredNestedTypes?: TypeInfo[] | undefined;
-    readonly declaredProperties?: PropertyInfo[] | undefined;
-    readonly implementedInterfaces?: Type[] | undefined;
-
-    constructor(data?: ITypeInfo) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            (<any>this).name = _data["name"];
-            if (Array.isArray(_data["customAttributes"])) {
-                (<any>this).customAttributes = [] as any;
-                for (let item of _data["customAttributes"])
-                    (<any>this).customAttributes!.push(CustomAttributeData.fromJS(item));
-            }
-            (<any>this).isCollectible = _data["isCollectible"];
-            (<any>this).metadataToken = _data["metadataToken"];
-            this.memberType = _data["memberType"];
-            (<any>this).namespace = _data["namespace"];
-            (<any>this).assemblyQualifiedName = _data["assemblyQualifiedName"];
-            (<any>this).fullName = _data["fullName"];
-            this.assembly = _data["assembly"] ? Assembly.fromJS(_data["assembly"]) : <any>undefined;
-            this.module = _data["module"] ? Module.fromJS(_data["module"]) : <any>undefined;
-            (<any>this).isInterface = _data["isInterface"];
-            (<any>this).isNested = _data["isNested"];
-            this.declaringType = _data["declaringType"] ? Type.fromJS(_data["declaringType"]) : <any>undefined;
-            this.declaringMethod = _data["declaringMethod"] ? MethodBase.fromJS(_data["declaringMethod"]) : <any>undefined;
-            this.reflectedType = _data["reflectedType"] ? Type.fromJS(_data["reflectedType"]) : <any>undefined;
-            this.underlyingSystemType = _data["underlyingSystemType"] ? Type.fromJS(_data["underlyingSystemType"]) : <any>undefined;
-            (<any>this).isTypeDefinition = _data["isTypeDefinition"];
-            (<any>this).isArray = _data["isArray"];
-            (<any>this).isByRef = _data["isByRef"];
-            (<any>this).isPointer = _data["isPointer"];
-            (<any>this).isConstructedGenericType = _data["isConstructedGenericType"];
-            (<any>this).isGenericParameter = _data["isGenericParameter"];
-            (<any>this).isGenericTypeParameter = _data["isGenericTypeParameter"];
-            (<any>this).isGenericMethodParameter = _data["isGenericMethodParameter"];
-            (<any>this).isGenericType = _data["isGenericType"];
-            (<any>this).isGenericTypeDefinition = _data["isGenericTypeDefinition"];
-            (<any>this).isSZArray = _data["isSZArray"];
-            (<any>this).isVariableBoundArray = _data["isVariableBoundArray"];
-            (<any>this).isByRefLike = _data["isByRefLike"];
-            (<any>this).isFunctionPointer = _data["isFunctionPointer"];
-            (<any>this).isUnmanagedFunctionPointer = _data["isUnmanagedFunctionPointer"];
-            (<any>this).hasElementType = _data["hasElementType"];
-            if (Array.isArray(_data["genericTypeArguments"])) {
-                (<any>this).genericTypeArguments = [] as any;
-                for (let item of _data["genericTypeArguments"])
-                    (<any>this).genericTypeArguments!.push(Type.fromJS(item));
-            }
-            (<any>this).genericParameterPosition = _data["genericParameterPosition"];
-            this.genericParameterAttributes = _data["genericParameterAttributes"];
-            this.attributes = _data["attributes"];
-            (<any>this).isAbstract = _data["isAbstract"];
-            (<any>this).isImport = _data["isImport"];
-            (<any>this).isSealed = _data["isSealed"];
-            (<any>this).isSpecialName = _data["isSpecialName"];
-            (<any>this).isClass = _data["isClass"];
-            (<any>this).isNestedAssembly = _data["isNestedAssembly"];
-            (<any>this).isNestedFamANDAssem = _data["isNestedFamANDAssem"];
-            (<any>this).isNestedFamily = _data["isNestedFamily"];
-            (<any>this).isNestedFamORAssem = _data["isNestedFamORAssem"];
-            (<any>this).isNestedPrivate = _data["isNestedPrivate"];
-            (<any>this).isNestedPublic = _data["isNestedPublic"];
-            (<any>this).isNotPublic = _data["isNotPublic"];
-            (<any>this).isPublic = _data["isPublic"];
-            (<any>this).isAutoLayout = _data["isAutoLayout"];
-            (<any>this).isExplicitLayout = _data["isExplicitLayout"];
-            (<any>this).isLayoutSequential = _data["isLayoutSequential"];
-            (<any>this).isAnsiClass = _data["isAnsiClass"];
-            (<any>this).isAutoClass = _data["isAutoClass"];
-            (<any>this).isUnicodeClass = _data["isUnicodeClass"];
-            (<any>this).isCOMObject = _data["isCOMObject"];
-            (<any>this).isContextful = _data["isContextful"];
-            (<any>this).isEnum = _data["isEnum"];
-            (<any>this).isMarshalByRef = _data["isMarshalByRef"];
-            (<any>this).isPrimitive = _data["isPrimitive"];
-            (<any>this).isValueType = _data["isValueType"];
-            (<any>this).isSignatureType = _data["isSignatureType"];
-            (<any>this).isSecurityCritical = _data["isSecurityCritical"];
-            (<any>this).isSecuritySafeCritical = _data["isSecuritySafeCritical"];
-            (<any>this).isSecurityTransparent = _data["isSecurityTransparent"];
-            this.structLayoutAttribute = _data["structLayoutAttribute"] ? StructLayoutAttribute.fromJS(_data["structLayoutAttribute"]) : <any>undefined;
-            this.typeInitializer = _data["typeInitializer"] ? ConstructorInfo.fromJS(_data["typeInitializer"]) : <any>undefined;
-            this.typeHandle = _data["typeHandle"] ? RuntimeTypeHandle.fromJS(_data["typeHandle"]) : <any>undefined;
-            (<any>this).guid = _data["guid"];
-            this.baseType = _data["baseType"] ? Type.fromJS(_data["baseType"]) : <any>undefined;
-            (<any>this).isSerializable = _data["isSerializable"];
-            (<any>this).containsGenericParameters = _data["containsGenericParameters"];
-            (<any>this).isVisible = _data["isVisible"];
-            if (Array.isArray(_data["genericTypeParameters"])) {
-                (<any>this).genericTypeParameters = [] as any;
-                for (let item of _data["genericTypeParameters"])
-                    (<any>this).genericTypeParameters!.push(Type.fromJS(item));
-            }
-            if (Array.isArray(_data["declaredConstructors"])) {
-                (<any>this).declaredConstructors = [] as any;
-                for (let item of _data["declaredConstructors"])
-                    (<any>this).declaredConstructors!.push(ConstructorInfo.fromJS(item));
-            }
-            if (Array.isArray(_data["declaredEvents"])) {
-                (<any>this).declaredEvents = [] as any;
-                for (let item of _data["declaredEvents"])
-                    (<any>this).declaredEvents!.push(EventInfo.fromJS(item));
-            }
-            if (Array.isArray(_data["declaredFields"])) {
-                (<any>this).declaredFields = [] as any;
-                for (let item of _data["declaredFields"])
-                    (<any>this).declaredFields!.push(FieldInfo.fromJS(item));
-            }
-            if (Array.isArray(_data["declaredMembers"])) {
-                (<any>this).declaredMembers = [] as any;
-                for (let item of _data["declaredMembers"])
-                    (<any>this).declaredMembers!.push(MemberInfo.fromJS(item));
-            }
-            if (Array.isArray(_data["declaredMethods"])) {
-                (<any>this).declaredMethods = [] as any;
-                for (let item of _data["declaredMethods"])
-                    (<any>this).declaredMethods!.push(MethodInfo.fromJS(item));
-            }
-            if (Array.isArray(_data["declaredNestedTypes"])) {
-                (<any>this).declaredNestedTypes = [] as any;
-                for (let item of _data["declaredNestedTypes"])
-                    (<any>this).declaredNestedTypes!.push(TypeInfo.fromJS(item));
-            }
-            if (Array.isArray(_data["declaredProperties"])) {
-                (<any>this).declaredProperties = [] as any;
-                for (let item of _data["declaredProperties"])
-                    (<any>this).declaredProperties!.push(PropertyInfo.fromJS(item));
-            }
-            if (Array.isArray(_data["implementedInterfaces"])) {
-                (<any>this).implementedInterfaces = [] as any;
-                for (let item of _data["implementedInterfaces"])
-                    (<any>this).implementedInterfaces!.push(Type.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): TypeInfo {
-        data = typeof data === 'object' ? data : {};
-        let result = new TypeInfo();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["name"] = this.name;
-        if (Array.isArray(this.customAttributes)) {
-            data["customAttributes"] = [];
-            for (let item of this.customAttributes)
-                data["customAttributes"].push(item ? item.toJSON() : <any>undefined);
-        }
-        data["isCollectible"] = this.isCollectible;
-        data["metadataToken"] = this.metadataToken;
-        data["memberType"] = this.memberType;
-        data["namespace"] = this.namespace;
-        data["assemblyQualifiedName"] = this.assemblyQualifiedName;
-        data["fullName"] = this.fullName;
-        data["assembly"] = this.assembly ? this.assembly.toJSON() : <any>undefined;
-        data["module"] = this.module ? this.module.toJSON() : <any>undefined;
-        data["isInterface"] = this.isInterface;
-        data["isNested"] = this.isNested;
-        data["declaringType"] = this.declaringType ? this.declaringType.toJSON() : <any>undefined;
-        data["declaringMethod"] = this.declaringMethod ? this.declaringMethod.toJSON() : <any>undefined;
-        data["reflectedType"] = this.reflectedType ? this.reflectedType.toJSON() : <any>undefined;
-        data["underlyingSystemType"] = this.underlyingSystemType ? this.underlyingSystemType.toJSON() : <any>undefined;
-        data["isTypeDefinition"] = this.isTypeDefinition;
-        data["isArray"] = this.isArray;
-        data["isByRef"] = this.isByRef;
-        data["isPointer"] = this.isPointer;
-        data["isConstructedGenericType"] = this.isConstructedGenericType;
-        data["isGenericParameter"] = this.isGenericParameter;
-        data["isGenericTypeParameter"] = this.isGenericTypeParameter;
-        data["isGenericMethodParameter"] = this.isGenericMethodParameter;
-        data["isGenericType"] = this.isGenericType;
-        data["isGenericTypeDefinition"] = this.isGenericTypeDefinition;
-        data["isSZArray"] = this.isSZArray;
-        data["isVariableBoundArray"] = this.isVariableBoundArray;
-        data["isByRefLike"] = this.isByRefLike;
-        data["isFunctionPointer"] = this.isFunctionPointer;
-        data["isUnmanagedFunctionPointer"] = this.isUnmanagedFunctionPointer;
-        data["hasElementType"] = this.hasElementType;
-        if (Array.isArray(this.genericTypeArguments)) {
-            data["genericTypeArguments"] = [];
-            for (let item of this.genericTypeArguments)
-                data["genericTypeArguments"].push(item ? item.toJSON() : <any>undefined);
-        }
-        data["genericParameterPosition"] = this.genericParameterPosition;
-        data["genericParameterAttributes"] = this.genericParameterAttributes;
-        data["attributes"] = this.attributes;
-        data["isAbstract"] = this.isAbstract;
-        data["isImport"] = this.isImport;
-        data["isSealed"] = this.isSealed;
-        data["isSpecialName"] = this.isSpecialName;
-        data["isClass"] = this.isClass;
-        data["isNestedAssembly"] = this.isNestedAssembly;
-        data["isNestedFamANDAssem"] = this.isNestedFamANDAssem;
-        data["isNestedFamily"] = this.isNestedFamily;
-        data["isNestedFamORAssem"] = this.isNestedFamORAssem;
-        data["isNestedPrivate"] = this.isNestedPrivate;
-        data["isNestedPublic"] = this.isNestedPublic;
-        data["isNotPublic"] = this.isNotPublic;
-        data["isPublic"] = this.isPublic;
-        data["isAutoLayout"] = this.isAutoLayout;
-        data["isExplicitLayout"] = this.isExplicitLayout;
-        data["isLayoutSequential"] = this.isLayoutSequential;
-        data["isAnsiClass"] = this.isAnsiClass;
-        data["isAutoClass"] = this.isAutoClass;
-        data["isUnicodeClass"] = this.isUnicodeClass;
-        data["isCOMObject"] = this.isCOMObject;
-        data["isContextful"] = this.isContextful;
-        data["isEnum"] = this.isEnum;
-        data["isMarshalByRef"] = this.isMarshalByRef;
-        data["isPrimitive"] = this.isPrimitive;
-        data["isValueType"] = this.isValueType;
-        data["isSignatureType"] = this.isSignatureType;
-        data["isSecurityCritical"] = this.isSecurityCritical;
-        data["isSecuritySafeCritical"] = this.isSecuritySafeCritical;
-        data["isSecurityTransparent"] = this.isSecurityTransparent;
-        data["structLayoutAttribute"] = this.structLayoutAttribute ? this.structLayoutAttribute.toJSON() : <any>undefined;
-        data["typeInitializer"] = this.typeInitializer ? this.typeInitializer.toJSON() : <any>undefined;
-        data["typeHandle"] = this.typeHandle ? this.typeHandle.toJSON() : <any>undefined;
-        data["guid"] = this.guid;
-        data["baseType"] = this.baseType ? this.baseType.toJSON() : <any>undefined;
-        data["isSerializable"] = this.isSerializable;
-        data["containsGenericParameters"] = this.containsGenericParameters;
-        data["isVisible"] = this.isVisible;
-        if (Array.isArray(this.genericTypeParameters)) {
-            data["genericTypeParameters"] = [];
-            for (let item of this.genericTypeParameters)
-                data["genericTypeParameters"].push(item ? item.toJSON() : <any>undefined);
-        }
-        if (Array.isArray(this.declaredConstructors)) {
-            data["declaredConstructors"] = [];
-            for (let item of this.declaredConstructors)
-                data["declaredConstructors"].push(item ? item.toJSON() : <any>undefined);
-        }
-        if (Array.isArray(this.declaredEvents)) {
-            data["declaredEvents"] = [];
-            for (let item of this.declaredEvents)
-                data["declaredEvents"].push(item ? item.toJSON() : <any>undefined);
-        }
-        if (Array.isArray(this.declaredFields)) {
-            data["declaredFields"] = [];
-            for (let item of this.declaredFields)
-                data["declaredFields"].push(item ? item.toJSON() : <any>undefined);
-        }
-        if (Array.isArray(this.declaredMembers)) {
-            data["declaredMembers"] = [];
-            for (let item of this.declaredMembers)
-                data["declaredMembers"].push(item ? item.toJSON() : <any>undefined);
-        }
-        if (Array.isArray(this.declaredMethods)) {
-            data["declaredMethods"] = [];
-            for (let item of this.declaredMethods)
-                data["declaredMethods"].push(item ? item.toJSON() : <any>undefined);
-        }
-        if (Array.isArray(this.declaredNestedTypes)) {
-            data["declaredNestedTypes"] = [];
-            for (let item of this.declaredNestedTypes)
-                data["declaredNestedTypes"].push(item ? item.toJSON() : <any>undefined);
-        }
-        if (Array.isArray(this.declaredProperties)) {
-            data["declaredProperties"] = [];
-            for (let item of this.declaredProperties)
-                data["declaredProperties"].push(item ? item.toJSON() : <any>undefined);
-        }
-        if (Array.isArray(this.implementedInterfaces)) {
-            data["implementedInterfaces"] = [];
-            for (let item of this.implementedInterfaces)
-                data["implementedInterfaces"].push(item ? item.toJSON() : <any>undefined);
-        }
-        return data;
-    }
+export interface TypeInfo {
+    readonly name: string | undefined;
+    readonly customAttributes: CustomAttributeData[] | undefined;
+    readonly isCollectible: boolean;
+    readonly metadataToken: number;
+    memberType: MemberTypes;
+    readonly namespace: string | undefined;
+    readonly assemblyQualifiedName: string | undefined;
+    readonly fullName: string | undefined;
+    assembly: Assembly;
+    module: Module;
+    readonly isInterface: boolean;
+    readonly isNested: boolean;
+    declaringType: Type;
+    declaringMethod: MethodBase;
+    reflectedType: Type;
+    underlyingSystemType: Type;
+    readonly isTypeDefinition: boolean;
+    readonly isArray: boolean;
+    readonly isByRef: boolean;
+    readonly isPointer: boolean;
+    readonly isConstructedGenericType: boolean;
+    readonly isGenericParameter: boolean;
+    readonly isGenericTypeParameter: boolean;
+    readonly isGenericMethodParameter: boolean;
+    readonly isGenericType: boolean;
+    readonly isGenericTypeDefinition: boolean;
+    readonly isSZArray: boolean;
+    readonly isVariableBoundArray: boolean;
+    readonly isByRefLike: boolean;
+    readonly isFunctionPointer: boolean;
+    readonly isUnmanagedFunctionPointer: boolean;
+    readonly hasElementType: boolean;
+    readonly genericTypeArguments: Type[] | undefined;
+    readonly genericParameterPosition: number;
+    genericParameterAttributes: GenericParameterAttributes;
+    attributes: TypeAttributes;
+    readonly isAbstract: boolean;
+    readonly isImport: boolean;
+    readonly isSealed: boolean;
+    readonly isSpecialName: boolean;
+    readonly isClass: boolean;
+    readonly isNestedAssembly: boolean;
+    readonly isNestedFamANDAssem: boolean;
+    readonly isNestedFamily: boolean;
+    readonly isNestedFamORAssem: boolean;
+    readonly isNestedPrivate: boolean;
+    readonly isNestedPublic: boolean;
+    readonly isNotPublic: boolean;
+    readonly isPublic: boolean;
+    readonly isAutoLayout: boolean;
+    readonly isExplicitLayout: boolean;
+    readonly isLayoutSequential: boolean;
+    readonly isAnsiClass: boolean;
+    readonly isAutoClass: boolean;
+    readonly isUnicodeClass: boolean;
+    readonly isCOMObject: boolean;
+    readonly isContextful: boolean;
+    readonly isEnum: boolean;
+    readonly isMarshalByRef: boolean;
+    readonly isPrimitive: boolean;
+    readonly isValueType: boolean;
+    readonly isSignatureType: boolean;
+    readonly isSecurityCritical: boolean;
+    readonly isSecuritySafeCritical: boolean;
+    readonly isSecurityTransparent: boolean;
+    structLayoutAttribute: StructLayoutAttribute;
+    typeInitializer: ConstructorInfo;
+    typeHandle: RuntimeTypeHandle;
+    readonly guid: string;
+    baseType: Type;
+    readonly isSerializable: boolean;
+    readonly containsGenericParameters: boolean;
+    readonly isVisible: boolean;
+    readonly genericTypeParameters: Type[] | undefined;
+    readonly declaredConstructors: ConstructorInfo[] | undefined;
+    readonly declaredEvents: EventInfo[] | undefined;
+    readonly declaredFields: FieldInfo[] | undefined;
+    readonly declaredMembers: MemberInfo[] | undefined;
+    readonly declaredMethods: MethodInfo[] | undefined;
+    readonly declaredNestedTypes: TypeInfo[] | undefined;
+    readonly declaredProperties: PropertyInfo[] | undefined;
+    readonly implementedInterfaces: Type[] | undefined;
 }
 
-export interface ITypeInfo {
-    name?: string | undefined;
-    customAttributes?: CustomAttributeData[] | undefined;
-    isCollectible?: boolean;
-    metadataToken?: number;
-    memberType?: MemberTypes;
-    namespace?: string | undefined;
-    assemblyQualifiedName?: string | undefined;
-    fullName?: string | undefined;
-    assembly?: Assembly;
-    module?: Module;
-    isInterface?: boolean;
-    isNested?: boolean;
-    declaringType?: Type;
-    declaringMethod?: MethodBase;
-    reflectedType?: Type;
-    underlyingSystemType?: Type;
-    isTypeDefinition?: boolean;
-    isArray?: boolean;
-    isByRef?: boolean;
-    isPointer?: boolean;
-    isConstructedGenericType?: boolean;
-    isGenericParameter?: boolean;
-    isGenericTypeParameter?: boolean;
-    isGenericMethodParameter?: boolean;
-    isGenericType?: boolean;
-    isGenericTypeDefinition?: boolean;
-    isSZArray?: boolean;
-    isVariableBoundArray?: boolean;
-    isByRefLike?: boolean;
-    isFunctionPointer?: boolean;
-    isUnmanagedFunctionPointer?: boolean;
-    hasElementType?: boolean;
-    genericTypeArguments?: Type[] | undefined;
-    genericParameterPosition?: number;
-    genericParameterAttributes?: GenericParameterAttributes;
-    attributes?: TypeAttributes;
-    isAbstract?: boolean;
-    isImport?: boolean;
-    isSealed?: boolean;
-    isSpecialName?: boolean;
-    isClass?: boolean;
-    isNestedAssembly?: boolean;
-    isNestedFamANDAssem?: boolean;
-    isNestedFamily?: boolean;
-    isNestedFamORAssem?: boolean;
-    isNestedPrivate?: boolean;
-    isNestedPublic?: boolean;
-    isNotPublic?: boolean;
-    isPublic?: boolean;
-    isAutoLayout?: boolean;
-    isExplicitLayout?: boolean;
-    isLayoutSequential?: boolean;
-    isAnsiClass?: boolean;
-    isAutoClass?: boolean;
-    isUnicodeClass?: boolean;
-    isCOMObject?: boolean;
-    isContextful?: boolean;
-    isEnum?: boolean;
-    isMarshalByRef?: boolean;
-    isPrimitive?: boolean;
-    isValueType?: boolean;
-    isSignatureType?: boolean;
-    isSecurityCritical?: boolean;
-    isSecuritySafeCritical?: boolean;
-    isSecurityTransparent?: boolean;
-    structLayoutAttribute?: StructLayoutAttribute;
-    typeInitializer?: ConstructorInfo;
-    typeHandle?: RuntimeTypeHandle;
-    guid?: string;
-    baseType?: Type;
-    isSerializable?: boolean;
-    containsGenericParameters?: boolean;
-    isVisible?: boolean;
-    genericTypeParameters?: Type[] | undefined;
-    declaredConstructors?: ConstructorInfo[] | undefined;
-    declaredEvents?: EventInfo[] | undefined;
-    declaredFields?: FieldInfo[] | undefined;
-    declaredMembers?: MemberInfo[] | undefined;
-    declaredMethods?: MethodInfo[] | undefined;
-    declaredNestedTypes?: TypeInfo[] | undefined;
-    declaredProperties?: PropertyInfo[] | undefined;
-    implementedInterfaces?: Type[] | undefined;
+export interface UpdateSubscriptionInput {
+    name: string | undefined;
+    amount: number;
+    currencyId: string | undefined;
+    frequency: SubscriptionFrequencyDto;
 }
 
-export class UpdateSubscriptionInput implements IUpdateSubscriptionInput {
-    name?: string | undefined;
-    amount?: number;
-    currencyId?: string | undefined;
-    frequency?: SubscriptionFrequencyDto;
-
-    constructor(data?: IUpdateSubscriptionInput) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.name = _data["name"];
-            this.amount = _data["amount"];
-            this.currencyId = _data["currencyId"];
-            this.frequency = _data["frequency"];
-        }
-    }
-
-    static fromJS(data: any): UpdateSubscriptionInput {
-        data = typeof data === 'object' ? data : {};
-        let result = new UpdateSubscriptionInput();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["name"] = this.name;
-        data["amount"] = this.amount;
-        data["currencyId"] = this.currencyId;
-        data["frequency"] = this.frequency;
-        return data;
-    }
+export interface UpdateUserDto {
+    firstName: string | undefined;
+    lastName: string | undefined;
+    phone: string | undefined;
+    birthDay: Date;
 }
 
-export interface IUpdateSubscriptionInput {
-    name?: string | undefined;
-    amount?: number;
-    currencyId?: string | undefined;
-    frequency?: SubscriptionFrequencyDto;
-}
-
-export class UpdateUserDto implements IUpdateUserDto {
-    firstName?: string | undefined;
-    lastName?: string | undefined;
-    phone?: string | undefined;
-    birthDay?: Date;
-
-    constructor(data?: IUpdateUserDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.firstName = _data["firstName"];
-            this.lastName = _data["lastName"];
-            this.phone = _data["phone"];
-            this.birthDay = _data["birthDay"] ? new Date(_data["birthDay"].toString()) : <any>undefined;
-        }
-    }
-
-    static fromJS(data: any): UpdateUserDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new UpdateUserDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["firstName"] = this.firstName;
-        data["lastName"] = this.lastName;
-        data["phone"] = this.phone;
-        data["birthDay"] = this.birthDay ? this.birthDay.toISOString() : <any>undefined;
-        return data;
-    }
-}
-
-export interface IUpdateUserDto {
-    firstName?: string | undefined;
-    lastName?: string | undefined;
-    phone?: string | undefined;
-    birthDay?: Date;
-}
-
-export class VerifyEmailInput implements IVerifyEmailInput {
-    email?: string | undefined;
-    code?: string | undefined;
-
-    constructor(data?: IVerifyEmailInput) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.email = _data["email"];
-            this.code = _data["code"];
-        }
-    }
-
-    static fromJS(data: any): VerifyEmailInput {
-        data = typeof data === 'object' ? data : {};
-        let result = new VerifyEmailInput();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["email"] = this.email;
-        data["code"] = this.code;
-        return data;
-    }
-}
-
-export interface IVerifyEmailInput {
-    email?: string | undefined;
-    code?: string | undefined;
+export interface VerifyEmailInput {
+    email: string | undefined;
+    code: string | undefined;
 }
 
 export class ApiException extends Error {
-    message: string;
+    override message: string;
     status: number;
     response: string;
     headers: { [key: string]: any; };
@@ -5621,9 +3505,25 @@ export class ApiException extends Error {
     }
 }
 
-function throwException(message: string, status: number, response: string, headers: { [key: string]: any; }, result?: any): any {
+function throwException(message: string, status: number, response: string, headers: { [key: string]: any; }, result?: any): Observable<any> {
     if (result !== null && result !== undefined)
-        throw result;
+        return _observableThrow(result);
     else
-        throw new ApiException(message, status, response, headers, null);
+        return _observableThrow(new ApiException(message, status, response, headers, null));
+}
+
+function blobToText(blob: any): Observable<string> {
+    return new Observable<string>((observer: any) => {
+        if (!blob) {
+            observer.next("");
+            observer.complete();
+        } else {
+            let reader = new FileReader();
+            reader.onload = event => {
+                observer.next((event.target as any).result);
+                observer.complete();
+            };
+            reader.readAsText(blob);
+        }
+    });
 }

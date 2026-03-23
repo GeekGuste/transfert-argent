@@ -10,6 +10,7 @@ import { connectedGuard } from './core/guard/auth/connected.guard'
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component'
 import { AddListingComponent } from './views/listings/add-listing/add-listing.component'
 import { ListListingComponent } from './views/listings/list-listing/list-listing.component'
+import { ListingDetailsComponent } from './views/listings/listing-details/listing-details.component'
 
 export const routes: Routes = [
   {
@@ -21,10 +22,8 @@ export const routes: Routes = [
     component: ListListingComponent,
   },
   {
-    path: '',
-    component: MainLayoutComponent,
-    loadChildren: () =>
-      import('./views/pages/pages.route').then((mod) => mod.PAGES_ROUTES),
+    path: 'forms/:id/details',
+    component: ListingDetailsComponent,
   },
   {
     path: 'views',
@@ -37,6 +36,12 @@ export const routes: Routes = [
     path: 'maintenance',
     component: MaintenanceComponent,
     data: { title: 'Maintenance' },
+  },
+  {
+    path: '',
+    component: MainLayoutComponent,
+    loadChildren: () =>
+      import('./views/pages/pages.route').then((mod) => mod.PAGES_ROUTES),
   },
 
   {
