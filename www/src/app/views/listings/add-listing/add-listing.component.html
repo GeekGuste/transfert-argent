@@ -1,255 +1,470 @@
-<div class="container bg-white p-3 mt-5 mb-5">
-  <div class="row justify-content-center">
-    <div class="col-lg-6 col-md-8 col-12">
-      <!-- Stepper navigation -->
-      <ul class="nav nav-pills nav-justified mb-4 flex-nowrap">
-        <li class="nav-item mx-1" *ngFor="let step of activeSteps()">
-          <button
-            class="btn w-100 d-flex flex-column flex-md-row align-items-center justify-content-center py-2"
-            [class.btn-primary]="currentStep() === step.id"
-            [class.btn-outline-secondary]="currentStep() !== step.id"
-            (click)="goToStep(step.id)"
-            [title]="step.label"
-          >
-            <i [class]="step.icon" class="me-0 me-md-2"></i>
-            <span class="d-none d-md-inline">{{ step.label }}</span>
-          </button>
-        </li>
-      </ul>
+<div class="al-page">
 
-      <form [formGroup]="listingForm">
-        <!-- STEP 1 : Identité + choix -->
-        <div *ngIf="currentStep() === 1">
-          <div class="mb-3">
-            <label class="form-label">Votre besoin</label>
-            <select class="form-select" formControlName="need">
-              <option [value]="Need.VOYAGEUR">Je suis voyageur</option>
-              <option [value]="Need.CHERCHEUR">Je cherche un voyageur</option>
-            </select>
-          </div>
+  <app-navbar></app-navbar>
 
-          <div [formGroup]="identityGroup">
-            <div class="mb-3">
-              <label class="form-label">Nom</label>
-              <input
-                type="text"
-                class="form-control"
-                formControlName="lastName"
-              />
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Prénom</label>
-              <input
-                type="text"
-                class="form-control"
-                formControlName="firstName"
-              />
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Téléphone</label>
-              <input type="text" class="form-control" formControlName="phone" />
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Email</label>
-              <input
-                type="email"
-                class="form-control"
-                formControlName="email"
-              />
-            </div>
-            <div class="form-check mt-3">
-              <input
-                type="checkbox"
-                class="form-check-input"
-                formControlName="isAdult"
-              />
-              <label class="form-check-label">Je certifie être majeur</label>
-            </div>
-          </div>
-
-          <button
-            class="btn btn-primary mt-3"
-            type="button"
-            (click)="nextStep()"
-            [disabled]="!isStepValid(1)"
-          >
-            Suivant
-          </button>
-        </div>
-
-        <!-- STEP 2 : Voyage ou Recherche -->
-        <div *ngIf="currentStep() === 2">
-          <!-- Voyageur -->
-          <div *ngIf="userType === Need.VOYAGEUR" [formGroup]="voyageurGroup">
-            <div class="mb-3">
-              <label class="form-label">Date de départ</label>
-              <input
-                type="date"
-                class="form-control"
-                formControlName="departureDate"
-              />
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Date d’arrivée</label>
-              <input
-                type="date"
-                class="form-control"
-                formControlName="arrivalDate"
-              />
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Kilos disponibles</label>
-              <input
-                type="number"
-                class="form-control"
-                formControlName="availableWeight"
-              />
-            </div>
-          </div>
-
-          <!-- Chercheur -->
-          <div *ngIf="userType === Need.CHERCHEUR" [formGroup]="chercheurGroup">
-            <div class="mb-3">
-              <label class="form-label">Date maximale de voyage</label>
-              <input
-                type="date"
-                class="form-control"
-                formControlName="maxTravelDate"
-              />
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Kilos désirés</label>
-              <input
-                type="number"
-                class="form-control"
-                formControlName="desiredWeight"
-              />
-            </div>
-          </div>
-
-          <button
-            class="btn btn-secondary me-2"
-            type="button"
-            (click)="prevStep()"
-          >
-            Précédent
-          </button>
-          <button
-            class="btn btn-primary"
-            type="button"
-            (click)="nextStep()"
-            [disabled]="!isStepValid(2)"
-          >
-            Suivant
-          </button>
-        </div>
-
-        <!-- STEP 3 : Trajet & prix -->
-        <div *ngIf="currentStep() === 3" [formGroup]="commonGroup">
-          <div class="mb-3">
-            <label class="form-label">Lieu de départ</label>
-            <input
-              type="text"
-              class="form-control"
-              formControlName="departureLocation"
-            />
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Lieu d’arrivée</label>
-            <input
-              type="text"
-              class="form-control"
-              formControlName="arrivalLocation"
-            />
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Prix au kilo</label>
-            <div class="input-group">
-              <input
-                type="number"
-                class="form-control"
-                formControlName="pricePerKg"
-              />
-              <select
-                class="form-select"
-                formControlName="currencyId"
-                style="max-width: 120px"
-              >
-                <option
-                  *ngFor="let currency of currencies"
-                  [value]="currency.id"
-                >
-                  {{ currency.code }}
-                </option>
-              </select>
-            </div>
-          </div>
-          <button
-            class="btn btn-secondary me-2"
-            type="button"
-            (click)="prevStep()"
-          >
-            Précédent
-          </button>
-          <button
-            class="btn btn-primary"
-            type="button"
-            (click)="nextStep()"
-            [disabled]="!isStepValid(3)"
-          >
-            Suivant
-          </button>
-        </div>
-
-        <!-- STEP 4 : Paiement et conditions -->
-        <div *ngIf="currentStep() === 4">
-          <div [formGroup]="legalGroup" class="form-check mt-3">
-            <div class="mb-3">
-              <label class="form-label">Moyen de paiement</label>
-              <input
-                type="text"
-                class="form-control"
-                formControlName="paymentMethod"
-              />
-            </div>
-            <input
-              type="checkbox"
-              class="form-check-input"
-              formControlName="acceptTerms"
-            />
-            <label class="form-check-label">
-              J’accepte les
-              <a routerLink="/conditions-utilisation" target="_blank"
-                >conditions d’utilisation</a
-              >
-            </label>
-          </div>
-
-          <button
-            class="btn btn-secondary me-2"
-            type="button"
-            (click)="prevStep()"
-          >
-            Précédent
-          </button>
-          <button
-            class="btn btn-success"
-            type="button"
-            (click)="submit()"
-            [disabled]="!isStepValid(4)"
-          >
-            Créer l’annonce
-          </button>
-        </div>
-
-        <!-- STEP 5 : Confirmation -->
-        <div *ngIf="currentStep() === 5" class="text-center mt-5">
-          <h2>Félicitations ! 🎉</h2>
-          <p>Votre annonce a été créée avec succès.</p>
-        </div>
-      </form>
+  <div class="al-page-header">
+    <div class="al-page-header__inner">
+      <a routerLink="/forms/list" class="al-back-btn">
+        <i class="fas fa-arrow-left me-2"></i>Retour aux annonces
+      </a>
+      <h1 class="al-page-header__title">
+        <i class="fas fa-plus-circle me-2"></i>Publier une annonce
+      </h1>
     </div>
-    <!-- end col -->
   </div>
-  <!-- end row -->
+
+  <div class="al-body" [formGroup]="listingForm">
+    <!-- Main content -->
+    <div class="al-main">
+
+      <!-- Stepper -->
+      <div class="al-stepper">
+        <div class="al-stepper__track">
+          <ng-container *ngFor="let step of activeSteps(); let i = index; let last = last">
+            <div class="al-step"
+              [class.al-step--done]="currentStep() > step.id"
+              [class.al-step--active]="currentStep() === step.id"
+              [class.al-step--error]="hasStepError(step.id)"
+              (click)="goToStep(step.id)"
+              [style.cursor]="step.id < currentStep() ? 'pointer' : 'default'">
+              <div class="al-step__bubble">
+                <i *ngIf="currentStep() > step.id && !hasStepError(step.id)" class="fas fa-check"></i>
+                <i *ngIf="hasStepError(step.id)" class="fas fa-exclamation"></i>
+                <span *ngIf="currentStep() <= step.id && !hasStepError(step.id)">{{ step.id }}</span>
+              </div>
+              <span class="al-step__label">{{ step.label }}</span>
+            </div>
+            <div *ngIf="!last" class="al-step__line" [class.al-step__line--done]="currentStep() > step.id"></div>
+          </ng-container>
+        </div>
+      </div>
+
+      <!-- Card -->
+      <div class="al-card">
+
+        <!-- ===== STEP 1 : Profil ===== -->
+        <div *ngIf="currentStep() === 1">
+          <div class="al-card__section-title">
+            <i class="fas fa-user-circle me-2 text-primary"></i>Votre profil
+          </div>
+
+          <!-- Type d'annonce -->
+          <div class="al-field-group mb-4">
+            <label class="al-label">Je suis <span class="text-danger">*</span></label>
+            <div class="al-type-selector">
+              <label class="al-type-card" [class.al-type-card--selected]="userType === NeedEnumDto.Traveler">
+                <input type="radio" formControlName="need" [value]="NeedEnumDto.Traveler" class="d-none" />
+                <div class="al-type-card__icon al-type-card__icon--traveler">
+                  <i class="fas fa-plane"></i>
+                </div>
+                <div class="al-type-card__body">
+                  <strong>Voyageur</strong>
+                  <span>Je voyage et peux transporter un colis</span>
+                </div>
+                <i class="fas fa-check-circle al-type-card__check"></i>
+              </label>
+
+              <label class="al-type-card" [class.al-type-card--selected]="userType === NeedEnumDto.Sender">
+                <input type="radio" formControlName="need" [value]="NeedEnumDto.Sender" class="d-none" />
+                <div class="al-type-card__icon al-type-card__icon--sender">
+                  <i class="fas fa-box"></i>
+                </div>
+                <div class="al-type-card__body">
+                  <strong>Expéditeur</strong>
+                  <span>Je cherche un voyageur pour envoyer un colis</span>
+                </div>
+                <i class="fas fa-check-circle al-type-card__check"></i>
+              </label>
+            </div>
+          </div>
+
+          <!-- Identité -->
+          <div class="al-card__section-title mt-4">
+            <i class="fas fa-id-card me-2 text-secondary"></i>Vos coordonnées
+          </div>
+          <div formGroupName="identity" class="al-grid-2">
+            <div class="al-field-group">
+              <label class="al-label">Prénom <span class="text-danger">*</span></label>
+              <input type="text" class="al-input" formControlName="firstName" placeholder="Votre prénom"
+                [class.al-input--error]="getControlError(identityGroup, 'firstName')" />
+              <span class="al-error" *ngIf="getControlError(identityGroup, 'firstName')">
+                {{ getControlError(identityGroup, 'firstName') }}
+              </span>
+            </div>
+            <div class="al-field-group">
+              <label class="al-label">Nom <span class="text-danger">*</span></label>
+              <input type="text" class="al-input" formControlName="lastName" placeholder="Votre nom"
+                [class.al-input--error]="getControlError(identityGroup, 'lastName')" />
+              <span class="al-error" *ngIf="getControlError(identityGroup, 'lastName')">
+                {{ getControlError(identityGroup, 'lastName') }}
+              </span>
+            </div>
+            <div class="al-field-group">
+              <label class="al-label">Téléphone <span class="text-danger">*</span></label>
+              <input type="tel" class="al-input" formControlName="phone" placeholder="+33 6 00 00 00 00"
+                [class.al-input--error]="getControlError(identityGroup, 'phone')" />
+              <span class="al-error" *ngIf="getControlError(identityGroup, 'phone')">
+                {{ getControlError(identityGroup, 'phone') }}
+              </span>
+            </div>
+            <div class="al-field-group">
+              <label class="al-label">Email <span class="text-danger">*</span></label>
+              <input type="email" class="al-input" formControlName="email" placeholder="vous@exemple.com"
+                [class.al-input--error]="getControlError(identityGroup, 'email')" />
+              <span class="al-error" *ngIf="getControlError(identityGroup, 'email')">
+                {{ getControlError(identityGroup, 'email') }}
+              </span>
+            </div>
+          </div>
+
+          <div class="al-field-group mt-3" formGroupName="identity">
+            <label class="al-checkbox-label">
+              <input type="checkbox" class="al-checkbox" formControlName="isAdult" />
+              <span>Je certifie être majeur(e) <span class="text-danger">*</span></span>
+            </label>
+            <span class="al-error" *ngIf="getControlError(identityGroup, 'isAdult')">
+              Vous devez confirmer être majeur(e).
+            </span>
+          </div>
+
+          <div class="al-actions al-actions--end">
+            <button class="al-btn al-btn--primary" type="button" (click)="nextStep()">
+              Suivant <i class="fas fa-arrow-right ms-2"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- ===== STEP 2 : Voyageur ===== -->
+        <div *ngIf="currentStep() === 2 && userType === NeedEnumDto.Traveler" formGroupName="voyageur">
+          <div class="al-card__section-title">
+            <i class="fas fa-plane me-2" style="color:#482890"></i>Informations de voyage
+          </div>
+
+          <div class="al-grid-2">
+            <div class="al-field-group">
+              <label class="al-label">Date de départ <span class="text-danger">*</span></label>
+              <input type="date" class="al-input" formControlName="departureDate" [min]="todayStr"
+                [class.al-input--error]="getControlError(voyageurGroup, 'departureDate')" />
+              <span class="al-error" *ngIf="getControlError(voyageurGroup, 'departureDate')">
+                {{ getControlError(voyageurGroup, 'departureDate') }}
+              </span>
+            </div>
+            <div class="al-field-group">
+              <label class="al-label">Date d'arrivée <span class="text-danger">*</span></label>
+              <input type="date" class="al-input" formControlName="arrivalDate" [min]="todayStr"
+                [class.al-input--error]="getControlError(voyageurGroup, 'arrivalDate')" />
+              <span class="al-error" *ngIf="getControlError(voyageurGroup, 'arrivalDate')">
+                {{ getControlError(voyageurGroup, 'arrivalDate') }}
+              </span>
+            </div>
+          </div>
+
+          <span class="al-error" *ngIf="getGroupError(voyageurGroup)">
+            {{ getGroupError(voyageurGroup) }}
+          </span>
+
+          <div class="al-field-group mt-3">
+            <label class="al-label">Kilos disponibles <span class="text-danger">*</span></label>
+            <div class="al-input-addon">
+              <input type="number" class="al-input" formControlName="availableWeightKg" min="0.1" step="0.5" placeholder="ex: 5"
+                [class.al-input--error]="getControlError(voyageurGroup, 'availableWeightKg')" />
+              <span class="al-input-addon__text">kg</span>
+            </div>
+            <span class="al-error" *ngIf="getControlError(voyageurGroup, 'availableWeightKg')">
+              {{ getControlError(voyageurGroup, 'availableWeightKg') }}
+            </span>
+          </div>
+
+          <div class="al-actions">
+            <button class="al-btn al-btn--outline" type="button" (click)="prevStep()">
+              <i class="fas fa-arrow-left me-2"></i>Précédent
+            </button>
+            <button class="al-btn al-btn--primary" type="button" (click)="nextStep()">
+              Suivant <i class="fas fa-arrow-right ms-2"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- ===== STEP 2 : Expéditeur ===== -->
+        <div *ngIf="currentStep() === 2 && userType === NeedEnumDto.Sender" formGroupName="chercheur">
+          <div class="al-card__section-title">
+            <i class="fas fa-box me-2" style="color:#4CBF88"></i>Informations du colis
+          </div>
+
+          <div class="al-field-group">
+            <label class="al-label">Date limite de voyage souhaitée <span class="text-danger">*</span></label>
+            <input type="date" class="al-input" formControlName="maxTravelDate" [min]="todayStr"
+              [class.al-input--error]="getControlError(chercheurGroup, 'maxTravelDate')" />
+            <span class="al-error" *ngIf="getControlError(chercheurGroup, 'maxTravelDate')">
+              {{ getControlError(chercheurGroup, 'maxTravelDate') }}
+            </span>
+          </div>
+
+          <div class="al-field-group mt-3">
+            <label class="al-label">Kilos souhaités <span class="text-danger">*</span></label>
+            <div class="al-input-addon">
+              <input type="number" class="al-input" formControlName="desiredWeightKg" min="0.1" step="0.5" placeholder="ex: 3"
+                [class.al-input--error]="getControlError(chercheurGroup, 'desiredWeightKg')" />
+              <span class="al-input-addon__text">kg</span>
+            </div>
+            <span class="al-error" *ngIf="getControlError(chercheurGroup, 'desiredWeightKg')">
+              {{ getControlError(chercheurGroup, 'desiredWeightKg') }}
+            </span>
+          </div>
+
+          <div class="al-actions">
+            <button class="al-btn al-btn--outline" type="button" (click)="prevStep()">
+              <i class="fas fa-arrow-left me-2"></i>Précédent
+            </button>
+            <button class="al-btn al-btn--primary" type="button" (click)="nextStep()">
+              Suivant <i class="fas fa-arrow-right ms-2"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- ===== STEP 3 : Trajet & tarif ===== -->
+        <div *ngIf="currentStep() === 3" formGroupName="common">
+          <div class="al-card__section-title">
+            <i class="fas fa-route me-2" style="color:#482890"></i>Trajet &amp; tarification
+          </div>
+
+          <div class="al-route-row">
+            <div class="al-field-group flex-fill">
+              <label class="al-label"><i class="fas fa-map-marker-alt text-danger me-1"></i>Départ <span class="text-danger">*</span></label>
+              <input type="text" class="al-input" formControlName="departureLocation" placeholder="ex: Paris, France"
+                [class.al-input--error]="getControlError(commonGroup, 'departureLocation')" />
+              <span class="al-error" *ngIf="getControlError(commonGroup, 'departureLocation')">
+                {{ getControlError(commonGroup, 'departureLocation') }}
+              </span>
+            </div>
+            <div class="al-route-arrow"><i class="fas fa-long-arrow-alt-right"></i></div>
+            <div class="al-field-group flex-fill">
+              <label class="al-label"><i class="fas fa-map-marker-alt text-success me-1"></i>Arrivée <span class="text-danger">*</span></label>
+              <input type="text" class="al-input" formControlName="arrivalLocation" placeholder="ex: Dakar, Sénégal"
+                [class.al-input--error]="getControlError(commonGroup, 'arrivalLocation')" />
+              <span class="al-error" *ngIf="getControlError(commonGroup, 'arrivalLocation')">
+                {{ getControlError(commonGroup, 'arrivalLocation') }}
+              </span>
+            </div>
+          </div>
+
+          <div class="al-price-row mt-4">
+            <div class="al-field-group flex-fill">
+              <label class="al-label">Prix par kilo <span class="text-danger">*</span></label>
+              <div class="al-input-addon">
+                <input type="number" class="al-input" formControlName="pricePerKg" min="0" step="0.5" placeholder="ex: 10"
+                  [class.al-input--error]="getControlError(commonGroup, 'pricePerKg')" />
+                <span class="al-input-addon__text">/kg</span>
+              </div>
+              <span class="al-error" *ngIf="getControlError(commonGroup, 'pricePerKg')">
+                {{ getControlError(commonGroup, 'pricePerKg') }}
+              </span>
+            </div>
+            <div class="al-field-group" style="min-width:160px">
+              <label class="al-label">Devise <span class="text-danger">*</span></label>
+              <select class="al-select" formControlName="currencyId"
+                [class.al-input--error]="getControlError(commonGroup, 'currencyId')">
+                <option value="">Choisir...</option>
+                <option *ngFor="let c of currencies" [value]="c.id">{{ c.code }} {{ c.symbol }}</option>
+              </select>
+              <span class="al-error" *ngIf="getControlError(commonGroup, 'currencyId')">
+                {{ getControlError(commonGroup, 'currencyId') }}
+              </span>
+            </div>
+          </div>
+
+          <div class="al-actions">
+            <button class="al-btn al-btn--outline" type="button" (click)="prevStep()">
+              <i class="fas fa-arrow-left me-2"></i>Précédent
+            </button>
+            <button class="al-btn al-btn--primary" type="button" (click)="nextStep()">
+              Suivant <i class="fas fa-arrow-right ms-2"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- ===== STEP 4 : Conditions ===== -->
+        <div *ngIf="currentStep() === 4" formGroupName="legal">
+          <div class="al-card__section-title">
+            <i class="fas fa-file-contract me-2" style="color:#482890"></i>Paiement &amp; conditions
+          </div>
+
+          <div class="al-field-group mb-4">
+            <label class="al-label">Moyen de paiement accepté <span class="text-danger">*</span></label>
+            <div class="al-payment-grid">
+              <label *ngFor="let m of paymentMethods" class="al-payment-option"
+                [class.al-payment-option--selected]="legalGroup.get('paymentMethod')?.value === m.key">
+                <input type="radio" formControlName="paymentMethod" [value]="m.key" class="d-none" />
+                <i class="al-payment-option__icon"
+                  [class.fas]="true"
+                  [class.fa-money-bill-wave]="m.key === PaymentMethodEnumDto.Cash"
+                  [class.fa-credit-card]="m.key === PaymentMethodEnumDto.CreditCard"
+                  [class.fa-paypal]="m.key === PaymentMethodEnumDto.PayPal"
+                  [class.fa-university]="m.key === PaymentMethodEnumDto.BankTransfer"
+                  [class.fa-mobile-alt]="m.key === PaymentMethodEnumDto.MobilePayment"
+                  [class.fa-check-double]="m.key === PaymentMethodEnumDto.All"
+                  [class.fa-ellipsis-h]="m.key === PaymentMethodEnumDto.Other"
+                ></i>
+                <span>{{ m.label }}</span>
+              </label>
+            </div>
+            <span class="al-error" *ngIf="getControlError(legalGroup, 'paymentMethod')">
+              {{ getControlError(legalGroup, 'paymentMethod') }}
+            </span>
+          </div>
+
+          <div class="al-field-group">
+            <label class="al-checkbox-label">
+              <input type="checkbox" class="al-checkbox" formControlName="acceptTerms" />
+              <span>J'accepte les <a href="#" target="_blank" class="al-link">conditions d'utilisation</a>
+                <span class="text-danger"> *</span></span>
+            </label>
+            <span class="al-error" *ngIf="getControlError(legalGroup, 'acceptTerms')">
+              Vous devez accepter les conditions d'utilisation.
+            </span>
+          </div>
+
+          <div *ngIf="submitError" class="al-alert al-alert--error mt-3">
+            <i class="fas fa-exclamation-circle me-2"></i>{{ submitError }}
+          </div>
+
+          <div class="al-actions">
+            <button class="al-btn al-btn--outline" type="button" (click)="prevStep()" [disabled]="submitLoading">
+              <i class="fas fa-arrow-left me-2"></i>Précédent
+            </button>
+            <button class="al-btn al-btn--success" type="button" (click)="submit()"
+              [disabled]="submitLoading">
+              <span *ngIf="submitLoading" class="spinner-border spinner-border-sm me-2" role="status"></span>
+              <i *ngIf="!submitLoading" class="fas fa-paper-plane me-2"></i>
+              {{ submitLoading ? 'Publication...' : 'Publier l\'annonce' }}
+            </button>
+          </div>
+        </div>
+
+        <!-- ===== STEP 5 : Confirmation ===== -->
+        <div *ngIf="currentStep() === 5" class="al-success">
+          <div class="al-success__icon">
+            <i class="fas fa-check-circle"></i>
+          </div>
+          <h3 class="al-success__title">Annonce publiée !</h3>
+          <p class="al-success__text">
+            Votre annonce est maintenant visible. Conservez précieusement le lien ci-dessous —
+            il est votre seul moyen de gérer votre annonce et valider les candidatures.
+          </p>
+
+          <div *ngIf="manageUrl()" class="al-manage-link-box">
+            <div class="al-manage-link-box__label">
+              <i class="fas fa-key me-2"></i>Votre lien de gestion personnel
+            </div>
+            <div class="al-manage-link-box__row">
+              <input type="text" class="al-input al-input--mono" [value]="manageUrl()" readonly />
+              <button class="al-btn al-btn--icon" type="button" (click)="copyLink()" title="Copier">
+                <i class="fas fa-copy"></i>
+              </button>
+            </div>
+            <small class="al-manage-link-box__hint">
+              <i class="fas fa-shield-alt me-1"></i>
+              Ce lien vous a été envoyé par email. Ne le partagez pas.
+            </small>
+          </div>
+
+          <a routerLink="/forms/list" class="al-btn al-btn--primary mt-4">
+            <i class="fas fa-list me-2"></i>Voir les annonces
+          </a>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Sidebar récap -->
+    <aside class="al-sidebar" *ngIf="currentStep() < 5">
+      <div class="al-recap">
+        <div class="al-recap__title">
+          <i class="fas fa-eye me-2"></i>Récapitulatif
+        </div>
+
+        <div class="al-recap__row" *ngIf="userType">
+          <span class="al-recap__key">Type</span>
+          <span class="al-recap__val al-badge" [class.al-badge--traveler]="userType === NeedEnumDto.Traveler"
+            [class.al-badge--sender]="userType === NeedEnumDto.Sender">
+            <i [class]="userType === NeedEnumDto.Traveler ? 'fas fa-plane me-1' : 'fas fa-box me-1'"></i>
+            {{ userType === NeedEnumDto.Traveler ? 'Voyageur' : 'Expéditeur' }}
+          </span>
+        </div>
+
+        <ng-container *ngIf="identityGroup.get('firstName')?.value || identityGroup.get('lastName')?.value">
+          <div class="al-recap__row">
+            <span class="al-recap__key">Nom</span>
+            <span class="al-recap__val">
+              {{ identityGroup.get('firstName')?.value }} {{ identityGroup.get('lastName')?.value }}
+            </span>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="userType === NeedEnumDto.Traveler && currentStep() > 2">
+          <div class="al-recap__row" *ngIf="voyageurGroup.get('departureDate')?.value">
+            <span class="al-recap__key">Départ</span>
+            <span class="al-recap__val">{{ voyageurGroup.get('departureDate')?.value | date:'dd/MM/yyyy' }}</span>
+          </div>
+          <div class="al-recap__row" *ngIf="voyageurGroup.get('arrivalDate')?.value">
+            <span class="al-recap__key">Arrivée</span>
+            <span class="al-recap__val">{{ voyageurGroup.get('arrivalDate')?.value | date:'dd/MM/yyyy' }}</span>
+          </div>
+          <div class="al-recap__row" *ngIf="voyageurGroup.get('availableWeightKg')?.value">
+            <span class="al-recap__key">Capacité</span>
+            <span class="al-recap__val">{{ voyageurGroup.get('availableWeightKg')?.value }} kg</span>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="userType === NeedEnumDto.Sender && currentStep() > 2">
+          <div class="al-recap__row" *ngIf="chercheurGroup.get('maxTravelDate')?.value">
+            <span class="al-recap__key">Date limite</span>
+            <span class="al-recap__val">{{ chercheurGroup.get('maxTravelDate')?.value | date:'dd/MM/yyyy' }}</span>
+          </div>
+          <div class="al-recap__row" *ngIf="chercheurGroup.get('desiredWeightKg')?.value">
+            <span class="al-recap__key">Poids</span>
+            <span class="al-recap__val">{{ chercheurGroup.get('desiredWeightKg')?.value }} kg</span>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="currentStep() > 3">
+          <div class="al-recap__divider"></div>
+          <div class="al-recap__row" *ngIf="commonGroup.get('departureLocation')?.value">
+            <span class="al-recap__key">Trajet</span>
+            <span class="al-recap__val al-recap__val--route">
+              <span>{{ commonGroup.get('departureLocation')?.value }}</span>
+              <i class="fas fa-arrow-right mx-1 text-muted"></i>
+              <span>{{ commonGroup.get('arrivalLocation')?.value }}</span>
+            </span>
+          </div>
+          <div class="al-recap__row" *ngIf="commonGroup.get('pricePerKg')?.value">
+            <span class="al-recap__key">Prix</span>
+            <span class="al-recap__val al-recap__val--price">
+              {{ commonGroup.get('pricePerKg')?.value }}
+              <ng-container *ngFor="let c of currencies">
+                <span *ngIf="c.id === commonGroup.get('currencyId')?.value">{{ c.symbol }}</span>
+              </ng-container>
+              /kg
+            </span>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="currentStep() > 4">
+          <div class="al-recap__divider"></div>
+          <div class="al-recap__row" *ngIf="legalGroup.get('paymentMethod')?.value">
+            <span class="al-recap__key">Paiement</span>
+            <span class="al-recap__val">{{ paymentMethodLabel(legalGroup.get('paymentMethod')?.value) }}</span>
+          </div>
+        </ng-container>
+
+        <div class="al-recap__progress mt-3">
+          <div class="al-recap__progress-bar"
+            [style.width.%]="((currentStep() - 1) / (activeSteps().length - 1)) * 100"></div>
+        </div>
+        <small class="al-recap__progress-label">
+          Étape {{ currentStep() }} / {{ activeSteps().length - 1 }}
+        </small>
+      </div>
+    </aside>
+  </div>
 </div>

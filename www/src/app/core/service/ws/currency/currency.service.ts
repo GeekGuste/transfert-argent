@@ -1,46 +1,25 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '@/environments/environment';
+import { from, Observable } from 'rxjs';
+import { ApiClientService } from '@/app/api/api-client.service';
+import { CurrencyDto, CurrencyOutput } from '@/app/api/webapiservice';
 
-
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class CurrencyService {
-  endpoint = environment.endpoint;
+  constructor(private api: ApiClientService) {}
 
-  constructor(
-    private httpClient: HttpClient
-  ) { }
-
-  getCurrencies(){
-      return this.httpClient.get(this.endpoint+'/currency');
+  getCurrencies(): Observable<CurrencyOutput> {
+    return from(this.api.client.getCurrencies());
   }
 
-  getCurrency(currency:any){
-    return this.httpClient.get(this.endpoint+'/currency/'+currency.key);
-}
-
-  createCurrency(currencyForm:any){
-    return this.httpClient.post(this.endpoint+'/currency',currencyForm);
+  createCurrency(body: CurrencyDto): Observable<void> {
+    return from(this.api.client.createCurrency(body));
   }
 
-  updateCurrency(currency:any){
-    console.log(currency);
-    return this.httpClient.put(this.endpoint+'/currency/'+currency.id,currency);
+  updateCurrency(currencyId: string, body: CurrencyDto): Observable<void> {
+    return from(this.api.client.updateCurrency(currencyId, body));
   }
 
-  deleteCurrency(currency:any){
-    return this.httpClient.delete(this.endpoint+'/currency/delete',currency);
-  }
-
-   deactivateCurrency(currency:any){
-    currency.isEnabled = false;
-    return this.httpClient.put(this.endpoint+'/currency/' + currency.id ,currency);
-  }
-
-   activateCurrency(currency:any){
-        currency.isEnabled = true;
-    return this.httpClient.put(this.endpoint+'/currency/' + currency.id ,currency);
+  deleteCurrency(currencyId: string): Observable<void> {
+    return from(this.api.client.deleteCurrency(currencyId));
   }
 }

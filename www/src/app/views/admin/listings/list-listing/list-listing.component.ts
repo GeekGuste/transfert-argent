@@ -2,37 +2,35 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ListingService } from '@/app/core/service/ws/listing/listing.service';
-import { Need } from '@/app/common/need.enum';
-
-declare var bootstrap: any;
+import { ListingDto, NeedEnumDto } from '@/app/api/webapiservice';
 
 @Component({
   selector: 'app-list-listing',
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './list-listing.component.html',
-  styleUrls: ['./list-listing.component.scss']
+  styleUrls: ['./list-listing.component.scss'],
 })
 export class ListListingComponent implements OnInit {
-  Need = Need;
+  NeedEnumDto = NeedEnumDto;
 
-  listings: any[] = [];
+  listings: ListingDto[] = [];
   loading = true;
   actionLoading = false;
-  currentListing: any = null;
+  currentListingId: string | null = null;
   error: string | null = null;
 
   activeTab: 'all' | 'travelers' | 'senders' = 'all';
 
-  get travelers(): any[] {
-    return this.listings.filter(l => (l.need?.key ?? l.need) === Need.VOYAGEUR);
+  get travelers(): ListingDto[] {
+    return this.listings.filter((l) => l.need?.key === NeedEnumDto.Traveler);
   }
 
-  get senders(): any[] {
-    return this.listings.filter(l => (l.need?.key ?? l.need) === Need.CHERCHEUR);
+  get senders(): ListingDto[] {
+    return this.listings.filter((l) => l.need?.key === NeedEnumDto.Sender);
   }
 
-  get filteredListings(): any[] {
+  get filteredListings(): ListingDto[] {
     if (this.activeTab === 'travelers') return this.travelers;
     if (this.activeTab === 'senders') return this.senders;
     return this.listings;
@@ -47,33 +45,36 @@ export class ListListingComponent implements OnInit {
   fetchListings(): void {
     this.loading = true;
     this.listingService.getListings().subscribe({
-      next: (res: any) => {
-        this.listings = res.listings ?? res;
+      next: (res) => {
+        this.listings = res.listings ?? [];
         this.loading = false;
       },
-      error: (err) => {
+      error: () => {
         this.error = 'Erreur lors de la récupération des annonces.';
-        console.error(err);
         this.loading = false;
-      }
+      },
     });
   }
 
-  deactivateListing(listing: any): void {
+  deleteListing(listing: ListingDto): void {
+    if (!listing.id || this.actionLoading) return;
     this.actionLoading = true;
-    this.currentListing = listing;
-    this.listingService.deactivateListing(listing).subscribe({
-      next: () => this.fetchListings(),
-      error: () => { this.actionLoading = false; }
+    this.currentListingId = listing.id;
+
+    this.listingService.deleteListing(listing.id).subscribe({
+      next: () => {
+        this.listings = this.listings.filter((l) => l.id !== listing.id);
+        this.actionLoading = false;
+        this.currentListingId = null;
+      },
+      error: () => {
+        this.actionLoading = false;
+        this.currentListingId = null;
+      },
     });
   }
 
-  activateListing(listing: any): void {
-    this.actionLoading = true;
-    this.currentListing = listing;
-    this.listingService.activateListing(listing).subscribe({
-      next: () => this.fetchListings(),
-      error: () => { this.actionLoading = false; }
-    });
+  pricePerKg(listing: ListingDto): number {
+    return (listing.pricePerGram ?? 0) * 1000;
   }
 }

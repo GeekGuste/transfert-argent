@@ -4,8 +4,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { mergeMap } from 'rxjs';
 import { TrlPipe } from '@alrevele/translator';
+import { CurrencyDto } from '@/app/api/webapiservice';
 
-declare var bootstrap: any; // Pour contrôler le modal Bootstrap
+declare var bootstrap: any;
 
 @Component({
   selector: 'app-list-currency',
@@ -16,15 +17,12 @@ declare var bootstrap: any; // Pour contrôler le modal Bootstrap
 export class ListCurrencyComponent implements OnInit {
   loading = false;
   currentCurrency: any = null;
-
   editForm!: FormGroup;
-
-
   currencies: any[] = [];
-  constructor(private currencyService: CurrencyService, private fb: FormBuilder
-  ) { }
+
+  constructor(private currencyService: CurrencyService, private fb: FormBuilder) {}
+
   ngOnInit(): void {
-    // Création du formulaire
     this.editForm = this.fb.group({
       id: [null],
       label: ['', Validators.required],
@@ -34,104 +32,57 @@ export class ListCurrencyComponent implements OnInit {
     this.initCurrencies();
   }
 
-  initCurrencies() {
-    this.currencyService.getCurrencies().subscribe(
-      (response: any) => {
-        this.currencies = response.currencies;
-      },
-      (err) => { },
-      () => { },
-    );
+  initCurrencies(): void {
+    this.currencyService.getCurrencies().subscribe({
+      next: (res) => { this.currencies = res.currencies ?? []; },
+      error: () => {},
+    });
   }
 
-  editCurrency(country: any) {
-    alert("cette fonctionnalité n'est pas encore développée");
-  }
-
-  deactivateCurrency(country: any) {
-    this.loading = true;
-    this.currentCurrency = country;
-
-    this.currencyService
-      .deactivateCurrency(country)
-      .pipe(mergeMap(() => this.currencyService.getCurrencies()))
-      .subscribe(
-        (response: any) => {
-          this.currencies = response.currencies;
-          this.loading = false;
-        },
-        (err) => {
-          this.loading = false;
-          // Gère l'erreur ici si nécessaire
-        },
-      );
-  }
-
-  activateCurrency(country: any) {
-    this.loading = true;
-    this.currentCurrency = country;
-
-    this.currencyService
-      .activateCurrency(country)
-      .pipe(mergeMap(() => this.currencyService.getCurrencies()))
-      .subscribe(
-        (response: any) => {
-          this.currencies = response.currencies;
-          this.loading = false;
-        },
-        (err) => {
-          this.loading = false;
-          // Gère l'erreur ici si nécessaire
-        },
-      );
-  }
-
-  deleteCurrency(country: any) {
-    alert("cette fonctionnalité n'est pas encore développée");
-
-    //   this.countryService
-    //     .deleteCurrency(country)
-    //     .pipe(mergeMap(() => this.countryService.getCountries()))
-    //     .subscribe(
-    //       (response: any) => {
-    //         this.countries = response;
-    //       },
-    //       (err) => {
-    //         // Gère l'erreur si nécessaire
-    //       },
-    //     );
-  }
-
-  openEditModal(country: any) {
-    this.editForm.patchValue(country); // remplit le form
-    const modal = new bootstrap.Modal(
-      document.getElementById('editCurrencyModal')
-    );
+  openEditModal(currency: any): void {
+    this.editForm.patchValue(currency);
+    const modal = new bootstrap.Modal(document.getElementById('editCurrencyModal'));
     modal.show();
   }
 
-  updateCurrency() {
+  updateCurrency(): void {
     if (this.editForm.invalid) {
       this.editForm.markAllAsTouched();
       return;
     }
 
+    const { id, label, code, symbol } = this.editForm.value;
+    const body = new CurrencyDto({ label, code, symbol });
+
     this.loading = true;
     this.currencyService
-      .updateCurrency(this.editForm.value) // méthode à ajouter dans le service
+      .updateCurrency(id, body)
       .pipe(mergeMap(() => this.currencyService.getCurrencies()))
-      .subscribe(
-        (response: any) => {
-          this.currencies = response.currencies;
+      .subscribe({
+        next: (res) => {
+          this.currencies = res.currencies ?? [];
           this.loading = false;
-          const modal = bootstrap.Modal.getInstance(
-            document.getElementById('editCurrencyModal')
-          );
-          modal.hide();
+          bootstrap.Modal.getInstance(document.getElementById('editCurrencyModal'))?.hide();
         },
-        () => {
+        error: () => { this.loading = false; },
+      });
+  }
+
+  deleteCurrency(currency: any): void {
+    if (!currency?.id) return;
+    this.loading = true;
+    this.currentCurrency = currency;
+
+    this.currencyService
+      .deleteCurrency(currency.id)
+      .pipe(mergeMap(() => this.currencyService.getCurrencies()))
+      .subscribe({
+        next: (res) => {
+          this.currencies = res.currencies ?? [];
           this.loading = false;
-        }
-      );
+          this.currentCurrency = null;
+        },
+        error: () => { this.loading = false; },
+      });
   }
 }

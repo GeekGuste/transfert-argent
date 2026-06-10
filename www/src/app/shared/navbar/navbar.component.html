@@ -1,0 +1,58 @@
+<nav class="gr-nav">
+  <div class="gr-nav__inner">
+
+    <!-- Brand -->
+    <a routerLink="/" class="gr-nav__brand" (click)="closeMobile()">
+      <div class="gr-nav__logo">GR</div>
+      <div class="gr-nav__brand-info">
+        <span class="gr-nav__brand-name">GlobRel</span>
+        <span class="gr-nav__brand-sub">Connect. Trust. Grow.</span>
+      </div>
+    </a>
+
+    <!-- Desktop nav links -->
+    <div class="gr-nav__links">
+      <a routerLink="/" routerLinkActive="gr-nav__link--active" [routerLinkActiveOptions]="{exact:true}"
+        class="gr-nav__link">
+        <i class="fas fa-home me-1"></i>Accueil
+      </a>
+      <a routerLink="/forms/list" routerLinkActive="gr-nav__link--active"
+        class="gr-nav__link">
+        <i class="fas fa-list me-1"></i>Annonces
+      </a>
+      <a routerLink="/forms" routerLinkActive="gr-nav__link--active" [routerLinkActiveOptions]="{exact:true}"
+        class="gr-nav__link gr-nav__link--publish">
+        <i class="fas fa-plus me-1"></i>Publier
+      </a>
+    </div>
+
+    <!-- Auth -->
+    <div class="gr-nav__auth">
+      <a routerLink="/auth/log-in" class="gr-nav__link">Connexion</a>
+      <a routerLink="/auth/register" class="gr-nav__btn-register">S'inscrire</a>
+    </div>
+
+    <!-- Mobile toggle -->
+    <button class="gr-nav__burger" (click)="toggleMobile()" [class.gr-nav__burger--open]="mobileOpen"
+      aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+
+  </div>
+
+  <!-- Mobile drawer -->
+  <div class="gr-nav__mobile" [class.gr-nav__mobile--open]="mobileOpen">
+    <a routerLink="/" class="gr-nav__mobile-link" (click)="closeMobile()">
+      <i class="fas fa-home me-2"></i>Accueil
+    </a>
+    <a routerLink="/forms/list" class="gr-nav__mobile-link" (click)="closeMobile()">
+      <i class="fas fa-list me-2"></i>Annonces
+    </a>
+    <a routerLink="/forms" class="gr-nav__mobile-link" (click)="closeMobile()">
+      <i class="fas fa-plus me-2"></i>Publier une annonce
+    </a>
+    <div class="gr-nav__mobile-divider"></div>
+    <a routerLink="/auth/log-in" class="gr-nav__mobile-link" (click)="closeMobile()">Connexion</a>
+    <a routerLink="/auth/register" class="gr-nav__mobile-btn" (click)="closeMobile()">S'inscrire</a>
+  </div>
+</nav>

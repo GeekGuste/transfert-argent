@@ -26,6 +26,7 @@ import { FakeBackendProvider } from './core/helpers/fake-backend'
 import { CalendarEffects } from './store/calendar/calendar.effects'
 import { KanbanEffects } from './store/kanban/kanban.effects'
 import { authInterceptor } from './interceptor/auth/auth.interceptor'
+import { httpErrorInterceptor } from './interceptor/http-error/http-error.interceptor'
 
 // scroll
 const scrollConfig: InMemoryScrollingOptions = {
@@ -52,6 +53,6 @@ export const appConfig: ApplicationConfig = {
     provideEffects(CalendarEffects),
     provideEffects(AuthenticationEffects,KanbanEffects),
     // provideHttpClient(withFetch(), withInterceptorsFromDi()),
-    provideHttpClient(withInterceptors([authInterceptor]))
+    provideHttpClient(withInterceptors([authInterceptor, httpErrorInterceptor]))
   ],
 }

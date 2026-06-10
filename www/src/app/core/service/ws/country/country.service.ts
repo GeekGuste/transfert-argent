@@ -1,46 +1,21 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '@/environments/environment';
+import { from, Observable } from 'rxjs';
+import { ApiClientService } from '@/app/api/api-client.service';
+import { CountryDto, GetCountriesOutput } from '@/app/api/webapiservice';
 
-
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class CountryService {
-  endpoint = environment.endpoint;
+  constructor(private api: ApiClientService) {}
 
-  constructor(
-    private httpClient: HttpClient
-  ) { }
-
-  getCountries(){
-      return this.httpClient.get(this.endpoint+'/countries');
+  getCountries(): Observable<GetCountriesOutput> {
+    return from(this.api.client.getCountries());
   }
 
-  getCountry(country:any){
-    return this.httpClient.get(this.endpoint+'/countries/'+country.key);
-}
-
-  createCountry(countryForm:any){
-    return this.httpClient.post(this.endpoint+'/countries',countryForm);
+  createCountry(body: CountryDto): Observable<void> {
+    return from(this.api.client.createCountry(body));
   }
 
-  updateCountry(country:any){
-    console.log(country);
-    return this.httpClient.put(this.endpoint+'/countries/'+country.id,country);
-  }
-
-  deleteCountry(country:any){
-    return this.httpClient.delete(this.endpoint+'/countries/delete',country);
-  }
-
-   deactivateCountry(country:any){
-    country.isEnabled = false;
-    return this.httpClient.put(this.endpoint+'/countries/' + country.id ,country);
-  }
-
-   activateCountry(country:any){
-        country.isEnabled = true;
-    return this.httpClient.put(this.endpoint+'/countries/' + country.id ,country);
+  updateCountry(id: string, body: CountryDto): Observable<void> {
+    return from(this.api.client.updateCountry(id, body));
   }
 }

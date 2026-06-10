@@ -1,0 +1,203 @@
+$violet: #482890;
+$violet-light: rgba(72, 40, 144, 0.08);
+$green: #4CBF88;
+$border: rgba(255, 255, 255, 0.12);
+$text: #fff;
+$text-muted: rgba(255, 255, 255, 0.65);
+
+.gr-nav {
+  background: $violet;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+}
+
+.gr-nav__inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+// ======= Brand =======
+.gr-nav__brand {
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  text-decoration: none;
+  color: $text;
+  flex-shrink: 0;
+  transition: opacity .2s;
+
+  &:hover { opacity: .85; color: $text; }
+}
+
+.gr-nav__logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: rgba(255,255,255,.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: .9rem;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.gr-nav__brand-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.gr-nav__brand-name { font-size: .95rem; font-weight: 700; }
+.gr-nav__brand-sub { font-size: .65rem; opacity: .6; }
+
+// ======= Links =======
+.gr-nav__links {
+  display: flex;
+  align-items: center;
+  gap: .25rem;
+  flex: 1;
+  margin-left: 1rem;
+
+  @media (max-width: 768px) { display: none; }
+}
+
+.gr-nav__link {
+  display: inline-flex;
+  align-items: center;
+  color: $text-muted;
+  text-decoration: none;
+  padding: .4rem .9rem;
+  border-radius: 6px;
+  font-size: .875rem;
+  font-weight: 500;
+  transition: all .2s;
+
+  &:hover { color: $text; background: rgba(255,255,255,.1); }
+
+  &--active { color: $text !important; background: rgba(255,255,255,.15) !important; font-weight: 600; }
+
+  &--publish {
+    color: $text !important;
+    background: rgba(255,255,255,.15);
+    font-weight: 600;
+
+    &:hover { background: rgba(255,255,255,.25); }
+  }
+}
+
+// ======= Auth =======
+.gr-nav__auth {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  margin-left: auto;
+  flex-shrink: 0;
+
+  @media (max-width: 768px) { display: none; }
+}
+
+.gr-nav__btn-register {
+  display: inline-flex;
+  align-items: center;
+  background: $green;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 6px;
+  padding: .4rem .9rem;
+  font-size: .875rem;
+  font-weight: 700;
+  transition: background .2s;
+
+  &:hover { background: darken($green, 8%); color: #fff; }
+}
+
+// ======= Burger =======
+.gr-nav__burger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 36px;
+  height: 36px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  margin-left: auto;
+
+  @media (max-width: 768px) { display: flex; }
+
+  span {
+    display: block;
+    height: 2px;
+    background: #fff;
+    border-radius: 2px;
+    transition: all .25s;
+  }
+
+  &--open {
+    span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    span:nth-child(2) { opacity: 0; }
+    span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  }
+}
+
+// ======= Mobile drawer =======
+.gr-nav__mobile {
+  display: none;
+  flex-direction: column;
+  background: darken($violet, 5%);
+  border-top: 1px solid rgba(255,255,255,.1);
+  padding: .75rem 1.5rem 1rem;
+  gap: .25rem;
+
+  @media (max-width: 768px) { display: flex; max-height: 0; overflow: hidden; padding: 0 1.5rem; transition: max-height .3s ease, padding .3s ease; }
+
+  &--open {
+    @media (max-width: 768px) { max-height: 400px; padding: .75rem 1.5rem 1rem; }
+  }
+}
+
+.gr-nav__mobile-link {
+  display: flex;
+  align-items: center;
+  color: $text-muted;
+  text-decoration: none;
+  padding: .6rem .5rem;
+  font-size: .9rem;
+  border-radius: 6px;
+  transition: all .2s;
+
+  &:hover { color: $text; background: rgba(255,255,255,.08); }
+}
+
+.gr-nav__mobile-divider {
+  height: 1px;
+  background: rgba(255,255,255,.1);
+  margin: .5rem 0;
+}
+
+.gr-nav__mobile-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: $green;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 6px;
+  padding: .6rem 1rem;
+  font-size: .9rem;
+  font-weight: 700;
+  margin-top: .25rem;
+
+  &:hover { background: darken($green, 8%); color: #fff; }
+}
