@@ -3,62 +3,136 @@
   <div class="hero-content">
     <div class="hero-left">
       <div class="trust-badge">
-        <img src="/assets/images/home/security-badge.png" alt="Sécurisé" class="badge-icon">
+        <i class="fas fa-shield-alt badge-icon"></i>
         <span>Plateforme sécurisée et certifiée</span>
       </div>
 
       <h1 class="hero-title">
-        Transférez de l'argent et envoyez des colis en toute <span class="gradient-text">confiance</span>
+        Envoyez des colis entre l'Afrique et le monde en toute <span class="gradient-text">confiance</span>
       </h1>
 
       <p class="hero-subtitle">
-        Rejoignez une communauté de confiance pour vos transferts d'argent et envois de colis entre l'Afrique et le
-        reste du monde. Simple, rapide et transparent.
+        Voyageurs et expéditeurs en relation directe. Simple, transparent, sans frais cachés.
       </p>
 
-      <div class="hero-cta">
-        <a routerLink="/create-transfer" class="btn-primary btn-large">
-          <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2">
-            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-          </svg>
-          Envoyer de l'argent
-        </a>
-        <a routerLink="/create-parcel" class="btn-secondary btn-large">
-          <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2">
-            <path
-              d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z">
-            </path>
-            <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-            <line x1="12" y1="22.08" x2="12" y2="12"></line>
-          </svg>
-          Envoyer un colis
-        </a>
+      <!-- Quick search bar -->
+      <div class="hero-search-bar">
+        <div class="hero-search-field">
+          <label class="hero-search-label"><i class="fas fa-map-marker-alt"></i> Départ</label>
+          <input type="text" class="hero-search-input" placeholder="ex: Paris" [(ngModel)]="searchDeparture" />
+        </div>
+        <div class="hero-search-sep"><i class="fas fa-long-arrow-alt-right"></i></div>
+        <div class="hero-search-field">
+          <label class="hero-search-label"><i class="fas fa-flag-checkered"></i> Arrivée</label>
+          <input type="text" class="hero-search-input" placeholder="ex: Dakar" [(ngModel)]="searchArrival" />
+        </div>
+        <div class="hero-search-field hero-search-field--sm">
+          <label class="hero-search-label"><i class="fas fa-filter"></i> Type</label>
+          <select class="hero-search-input hero-search-select" [(ngModel)]="searchType">
+            <option value="">Tous</option>
+            <option [value]="NeedEnumDto.Traveler">Voyageur</option>
+            <option [value]="NeedEnumDto.Sender">Expéditeur</option>
+          </select>
+        </div>
+        <button class="hero-search-btn" (click)="quickSearch()">
+          <i class="fas fa-search me-2"></i>Rechercher
+        </button>
       </div>
 
       <div class="hero-stats">
         <div class="stat-item">
           <div class="stat-number">10K+</div>
-          <div class="stat-label">Utilisateurs actifs</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-number">€2M+</div>
-          <div class="stat-label">Transférés</div>
+          <div class="stat-label">Membres actifs</div>
         </div>
         <div class="stat-item">
           <div class="stat-number">15K+</div>
           <div class="stat-label">Colis livrés</div>
         </div>
+        <div class="stat-item">
+          <div class="stat-number">98%</div>
+          <div class="stat-label">Satisfaction</div>
+        </div>
       </div>
     </div>
 
     <div class="hero-right">
-      <div class="hero-image-wrapper">
-        <img src="/assets/images/home/hero-illustration.png" alt="Transfert d'argent et colis en toute confiance"
-          class="hero-image">
+      <div class="hero-actions-card">
+        <div class="hero-action-item">
+          <div class="hero-action-icon hero-action-icon--traveler">
+            <i class="fas fa-plane"></i>
+          </div>
+          <div class="hero-action-body">
+            <strong>Vous voyagez ?</strong>
+            <span>Monétisez votre bagage disponible</span>
+          </div>
+          <a routerLink="/forms" class="hero-action-btn">Publier <i class="fas fa-arrow-right ms-1"></i></a>
+        </div>
+        <div class="hero-action-divider"></div>
+        <div class="hero-action-item">
+          <div class="hero-action-icon hero-action-icon--sender">
+            <i class="fas fa-box"></i>
+          </div>
+          <div class="hero-action-body">
+            <strong>Vous expédiez ?</strong>
+            <span>Trouvez un voyageur de confiance</span>
+          </div>
+          <a routerLink="/forms" class="hero-action-btn">Trouver <i class="fas fa-arrow-right ms-1"></i></a>
+        </div>
+        <div class="hero-action-divider"></div>
+        <a routerLink="/forms/list" class="hero-browse-link">
+          <i class="fas fa-list me-2"></i>Voir toutes les annonces
+        </a>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- SECTION: RECENT LISTINGS -->
+<section class="listings-section">
+  <div class="section-header">
+    <h2 class="section-title section-title--dark">Annonces récentes</h2>
+    <p class="section-subtitle section-subtitle--dark">Voyageurs et expéditeurs disponibles dès maintenant</p>
+  </div>
+
+  <div class="listings-grid" *ngIf="!listingsLoading">
+    <a *ngFor="let listing of recentListings" [routerLink]="['/forms', listing.id, 'details']" class="listing-card">
+      <div class="listing-card__badge"
+        [class.listing-card__badge--traveler]="listing.need?.key === NeedEnumDto.Traveler"
+        [class.listing-card__badge--sender]="listing.need?.key === NeedEnumDto.Sender">
+        <i [class]="listing.need?.key === NeedEnumDto.Traveler ? 'fas fa-plane me-1' : 'fas fa-box me-1'"></i>
+        {{ listing.need?.label }}
+      </div>
+      <div class="listing-card__route">
+        <span class="listing-card__loc">{{ listing.departureLocation }}</span>
+        <i class="fas fa-arrow-right listing-card__arrow"></i>
+        <span class="listing-card__loc">{{ listing.arrivalLocation }}</span>
+      </div>
+      <div class="listing-card__meta">
+        <span class="listing-card__weight" *ngIf="listing.need?.key === NeedEnumDto.Traveler && listing.availableWeightInGrams">
+          <i class="fas fa-weight-hanging me-1"></i>{{ weightKg(listing.availableWeightInGrams) }} kg dispo
+        </span>
+        <span class="listing-card__weight" *ngIf="listing.need?.key === NeedEnumDto.Sender && listing.desiredWeightInGrams">
+          <i class="fas fa-weight-hanging me-1"></i>{{ weightKg(listing.desiredWeightInGrams) }} kg souhaités
+        </span>
+        <span class="listing-card__price" *ngIf="listing.pricePerGram">
+          {{ pricePerKg(listing) | number:'1.0-2' }}/kg
+        </span>
+      </div>
+    </a>
+    <div *ngIf="recentListings.length === 0" class="listings-empty">
+      <i class="fas fa-search listings-empty__icon"></i>
+      <p>Aucune annonce pour le moment. <a routerLink="/forms" class="listings-empty__link">Soyez le premier !</a></p>
+    </div>
+  </div>
+
+  <div class="listings-loading" *ngIf="listingsLoading">
+    <div class="listing-skeleton" *ngFor="let i of [1,2,3]"></div>
+  </div>
+
+  <div class="listings-footer" *ngIf="recentListings.length > 0">
+    <a routerLink="/forms/list" class="btn-see-all">
+      Voir toutes les annonces <i class="fas fa-arrow-right ms-2"></i>
+    </a>
   </div>
 </section>
 
@@ -66,16 +140,14 @@
 <section class="how-it-works-section">
   <div class="section-header">
     <h2 class="section-title">Comment ça marche ?</h2>
-    <p class="section-subtitle">Quatre étapes simples pour commencer</p>
+    <p class="section-subtitle">Trois étapes simples pour commencer</p>
   </div>
 
   <div class="steps-grid">
     <div class="step-card" *ngFor="let step of steps; let i = index">
       <div class="step-number">{{ i + 1 }}</div>
       <div class="step-icon">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path [attr.d]="step.iconPath"></path>
-        </svg>
+        <i [class]="step.icon" style="font-size:2rem;color:currentColor"></i>
       </div>
       <h3 class="step-title">{{ step.title }}</h3>
       <p class="step-description">{{ step.description }}</p>

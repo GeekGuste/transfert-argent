@@ -2,21 +2,24 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ListingService } from '@/app/core/service/ws/listing/listing.service';
+import { ApplicationDto, ListingDto, NeedEnumDto } from '@/app/api/webapiservice';
 
 @Component({
   selector: 'app-listing-details',
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './listing-details.component.html',
-  styleUrl: './listing-details.component.scss'
+  styleUrl: './listing-details.component.scss',
 })
 export class ListingDetailsComponent implements OnInit {
-  listing: any = null;
+  NeedEnumDto = NeedEnumDto;
+
+  listing: ListingDto | null = null;
   loading = true;
   actionLoading = false;
   error: string | null = null;
 
-  selectedApplication: any = null;
+  selectedApplication: ApplicationDto | null = null;
   showApplicationModal = false;
 
   constructor(
@@ -26,27 +29,33 @@ export class ListingDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.loadListing(id);
-    }
+    if (id) this.loadListing(id);
   }
 
   private loadListing(id: string): void {
     this.loading = true;
-    this.listingService.getListing({ id } as any).subscribe({
-      next: (res: any) => {
-        this.listing = res.listing ?? res;
+    this.listingService.getListingById(id).subscribe({
+      next: (res) => {
+        this.listing = res;
         this.loading = false;
       },
-      error: (err) => {
+      error: () => {
         this.error = 'Impossible de charger les détails de cette annonce.';
-        console.error(err);
         this.loading = false;
-      }
+      },
     });
   }
 
-  openApplicationDetail(app: any): void {
+  get pricePerKg(): number {
+    return (this.listing?.pricePerGram ?? 0) * 1000;
+  }
+
+  get weightKg(): number {
+    const grams = this.listing?.availableWeightInGrams ?? this.listing?.desiredWeightInGrams ?? 0;
+    return grams / 1000;
+  }
+
+  openApplicationDetail(app: ApplicationDto): void {
     this.selectedApplication = app;
     this.showApplicationModal = true;
   }
@@ -56,23 +65,18 @@ export class ListingDetailsComponent implements OnInit {
     this.selectedApplication = null;
   }
 
-  toggleStatus(): void {
-    if (!this.listing) return;
+  deleteListing(): void {
+    if (!this.listing?.id || this.actionLoading) return;
     this.actionLoading = true;
 
-    const action$ = this.listing.isEnabled
-      ? this.listingService.deactivateListing(this.listing)
-      : this.listingService.activateListing(this.listing);
-
-    action$.subscribe({
+    this.listingService.deleteListing(this.listing.id).subscribe({
       next: () => {
-        this.listing.isEnabled = !this.listing.isEnabled;
+        this.actionLoading = false;
+        history.back();
+      },
+      error: () => {
         this.actionLoading = false;
       },
-      error: (err) => {
-        console.error(err);
-        this.actionLoading = false;
-      }
     });
   }
 }

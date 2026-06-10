@@ -1,52 +1,67 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { environment } from '@/environments/environment';
-import { Listing } from '@/app/core/models/listing.model';
+import { from, Observable } from 'rxjs';
+import { ApiClientService } from '@/app/api/api-client.service';
+import {
+  ApplicationInput,
+  GetApplicationsOutput,
+  GetListingsOutput,
+  ListingDto,
+  ListingInput,
+  NeedEnumDto,
+  UpdateListingInput,
+} from '@/app/api/webapiservice';
 
-
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class ListingService {
-  endpoint = environment.endpoint;
+  constructor(private api: ApiClientService) {}
 
-  constructor(
-    private httpClient: HttpClient
-  ) { }
-
-  getListings() {
-    return this.httpClient.get(this.endpoint + '/listings');
+  getListings(
+    departureLocation?: string,
+    arrivalLocation?: string,
+    need?: NeedEnumDto,
+    dateFrom?: Date,
+    dateTo?: Date
+  ): Observable<GetListingsOutput> {
+    return from(this.api.client.getListings(departureLocation, arrivalLocation, need, dateFrom, dateTo));
   }
 
-  getListing(listing: Listing) {
-    return this.httpClient.get(this.endpoint + '/listings/' + listing.id);
+  getListingById(id: string): Observable<ListingDto> {
+    return from(this.api.client.getListingById(id));
   }
 
-  createListing(ListingForm: any) {
-    return this.httpClient.post(this.endpoint + '/listings', ListingForm);
+  getListingByToken(token: string): Observable<ListingDto> {
+    return from(this.api.client.getListingByToken(token));
   }
 
-  updateListing(Listing: any) {
-    console.log(Listing);
-    return this.httpClient.put(this.endpoint + '/listings/' + Listing.id, Listing);
+  createListing(input: ListingInput): Observable<ListingDto> {
+    return from(this.api.client.createListing(input));
   }
 
-  deleteListing(Listing: any) {
-    return this.httpClient.delete(this.endpoint + '/listings/delete', Listing);
+  updateListingByToken(token: string, input: UpdateListingInput): Observable<ListingDto> {
+    return from(this.api.client.updateListingByToken(token, input));
   }
 
-  deactivateListing(Listing: any) {
-    Listing.isEnabled = false;
-    return this.httpClient.put(this.endpoint + '/listings/' + Listing.id, Listing);
+  deactivateListing(token: string): Observable<void> {
+    return from(this.api.client.deactivateListing(token));
   }
 
-  activateListing(Listing: any) {
-    Listing.isEnabled = true;
-    return this.httpClient.put(this.endpoint + '/listings/' + Listing.id, Listing);
+  deleteListing(listingId: string): Observable<void> {
+    return from(this.api.client.deleteListing(listingId));
   }
 
-  createApplication(applicationForm: any) {
-    return this.httpClient.post(this.endpoint + '/applications', applicationForm);
+  confirmListingActive(token: string): Observable<void> {
+    return from(this.api.client.confirmListingActive(token));
   }
 
+  validateApplication(token: string, applicationId: string): Observable<void> {
+    return from(this.api.client.validateApplication(token, applicationId));
+  }
+
+  createApplication(input: ApplicationInput): Observable<void> {
+    return from(this.api.client.createApplication(input));
+  }
+
+  getApplications(): Observable<GetApplicationsOutput> {
+    return from(this.api.client.getApplications());
+  }
 }

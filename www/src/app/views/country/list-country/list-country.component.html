@@ -48,16 +48,8 @@
                   </td>
 
                   <td class="text-end">
-                    <a href="javascript:void(0);" (click)="openEditModal(country)" class="me-0.5"><i
+                    <a href="javascript:void(0);" (click)="editCountry(country)" class="me-0.5"><i
                         class="las la-pen text-secondary font-16"></i></a>
-                    @if (country.isEnabled) {
-                    <a href="javascript:void(0);" (click)="deactivateCountry(country)"><i
-                        class="las la-lock text-secondary font-16"></i></a>
-                    }
-                    @if (!country.isEnabled) {
-                    <a href="javascript:void(0);" (click)="activateCountry(country)"><i
-                        class="las la-unlock text-secondary font-16"></i></a>
-                    }
                     <a href="javascript:void(0);" (click)="deleteCountry(country)"><i
                         class="las la-trash-alt text-secondary font-16"></i></a>
                     <!-- <ng-container *ngIf="(loading && currentCountry!==null && currentCountry.name === country.countryName)">

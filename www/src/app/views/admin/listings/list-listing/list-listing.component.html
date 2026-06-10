@@ -1,56 +1,38 @@
 <div class="row justify-content-center">
   <div class="col-md-12 col-lg-12">
     <div class="card">
-      <!-- Card Header -->
       <div class="card-header">
         <div class="row align-items-center">
           <div class="col">
             <h4 class="card-title">Gestion des annonces</h4>
           </div>
           <div class="col-auto">
-            <!-- Filter tabs -->
             <div class="btn-group btn-group-sm" role="group">
-              <button
-                type="button"
-                class="btn"
+              <button type="button" class="btn"
                 [class.btn-primary]="activeTab === 'all'"
                 [class.btn-outline-primary]="activeTab !== 'all'"
-                (click)="activeTab = 'all'"
-              >
+                (click)="activeTab = 'all'">
                 Toutes
-                <span class="badge bg-white text-primary ms-1">{{
-                  listings.length
-                }}</span>
+                <span class="badge bg-white text-primary ms-1">{{ listings.length }}</span>
               </button>
-              <button
-                type="button"
-                class="btn"
+              <button type="button" class="btn"
                 [class.btn-primary]="activeTab === 'travelers'"
                 [class.btn-outline-primary]="activeTab !== 'travelers'"
-                (click)="activeTab = 'travelers'"
-              >
+                (click)="activeTab = 'travelers'">
                 <i class="las la-plane me-1"></i>Voyageurs
-                <span class="badge bg-white text-primary ms-1">{{
-                  travelers.length
-                }}</span>
+                <span class="badge bg-white text-primary ms-1">{{ travelers.length }}</span>
               </button>
-              <button
-                type="button"
-                class="btn"
+              <button type="button" class="btn"
                 [class.btn-success]="activeTab === 'senders'"
                 [class.btn-outline-success]="activeTab !== 'senders'"
-                (click)="activeTab = 'senders'"
-              >
-                <i class="las la-search me-1"></i>Expéditeurs
-                <span class="badge bg-white text-success ms-1">{{
-                  senders.length
-                }}</span>
+                (click)="activeTab = 'senders'">
+                <i class="las la-box me-1"></i>Expéditeurs
+                <span class="badge bg-white text-success ms-1">{{ senders.length }}</span>
               </button>
             </div>
           </div>
         </div>
       </div>
-      <!-- end card-header -->
 
       <div class="card-body pt-0">
         <!-- Loading -->
@@ -66,19 +48,13 @@
         </div>
 
         <!-- Empty -->
-        <div
-          *ngIf="!loading && listings.length === 0 && !error"
-          class="text-center py-5"
-        >
+        <div *ngIf="!loading && listings.length === 0 && !error" class="text-center py-5">
           <i class="las la-box-open text-muted" style="font-size: 3rem"></i>
           <h5 class="text-muted mt-3">Aucune annonce trouvée</h5>
         </div>
 
         <!-- Table -->
-        <div
-          class="table-responsive"
-          *ngIf="!loading && filteredListings.length > 0"
-        >
+        <div class="table-responsive" *ngIf="!loading && filteredListings.length > 0">
           <table class="table table-striped mb-0">
             <thead class="table-light">
               <tr>
@@ -88,147 +64,76 @@
                 <th>Arrivée</th>
                 <th>Date</th>
                 <th>Prix/kg</th>
+                <th>Candidatures</th>
                 <th>Statut</th>
                 <th class="text-end">Actions</th>
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let listing of filteredListings">
-                <!-- Type badge -->
                 <td>
-                  <span
-                    class="badge rounded-pill px-2 py-1"
-                    [class.bg-primary]="
-                      (listing.need?.key ?? listing.need) === 'VOYAGEUR'
-                    "
-                    [class.bg-warning]="
-                      (listing.need?.key ?? listing.need) === 'CHERCHEUR'
-                    "
-                  >
-                    <i
-                      class="las me-1"
-                      [class.la-plane]="
-                        (listing.need?.key ?? listing.need) === 'VOYAGEUR'
-                      "
-                      [class.la-search]="
-                        (listing.need?.key ?? listing.need) === 'CHERCHEUR'
-                      "
-                    ></i>
+                  <span class="badge rounded-pill px-2 py-1"
+                    [class.bg-primary]="listing.need?.key === NeedEnumDto.Traveler"
+                    [class.bg-warning]="listing.need?.key === NeedEnumDto.Sender">
+                    <i class="las me-1"
+                      [class.la-plane]="listing.need?.key === NeedEnumDto.Traveler"
+                      [class.la-box]="listing.need?.key === NeedEnumDto.Sender"></i>
                     <span class="text-secondary">
-                      {{
-                        (listing.need?.key ?? listing.need) === "VOYAGEUR"
-                          ? "Voyageur"
-                          : "Expéditeur"
-                      }}
+                      {{ listing.need?.key === NeedEnumDto.Traveler ? 'Voyageur' : 'Expéditeur' }}
                     </span>
                   </span>
                 </td>
-
-                <!-- Annonceur -->
                 <td>
                   <div class="d-flex align-items-center">
                     <div class="avatar-sm me-2">
-                      {{ listing.firstName?.charAt(0)
-                      }}{{ listing.lastName?.charAt(0) }}
+                      {{ listing.firstName?.charAt(0) }}{{ listing.lastName?.charAt(0) }}
                     </div>
-                    <div>
-                      <span class="fw-semibold d-block"
-                        >{{ listing.firstName }} {{ listing.lastName }}</span
-                      >
-                    </div>
+                    <span class="fw-semibold">{{ listing.firstName }} {{ listing.lastName }}</span>
                   </div>
                 </td>
-
-                <!-- Départ -->
                 <td>
                   <i class="las la-map-marker text-danger me-1"></i>
-                  {{ listing.departureLocation || "—" }}
+                  {{ listing.departureLocation || '—' }}
                 </td>
-
-                <!-- Arrivée -->
                 <td>
                   <i class="las la-map-pin text-success me-1"></i>
-                  {{ listing.arrivalLocation || "—" }}
+                  {{ listing.arrivalLocation || '—' }}
                 </td>
-
-                <!-- Date -->
                 <td class="text-muted small">
-                  {{
-                    listing.departureDate || listing.maxTravelDate
-                      | date: "mediumDate"
-                  }}
+                  {{ (listing.departureDate || listing.maxTravelDate) | date:'mediumDate' }}
                 </td>
-
-                <!-- Prix -->
                 <td class="fw-bold">
-                  {{ listing.pricePerKg }}
-                  <span class="text-muted fw-normal">€/kg</span>
+                  {{ pricePerKg(listing) | number:'1.0-2' }}
+                  <span class="text-muted fw-normal">/kg</span>
                 </td>
-
-                <!-- Statut -->
                 <td>
-                  <span *ngIf="listing.isEnabled" class="badge bg-success"
-                    >Actif</span
-                  >
-                  <span *ngIf="!listing.isEnabled" class="badge bg-secondary"
-                    >Inactif</span
-                  >
+                  <span class="badge bg-info-subtle text-info rounded-pill">
+                    {{ listing.applicationsNumber ?? 0 }}
+                  </span>
                 </td>
-
-                <!-- Actions -->
+                <td>
+                  <span class="badge" [class.bg-success]="listing.isActive" [class.bg-secondary]="!listing.isActive">
+                    {{ listing.isActive ? 'Active' : 'Inactive' }}
+                  </span>
+                </td>
                 <td class="text-end">
-                  <!-- Voir détails -->
-                  <a
-                    [routerLink]="['/views/listings/details', listing.id]"
-                    class="me-1"
-                    title="Voir les détails"
-                  >
+                  <a [routerLink]="['/views/listings/details', listing.id]" class="me-2" title="Voir les détails">
                     <i class="las la-eye text-secondary font-16"></i>
                   </a>
-
-                  <!-- Désactiver -->
-                  @if (listing.isEnabled) {
-                    <a
-                      href="javascript:void(0);"
-                      (click)="deactivateListing(listing)"
-                      title="Désactiver"
-                    >
-                      <i class="las la-lock text-secondary font-16"></i>
-                    </a>
-                  }
-
-                  <!-- Activer -->
-                  @if (!listing.isEnabled) {
-                    <a
-                      href="javascript:void(0);"
-                      (click)="activateListing(listing)"
-                      title="Activer"
-                    >
-                      <i class="las la-unlock text-secondary font-16"></i>
-                    </a>
-                  }
-
-                  <!-- Spinner -->
-                  <ng-container
-                    *ngIf="actionLoading && currentListing?.id === listing.id"
-                  >
-                    <span
-                      class="spinner-border spinner-border-sm ms-1"
-                      role="status"
-                      aria-hidden="true"
-                    ></span>
-                  </ng-container>
+                  <a href="javascript:void(0);" (click)="deleteListing(listing)" title="Supprimer">
+                    <ng-container *ngIf="actionLoading && currentListingId === listing.id; else deleteIcon">
+                      <span class="spinner-border spinner-border-sm" role="status"></span>
+                    </ng-container>
+                    <ng-template #deleteIcon>
+                      <i class="las la-trash text-danger font-16"></i>
+                    </ng-template>
+                  </a>
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
-        <!-- end table-responsive -->
       </div>
-      <!-- end card-body -->
     </div>
-    <!-- end card -->
   </div>
-  <!-- end col -->
 </div>
-<!-- end row -->

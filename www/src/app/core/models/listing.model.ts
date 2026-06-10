@@ -1,26 +1,30 @@
-import { Need } from '@/app/common/need.enum';
+import { NeedEnumDto } from '@/app/api/webapiservice';
 
 export interface Listing {
-    readonly id?: number
-    need?: Need | null;
-    lastName?: string | null;
-    firstName?: string | null;
-    phone?: string | null;
-    email?: string | null;
-    isAdult?: boolean | null;
+  id?: string;
+  need?: { key?: NeedEnumDto; label?: string } | null;
+  lastName?: string | null;
+  firstName?: string | null;
+  phone?: string | null;
+  email?: string | null;
+  isAdult?: boolean | null;
 
-    departureDate?: string | Date | null;
-    arrivalDate?: string | Date | null;
-    availableWeight?: number | null;
+  departureDate?: Date | null;
+  arrivalDate?: Date | null;
+  availableWeightInGrams?: number | null;
 
-    maxTravelDate?: string | Date | null;
-    desiredWeight?: number | null;
+  maxTravelDate?: Date | null;
+  desiredWeightInGrams?: number | null;
 
-    departureLocation?: string | null;
-    arrivalLocation?: string | null;
-    pricePerKg?: number | null;
-    paymentMethod?: string | null;
+  departureLocation?: string | null;
+  arrivalLocation?: string | null;
+  pricePerGram?: number | null;
+  currencyId?: string | null;
+  serviceId?: string | null;
+  paymentMethod?: string | null;
 
-    acceptTerms?: boolean | null;
-    currencyId?: number | null;
+  isActive?: boolean;
+  accessToken?: string | null;
+  dateCreation?: Date;
+  applicationsNumber?: number;
 }
