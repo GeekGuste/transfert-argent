@@ -8,23 +8,31 @@
       </div>
 
       <h1 class="hero-title">
-        Envoyez des colis entre l'Afrique et le monde en toute <span class="gradient-text">confiance</span>
+        Envoyez vos colis de ville en ville, partout dans le monde, en toute <span class="gradient-text">confiance</span>
       </h1>
 
       <p class="hero-subtitle">
-        Voyageurs et expéditeurs en relation directe. Simple, transparent, sans frais cachés.
+        Voyageurs et expéditeurs en relation directe, sans intermédiaire. Simple, transparent, sans frais cachés.
       </p>
 
       <!-- Quick search bar -->
       <div class="hero-search-bar">
         <div class="hero-search-field">
           <label class="hero-search-label"><i class="fas fa-map-marker-alt"></i> Départ</label>
-          <input type="text" class="hero-search-input" placeholder="ex: Paris" [(ngModel)]="searchDeparture" />
+          <select class="hero-search-input hero-search-select" [(ngModel)]="searchDepartureCountryId">
+            <option value="">Pays...</option>
+            <option *ngFor="let c of countries" [value]="c.id">{{ c.name }}</option>
+          </select>
+          <input type="text" class="hero-search-input hero-search-city" placeholder="Ville..." [(ngModel)]="searchDepartureCity" />
         </div>
         <div class="hero-search-sep"><i class="fas fa-long-arrow-alt-right"></i></div>
         <div class="hero-search-field">
           <label class="hero-search-label"><i class="fas fa-flag-checkered"></i> Arrivée</label>
-          <input type="text" class="hero-search-input" placeholder="ex: Dakar" [(ngModel)]="searchArrival" />
+          <select class="hero-search-input hero-search-select" [(ngModel)]="searchArrivalCountryId">
+            <option value="">Pays...</option>
+            <option *ngFor="let c of countries" [value]="c.id">{{ c.name }}</option>
+          </select>
+          <input type="text" class="hero-search-input hero-search-city" placeholder="Ville..." [(ngModel)]="searchArrivalCity" />
         </div>
         <div class="hero-search-field hero-search-field--sm">
           <label class="hero-search-label"><i class="fas fa-filter"></i> Type</label>
@@ -103,9 +111,9 @@
         {{ listing.need?.label }}
       </div>
       <div class="listing-card__route">
-        <span class="listing-card__loc">{{ listing.departureLocation }}</span>
+        <span class="listing-card__loc">{{ listing.departureCity || '—' }}{{ listing.departureCountry?.name ? ', ' + listing.departureCountry!.name : '' }}</span>
         <i class="fas fa-arrow-right listing-card__arrow"></i>
-        <span class="listing-card__loc">{{ listing.arrivalLocation }}</span>
+        <span class="listing-card__loc">{{ listing.arrivalCity || '—' }}{{ listing.arrivalCountry?.name ? ', ' + listing.arrivalCountry!.name : '' }}</span>
       </div>
       <div class="listing-card__meta">
         <span class="listing-card__weight" *ngIf="listing.need?.key === NeedEnumDto.Traveler && listing.availableWeightInGrams">
@@ -114,8 +122,8 @@
         <span class="listing-card__weight" *ngIf="listing.need?.key === NeedEnumDto.Sender && listing.desiredWeightInGrams">
           <i class="fas fa-weight-hanging me-1"></i>{{ weightKg(listing.desiredWeightInGrams) }} kg souhaités
         </span>
-        <span class="listing-card__price" *ngIf="listing.pricePerGram">
-          {{ pricePerKg(listing) | number:'1.0-2' }}/kg
+        <span class="listing-card__price" *ngIf="listing.pricePerKg">
+          {{ pricePerKg(listing) | number:'1.0-2' }} {{ listing.currency?.symbol || listing.currency?.code || '' }}/kg
         </span>
       </div>
     </a>
@@ -219,7 +227,7 @@
       </div>
       <h3 class="service-title">Envoi de colis sécurisé</h3>
       <p class="service-description">
-        Connectez-vous avec des voyageurs de confiance pour envoyer vos colis entre l'Afrique et le reste du monde.
+        Connectez-vous avec des voyageurs de confiance pour envoyer vos colis d'une ville à l'autre, où que vous soyez dans le monde.
       </p>
       <ul class="service-features">
         <li>

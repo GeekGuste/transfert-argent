@@ -11,6 +11,10 @@ export class CountryService {
     return from(this.api.client.getCountries());
   }
 
+  getActiveCountries(): Observable<GetCountriesOutput> {
+    return from(this.api.client.getActiveCountries());
+  }
+
   createCountry(body: CountryDto): Observable<void> {
     return from(this.api.client.createCountry(body));
   }

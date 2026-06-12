@@ -45,13 +45,21 @@
 
       <div class="ll-filter-group">
         <label class="ll-filter-label"><i class="fas fa-map-marker-alt text-danger me-1"></i>Départ</label>
-        <input type="text" class="ll-filter-input" placeholder="ex: Paris" [(ngModel)]="filterDeparture"
+        <select class="ll-filter-input" [(ngModel)]="filterDepartureCountryId" (change)="fetchListings()">
+          <option value="">Tous les pays</option>
+          <option *ngFor="let c of countries" [value]="c.id">{{ c.name }}</option>
+        </select>
+        <input type="text" class="ll-filter-input mt-1" placeholder="Ville..." [(ngModel)]="filterDepartureCity"
           (change)="fetchListings()" />
       </div>
 
       <div class="ll-filter-group">
         <label class="ll-filter-label"><i class="fas fa-flag-checkered text-success me-1"></i>Arrivée</label>
-        <input type="text" class="ll-filter-input" placeholder="ex: Dakar" [(ngModel)]="filterArrival"
+        <select class="ll-filter-input" [(ngModel)]="filterArrivalCountryId" (change)="fetchListings()">
+          <option value="">Tous les pays</option>
+          <option *ngFor="let c of countries" [value]="c.id">{{ c.name }}</option>
+        </select>
+        <input type="text" class="ll-filter-input mt-1" placeholder="Ville..." [(ngModel)]="filterArrivalCity"
           (change)="fetchListings()" />
       </div>
 
@@ -134,12 +142,12 @@
           <div class="ll-card__route">
             <div class="ll-card__loc">
               <span class="ll-card__loc-dot ll-card__loc-dot--from"></span>
-              <span>{{ listing.departureLocation || '—' }}</span>
+              <span>{{ listing.departureCity || '—' }}{{ listing.departureCountry?.name ? ', ' + listing.departureCountry!.name : '' }}</span>
             </div>
             <div class="ll-card__line"></div>
             <div class="ll-card__loc">
               <span class="ll-card__loc-dot ll-card__loc-dot--to"></span>
-              <span>{{ listing.arrivalLocation || '—' }}</span>
+              <span>{{ listing.arrivalCity || '—' }}{{ listing.arrivalCountry?.name ? ', ' + listing.arrivalCountry!.name : '' }}</span>
             </div>
           </div>
 
@@ -163,8 +171,8 @@
           <div class="ll-card__footer">
             <div class="ll-card__avatar">{{ initials(listing) }}</div>
             <span class="ll-card__name">{{ listing.firstName }} {{ listing.lastName }}</span>
-            <span class="ll-card__price" *ngIf="listing.pricePerGram">
-              {{ pricePerKg(listing) | number:'1.0-2' }}/kg
+            <span class="ll-card__price" *ngIf="listing.pricePerKg">
+              {{ pricePerKg(listing) | number:'1.0-2' }} {{ listing.currency?.symbol || listing.currency?.code || '' }}/kg
             </span>
           </div>
 

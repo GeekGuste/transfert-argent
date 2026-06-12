@@ -16,13 +16,15 @@ export class ListingService {
   constructor(private api: ApiClientService) {}
 
   getListings(
-    departureLocation?: string,
-    arrivalLocation?: string,
+    departureCountryId?: string,
+    departureCity?: string,
+    arrivalCountryId?: string,
+    arrivalCity?: string,
     need?: NeedEnumDto,
     dateFrom?: Date,
     dateTo?: Date
   ): Observable<GetListingsOutput> {
-    return from(this.api.client.getListings(departureLocation, arrivalLocation, need, dateFrom, dateTo));
+    return from(this.api.client.getListings(departureCountryId, departureCity, arrivalCountryId, arrivalCity, need, dateFrom, dateTo));
   }
 
   getListingById(id: string): Observable<ListingDto> {

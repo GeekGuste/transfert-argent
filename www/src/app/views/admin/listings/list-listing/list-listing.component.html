@@ -93,11 +93,11 @@
                 </td>
                 <td>
                   <i class="las la-map-marker text-danger me-1"></i>
-                  {{ listing.departureLocation || '—' }}
+                  {{ listing.departureCity || '—' }}{{ listing.departureCountry?.name ? ', ' + listing.departureCountry!.name : '' }}
                 </td>
                 <td>
                   <i class="las la-map-pin text-success me-1"></i>
-                  {{ listing.arrivalLocation || '—' }}
+                  {{ listing.arrivalCity || '—' }}{{ listing.arrivalCountry?.name ? ', ' + listing.arrivalCountry!.name : '' }}
                 </td>
                 <td class="text-muted small">
                   {{ (listing.departureDate || listing.maxTravelDate) | date:'mediumDate' }}

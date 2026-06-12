@@ -209,6 +209,16 @@ $radius-lg: 12px;
     flex: 1;
   }
 
+  &__select {
+    @extend .al-input;
+    border-radius: 0;
+    border-left: none;
+    cursor: pointer;
+    width: 72px;
+    flex: 0 0 72px;
+    padding-right: .25rem;
+  }
+
   &__text {
     background: #f3f3f3;
     border: 1px solid $border;

@@ -32,7 +32,7 @@
             <span class="ld-banner__dot ld-banner__dot--from"></span>
             <div>
               <small>Départ</small>
-              <strong>{{ listing.departureLocation || '—' }}</strong>
+              <strong>{{ listing.departureCity || '—' }}{{ listing.departureCountry?.name ? ', ' + listing.departureCountry!.name : '' }}</strong>
             </div>
           </div>
           <i class="fas fa-long-arrow-alt-right ld-banner__arrow"></i>
@@ -40,7 +40,7 @@
             <span class="ld-banner__dot ld-banner__dot--to"></span>
             <div>
               <small>Arrivée</small>
-              <strong>{{ listing.arrivalLocation || '—' }}</strong>
+              <strong>{{ listing.arrivalCity || '—' }}{{ listing.arrivalCountry?.name ? ', ' + listing.arrivalCountry!.name : '' }}</strong>
             </div>
           </div>
         </div>
@@ -64,7 +64,7 @@
           <div class="ld-highlight-box ld-highlight-box--price">
             <span class="ld-highlight-box__label"><i class="fas fa-tag me-1"></i>Prix</span>
             <span class="ld-highlight-box__value">{{ pricePerKg | number:'1.0-2' }}</span>
-            <span class="ld-highlight-box__unit">/kg</span>
+            <span class="ld-highlight-box__unit">{{ listing.currency?.symbol || listing.currency?.code || '' }}/kg</span>
           </div>
           <div class="ld-highlight-box ld-highlight-box--weight">
             <span class="ld-highlight-box__label">

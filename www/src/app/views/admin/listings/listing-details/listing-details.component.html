@@ -75,11 +75,11 @@
                 </tr>
                 <tr>
                   <th class="text-muted fw-normal">Lieu de départ</th>
-                  <td><i class="las la-map-marker text-danger me-1"></i>{{ listing.departureLocation || '—' }}</td>
+                  <td><i class="las la-map-marker text-danger me-1"></i>{{ listing.departureCity || '—' }}{{ listing.departureCountry?.name ? ', ' + listing.departureCountry!.name : '' }}</td>
                 </tr>
                 <tr>
                   <th class="text-muted fw-normal">Lieu d'arrivée</th>
-                  <td><i class="las la-map-pin text-success me-1"></i>{{ listing.arrivalLocation || '—' }}</td>
+                  <td><i class="las la-map-pin text-success me-1"></i>{{ listing.arrivalCity || '—' }}{{ listing.arrivalCountry?.name ? ', ' + listing.arrivalCountry!.name : '' }}</td>
                 </tr>
                 <tr *ngIf="listing.departureDate">
                   <th class="text-muted fw-normal">Date de départ</th>

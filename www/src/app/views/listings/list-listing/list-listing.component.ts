@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ListingService } from '@/app/core/service/ws/listing/listing.service';
-import { ListingDto, NeedEnumDto } from '@/app/api/webapiservice';
+import { CountryService } from '@/app/core/service/ws/country/country.service';
+import { CountryDto, ListingDto, NeedEnumDto } from '@/app/api/webapiservice';
 import { NavbarComponent } from '@/app/shared/navbar/navbar.component';
 
 @Component({
@@ -17,25 +18,34 @@ export class ListListingComponent implements OnInit {
   NeedEnumDto = NeedEnumDto;
 
   listings: ListingDto[] = [];
+  countries: CountryDto[] = [];
   loading = true;
   error: string | null = null;
   viewMode: 'grid' | 'list' = 'grid';
 
-  filterDeparture = '';
-  filterArrival = '';
+  filterDepartureCountryId = '';
+  filterDepartureCity = '';
+  filterArrivalCountryId = '';
+  filterArrivalCity = '';
   filterNeed: NeedEnumDto | '' = '';
   filterDateFrom = '';
   filterDateTo = '';
 
   constructor(
     private listingService: ListingService,
+    private countryService: CountryService,
     private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
+    this.countryService.getActiveCountries().subscribe({
+      next: (res) => { this.countries = res.countries ?? []; },
+    });
     this.route.queryParams.subscribe(params => {
-      this.filterDeparture = params['departure'] ?? '';
-      this.filterArrival = params['arrival'] ?? '';
+      this.filterDepartureCountryId = params['departureCountryId'] ?? '';
+      this.filterDepartureCity = params['departureCity'] ?? '';
+      this.filterArrivalCountryId = params['arrivalCountryId'] ?? '';
+      this.filterArrivalCity = params['arrivalCity'] ?? '';
       this.filterNeed = params['need'] ?? '';
       this.fetchListings();
     });
@@ -49,8 +59,10 @@ export class ListListingComponent implements OnInit {
     const dateTo = this.filterDateTo ? new Date(this.filterDateTo) : undefined;
 
     this.listingService.getListings(
-      this.filterDeparture || undefined,
-      this.filterArrival || undefined,
+      this.filterDepartureCountryId || undefined,
+      this.filterDepartureCity || undefined,
+      this.filterArrivalCountryId || undefined,
+      this.filterArrivalCity || undefined,
       need,
       dateFrom,
       dateTo
@@ -67,8 +79,10 @@ export class ListListingComponent implements OnInit {
   }
 
   resetFilters(): void {
-    this.filterDeparture = '';
-    this.filterArrival = '';
+    this.filterDepartureCountryId = '';
+    this.filterDepartureCity = '';
+    this.filterArrivalCountryId = '';
+    this.filterArrivalCity = '';
     this.filterNeed = '';
     this.filterDateFrom = '';
     this.filterDateTo = '';
@@ -76,11 +90,11 @@ export class ListListingComponent implements OnInit {
   }
 
   get hasActiveFilters(): boolean {
-    return !!(this.filterDeparture || this.filterArrival || this.filterNeed || this.filterDateFrom || this.filterDateTo);
+    return !!(this.filterDepartureCountryId || this.filterDepartureCity || this.filterArrivalCountryId || this.filterArrivalCity || this.filterNeed || this.filterDateFrom || this.filterDateTo);
   }
 
   pricePerKg(listing: ListingDto): number {
-    return (listing.pricePerGram ?? 0) * 1000;
+    return listing.pricePerKg ?? 0;
   }
 
   weightKg(grams: number | null | undefined): number {
