@@ -4,7 +4,8 @@ import { RouterModule, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { LanguageService } from '../../../core/service/language.service';
 import { ListingService } from '../../../core/service/ws/listing/listing.service';
-import { ListingDto, NeedEnumDto } from '../../../api/webapiservice';
+import { CountryService } from '../../../core/service/ws/country/country.service';
+import { CountryDto, ListingDto, NeedEnumDto } from '../../../api/webapiservice';
 
 interface Step {
   title: string;
@@ -61,9 +62,12 @@ export class HomeComponent implements OnInit {
 
   recentListings: ListingDto[] = [];
   listingsLoading = true;
+  countries: CountryDto[] = [];
 
-  searchDeparture = '';
-  searchArrival = '';
+  searchDepartureCountryId = '';
+  searchDepartureCity = '';
+  searchArrivalCountryId = '';
+  searchArrivalCity = '';
   searchType: NeedEnumDto | '' = '';
 
   languages: Language[] = [
@@ -121,24 +125,24 @@ export class HomeComponent implements OnInit {
 
   testimonials: Testimonial[] = [
     {
-      name: 'Aminata Diallo',
-      location: 'Paris → Dakar',
+      name: 'Sophie Martin',
+      location: 'Paris → Montréal',
       avatar: 'https://i.pravatar.cc/150?img=1',
-      text: 'J\'envoie des colis à ma famille au Sénégal. GlobRel est rapide et les frais sont vraiment compétitifs. Je recommande !',
+      text: 'J\'envoie régulièrement des colis à ma famille au Canada. GlobRel est rapide, les frais sont transparents et le service vraiment fiable. Je recommande !',
       type: 'Envoi de colis'
     },
     {
-      name: 'Jean-Marc Kouassi',
-      location: 'Abidjan → Lyon',
+      name: 'Omar Al-Rashid',
+      location: 'Dubaï → Paris',
       avatar: 'https://i.pravatar.cc/150?img=12',
-      text: 'J\'ai trouvé un voyageur en moins d\'une heure. Le suivi m\'a rassuré et tout s\'est parfaitement déroulé.',
+      text: 'J\'ai trouvé un voyageur en moins d\'une heure pour transporter un cadeau à ma sœur. Tout s\'est parfaitement déroulé, je suis bluffé par la simplicité.',
       type: 'Voyageur'
     },
     {
-      name: 'Fatou Ndiaye',
-      location: 'Bruxelles → Bamako',
+      name: 'Luisa Ferreira',
+      location: 'Lisbonne → São Paulo',
       avatar: 'https://i.pravatar.cc/150?img=5',
-      text: 'Interface simple et intuitive. J\'ai pu envoyer un colis à ma mère en quelques clics. Service excellent.',
+      text: 'Interface simple et intuitive. En quelques clics j\'ai trouvé quelqu\'un de confiance pour envoyer un colis à ma famille au Brésil. Service excellent.',
       type: 'Expéditeur'
     }
   ];
@@ -181,6 +185,7 @@ export class HomeComponent implements OnInit {
   constructor(
     private languageService: LanguageService,
     private listingService: ListingService,
+    private countryService: CountryService,
     private router: Router
   ) {
     this.currentLanguage = this.languageService.getCurrentLanguage();
@@ -188,7 +193,14 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadRecentListings();
+    this.loadCountries();
     this.setupScrollAnimations();
+  }
+
+  loadCountries(): void {
+    this.countryService.getActiveCountries().subscribe({
+      next: (res) => { this.countries = res.countries ?? []; },
+    });
   }
 
   loadRecentListings(): void {
@@ -205,14 +217,16 @@ export class HomeComponent implements OnInit {
 
   quickSearch(): void {
     const params: Record<string, string> = {};
-    if (this.searchDeparture) params['departure'] = this.searchDeparture;
-    if (this.searchArrival) params['arrival'] = this.searchArrival;
+    if (this.searchDepartureCountryId) params['departureCountryId'] = this.searchDepartureCountryId;
+    if (this.searchDepartureCity) params['departureCity'] = this.searchDepartureCity;
+    if (this.searchArrivalCountryId) params['arrivalCountryId'] = this.searchArrivalCountryId;
+    if (this.searchArrivalCity) params['arrivalCity'] = this.searchArrivalCity;
     if (this.searchType) params['need'] = this.searchType;
     this.router.navigate(['/forms/list'], { queryParams: params });
   }
 
   pricePerKg(listing: ListingDto): number {
-    return (listing.pricePerGram ?? 0) * 1000;
+    return listing.pricePerKg ?? 0;
   }
 
   weightKg(grams: number | null | undefined): number {

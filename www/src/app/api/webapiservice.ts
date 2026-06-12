@@ -205,6 +205,43 @@ export class Client {
     /**
      * @return OK
      */
+    getActiveCountries(): Promise<GetCountriesOutput> {
+        let url_ = this.baseUrl + "/countries/active";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetActiveCountries(_response);
+        });
+    }
+
+    protected processGetActiveCountries(response: Response): Promise<GetCountriesOutput> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GetCountriesOutput.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<GetCountriesOutput>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
     updateCountry(id: string, body: CountryDto): Promise<void> {
         let url_ = this.baseUrl + "/countries/{id}";
         if (id === undefined || id === null)
@@ -434,23 +471,33 @@ export class Client {
     }
 
     /**
-     * @param departureLocation (optional) 
-     * @param arrivalLocation (optional) 
+     * @param departureCountryId (optional) 
+     * @param departureCity (optional) 
+     * @param arrivalCountryId (optional) 
+     * @param arrivalCity (optional) 
      * @param need (optional) 
      * @param dateFrom (optional) 
      * @param dateTo (optional) 
      * @return OK
      */
-    getListings(departureLocation: string | undefined, arrivalLocation: string | undefined, need: NeedEnumDto | undefined, dateFrom: Date | undefined, dateTo: Date | undefined): Promise<GetListingsOutput> {
+    getListings(departureCountryId: string | undefined, departureCity: string | undefined, arrivalCountryId: string | undefined, arrivalCity: string | undefined, need: NeedEnumDto | undefined, dateFrom: Date | undefined, dateTo: Date | undefined): Promise<GetListingsOutput> {
         let url_ = this.baseUrl + "/listings?";
-        if (departureLocation === null)
-            throw new Error("The parameter 'departureLocation' cannot be null.");
-        else if (departureLocation !== undefined)
-            url_ += "DepartureLocation=" + encodeURIComponent("" + departureLocation) + "&";
-        if (arrivalLocation === null)
-            throw new Error("The parameter 'arrivalLocation' cannot be null.");
-        else if (arrivalLocation !== undefined)
-            url_ += "ArrivalLocation=" + encodeURIComponent("" + arrivalLocation) + "&";
+        if (departureCountryId === null)
+            throw new Error("The parameter 'departureCountryId' cannot be null.");
+        else if (departureCountryId !== undefined)
+            url_ += "DepartureCountryId=" + encodeURIComponent("" + departureCountryId) + "&";
+        if (departureCity === null)
+            throw new Error("The parameter 'departureCity' cannot be null.");
+        else if (departureCity !== undefined)
+            url_ += "DepartureCity=" + encodeURIComponent("" + departureCity) + "&";
+        if (arrivalCountryId === null)
+            throw new Error("The parameter 'arrivalCountryId' cannot be null.");
+        else if (arrivalCountryId !== undefined)
+            url_ += "ArrivalCountryId=" + encodeURIComponent("" + arrivalCountryId) + "&";
+        if (arrivalCity === null)
+            throw new Error("The parameter 'arrivalCity' cannot be null.");
+        else if (arrivalCity !== undefined)
+            url_ += "ArrivalCity=" + encodeURIComponent("" + arrivalCity) + "&";
         if (need === null)
             throw new Error("The parameter 'need' cannot be null.");
         else if (need !== undefined)
@@ -3785,10 +3832,15 @@ export class ListingDto implements IListingDto {
     availableWeightInGrams?: number | undefined;
     maxTravelDate?: Date | undefined;
     desiredWeightInGrams?: number | undefined;
-    departureLocation?: string | undefined;
-    arrivalLocation?: string | undefined;
-    pricePerGram?: number;
+    departureCountryId?: string | undefined;
+    departureCity?: string | undefined;
+    departureCountry?: CountryDto;
+    arrivalCountryId?: string | undefined;
+    arrivalCity?: string | undefined;
+    arrivalCountry?: CountryDto;
+    pricePerKg?: number;
     currencyId?: string | undefined;
+    currency?: CurrencyDto;
     serviceId?: string | undefined;
     paymentMethod?: string | undefined;
     isActive?: boolean;
@@ -3820,10 +3872,15 @@ export class ListingDto implements IListingDto {
             this.availableWeightInGrams = _data["availableWeightInGrams"];
             this.maxTravelDate = _data["maxTravelDate"] ? new Date(_data["maxTravelDate"].toString()) : <any>undefined;
             this.desiredWeightInGrams = _data["desiredWeightInGrams"];
-            this.departureLocation = _data["departureLocation"];
-            this.arrivalLocation = _data["arrivalLocation"];
-            this.pricePerGram = _data["pricePerGram"];
+            this.departureCountryId = _data["departureCountryId"];
+            this.departureCity = _data["departureCity"];
+            this.departureCountry = _data["departureCountry"] ? CountryDto.fromJS(_data["departureCountry"]) : <any>undefined;
+            this.arrivalCountryId = _data["arrivalCountryId"];
+            this.arrivalCity = _data["arrivalCity"];
+            this.arrivalCountry = _data["arrivalCountry"] ? CountryDto.fromJS(_data["arrivalCountry"]) : <any>undefined;
+            this.pricePerKg = _data["pricePerKg"];
             this.currencyId = _data["currencyId"];
+            this.currency = _data["currency"] ? CurrencyDto.fromJS(_data["currency"]) : <any>undefined;
             this.serviceId = _data["serviceId"];
             this.paymentMethod = _data["paymentMethod"];
             this.isActive = _data["isActive"];
@@ -3859,10 +3916,15 @@ export class ListingDto implements IListingDto {
         data["availableWeightInGrams"] = this.availableWeightInGrams;
         data["maxTravelDate"] = this.maxTravelDate ? this.maxTravelDate.toISOString() : <any>undefined;
         data["desiredWeightInGrams"] = this.desiredWeightInGrams;
-        data["departureLocation"] = this.departureLocation;
-        data["arrivalLocation"] = this.arrivalLocation;
-        data["pricePerGram"] = this.pricePerGram;
+        data["departureCountryId"] = this.departureCountryId;
+        data["departureCity"] = this.departureCity;
+        data["departureCountry"] = this.departureCountry ? this.departureCountry.toJSON() : <any>undefined;
+        data["arrivalCountryId"] = this.arrivalCountryId;
+        data["arrivalCity"] = this.arrivalCity;
+        data["arrivalCountry"] = this.arrivalCountry ? this.arrivalCountry.toJSON() : <any>undefined;
+        data["pricePerKg"] = this.pricePerKg;
         data["currencyId"] = this.currencyId;
+        data["currency"] = this.currency ? this.currency.toJSON() : <any>undefined;
         data["serviceId"] = this.serviceId;
         data["paymentMethod"] = this.paymentMethod;
         data["isActive"] = this.isActive;
@@ -3891,10 +3953,15 @@ export interface IListingDto {
     availableWeightInGrams?: number | undefined;
     maxTravelDate?: Date | undefined;
     desiredWeightInGrams?: number | undefined;
-    departureLocation?: string | undefined;
-    arrivalLocation?: string | undefined;
-    pricePerGram?: number;
+    departureCountryId?: string | undefined;
+    departureCity?: string | undefined;
+    departureCountry?: CountryDto;
+    arrivalCountryId?: string | undefined;
+    arrivalCity?: string | undefined;
+    arrivalCountry?: CountryDto;
+    pricePerKg?: number;
     currencyId?: string | undefined;
+    currency?: CurrencyDto;
     serviceId?: string | undefined;
     paymentMethod?: string | undefined;
     isActive?: boolean;
@@ -3916,9 +3983,11 @@ export class ListingInput implements IListingInput {
     availableWeightInGrams?: number | undefined;
     maxTravelDate?: Date | undefined;
     desiredWeightInGrams?: number | undefined;
-    departureLocation?: string | undefined;
-    arrivalLocation?: string | undefined;
-    pricePerGram?: number;
+    departureCountryId?: string | undefined;
+    departureCity?: string | undefined;
+    arrivalCountryId?: string | undefined;
+    arrivalCity?: string | undefined;
+    pricePerKg?: number;
     currencyId?: string | undefined;
     serviceId?: string | undefined;
     paymentMethod?: string | undefined;
@@ -3945,9 +4014,11 @@ export class ListingInput implements IListingInput {
             this.availableWeightInGrams = _data["availableWeightInGrams"];
             this.maxTravelDate = _data["maxTravelDate"] ? new Date(_data["maxTravelDate"].toString()) : <any>undefined;
             this.desiredWeightInGrams = _data["desiredWeightInGrams"];
-            this.departureLocation = _data["departureLocation"];
-            this.arrivalLocation = _data["arrivalLocation"];
-            this.pricePerGram = _data["pricePerGram"];
+            this.departureCountryId = _data["departureCountryId"];
+            this.departureCity = _data["departureCity"];
+            this.arrivalCountryId = _data["arrivalCountryId"];
+            this.arrivalCity = _data["arrivalCity"];
+            this.pricePerKg = _data["pricePerKg"];
             this.currencyId = _data["currencyId"];
             this.serviceId = _data["serviceId"];
             this.paymentMethod = _data["paymentMethod"];
@@ -3974,9 +4045,11 @@ export class ListingInput implements IListingInput {
         data["availableWeightInGrams"] = this.availableWeightInGrams;
         data["maxTravelDate"] = this.maxTravelDate ? this.maxTravelDate.toISOString() : <any>undefined;
         data["desiredWeightInGrams"] = this.desiredWeightInGrams;
-        data["departureLocation"] = this.departureLocation;
-        data["arrivalLocation"] = this.arrivalLocation;
-        data["pricePerGram"] = this.pricePerGram;
+        data["departureCountryId"] = this.departureCountryId;
+        data["departureCity"] = this.departureCity;
+        data["arrivalCountryId"] = this.arrivalCountryId;
+        data["arrivalCity"] = this.arrivalCity;
+        data["pricePerKg"] = this.pricePerKg;
         data["currencyId"] = this.currencyId;
         data["serviceId"] = this.serviceId;
         data["paymentMethod"] = this.paymentMethod;
@@ -3996,9 +4069,11 @@ export interface IListingInput {
     availableWeightInGrams?: number | undefined;
     maxTravelDate?: Date | undefined;
     desiredWeightInGrams?: number | undefined;
-    departureLocation?: string | undefined;
-    arrivalLocation?: string | undefined;
-    pricePerGram?: number;
+    departureCountryId?: string | undefined;
+    departureCity?: string | undefined;
+    arrivalCountryId?: string | undefined;
+    arrivalCity?: string | undefined;
+    pricePerKg?: number;
     currencyId?: string | undefined;
     serviceId?: string | undefined;
     paymentMethod?: string | undefined;
@@ -6271,9 +6346,11 @@ export class UpdateListingInput implements IUpdateListingInput {
     maxTravelDate?: Date | undefined;
     availableWeightInGrams?: number | undefined;
     desiredWeightInGrams?: number | undefined;
-    departureLocation?: string | undefined;
-    arrivalLocation?: string | undefined;
-    pricePerGram?: number;
+    departureCountryId?: string | undefined;
+    departureCity?: string | undefined;
+    arrivalCountryId?: string | undefined;
+    arrivalCity?: string | undefined;
+    pricePerKg?: number;
     currencyId?: string | undefined;
     paymentMethod?: string | undefined;
 
@@ -6297,9 +6374,11 @@ export class UpdateListingInput implements IUpdateListingInput {
             this.maxTravelDate = _data["maxTravelDate"] ? new Date(_data["maxTravelDate"].toString()) : <any>undefined;
             this.availableWeightInGrams = _data["availableWeightInGrams"];
             this.desiredWeightInGrams = _data["desiredWeightInGrams"];
-            this.departureLocation = _data["departureLocation"];
-            this.arrivalLocation = _data["arrivalLocation"];
-            this.pricePerGram = _data["pricePerGram"];
+            this.departureCountryId = _data["departureCountryId"];
+            this.departureCity = _data["departureCity"];
+            this.arrivalCountryId = _data["arrivalCountryId"];
+            this.arrivalCity = _data["arrivalCity"];
+            this.pricePerKg = _data["pricePerKg"];
             this.currencyId = _data["currencyId"];
             this.paymentMethod = _data["paymentMethod"];
         }
@@ -6323,9 +6402,11 @@ export class UpdateListingInput implements IUpdateListingInput {
         data["maxTravelDate"] = this.maxTravelDate ? this.maxTravelDate.toISOString() : <any>undefined;
         data["availableWeightInGrams"] = this.availableWeightInGrams;
         data["desiredWeightInGrams"] = this.desiredWeightInGrams;
-        data["departureLocation"] = this.departureLocation;
-        data["arrivalLocation"] = this.arrivalLocation;
-        data["pricePerGram"] = this.pricePerGram;
+        data["departureCountryId"] = this.departureCountryId;
+        data["departureCity"] = this.departureCity;
+        data["arrivalCountryId"] = this.arrivalCountryId;
+        data["arrivalCity"] = this.arrivalCity;
+        data["pricePerKg"] = this.pricePerKg;
         data["currencyId"] = this.currencyId;
         data["paymentMethod"] = this.paymentMethod;
         return data;
@@ -6342,9 +6423,11 @@ export interface IUpdateListingInput {
     maxTravelDate?: Date | undefined;
     availableWeightInGrams?: number | undefined;
     desiredWeightInGrams?: number | undefined;
-    departureLocation?: string | undefined;
-    arrivalLocation?: string | undefined;
-    pricePerGram?: number;
+    departureCountryId?: string | undefined;
+    departureCity?: string | undefined;
+    arrivalCountryId?: string | undefined;
+    arrivalCity?: string | undefined;
+    pricePerKg?: number;
     currencyId?: string | undefined;
     paymentMethod?: string | undefined;
 }

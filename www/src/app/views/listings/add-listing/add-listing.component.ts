@@ -10,10 +10,12 @@ import {
 import { RouterModule } from '@angular/router';
 import { ListingService } from '@/app/core/service/ws/listing/listing.service';
 import { CurrencyService } from '@/app/core/service/ws/currency/currency.service';
+import { CountryService } from '@/app/core/service/ws/country/country.service';
 import { PaymentMethodService } from '@/app/core/service/ws/payment-method/payment-method.service';
 import { GlobalErrorService } from '@/app/core/service/global-error.service';
 import { futureDateValidator, dateRangeValidator } from '@/app/core/validators/date.validators';
 import {
+  CountryDto,
   GetCurrencyDto,
   ListingInput,
   NeedEnumDto,
@@ -32,6 +34,7 @@ export class AddListingComponent implements OnInit {
   NeedEnumDto = NeedEnumDto;
   PaymentMethodEnumDto = PaymentMethodEnumDto;
   currencies: GetCurrencyDto[] = [];
+  countries: CountryDto[] = [];
   paymentMethods: PaymentMethodDto[] = [];
 
   createdAccessToken: string | null = null;
@@ -82,8 +85,10 @@ export class AddListingComponent implements OnInit {
     }),
 
     common: new FormGroup({
-      departureLocation: new FormControl('', Validators.required),
-      arrivalLocation: new FormControl('', Validators.required),
+      departureCountryId: new FormControl<string>('', Validators.required),
+      departureCity: new FormControl('', Validators.required),
+      arrivalCountryId: new FormControl<string>('', Validators.required),
+      arrivalCity: new FormControl('', Validators.required),
       pricePerKg: new FormControl<number>(0, [Validators.required, Validators.min(0)]),
       currencyId: new FormControl<string>('', Validators.required),
     }),
@@ -114,21 +119,49 @@ export class AddListingComponent implements OnInit {
     return new Date().toISOString().split('T')[0];
   }
 
+  get selectedCurrencySymbol(): string {
+    const id = this.commonGroup.get('currencyId')?.value;
+    if (!id) return '';
+    const c = this.currencies.find(x => x.id === id);
+    return c?.symbol || c?.code || '';
+  }
+
+  get selectedDepartureCountryName(): string {
+    const id = this.commonGroup.get('departureCountryId')?.value;
+    if (!id) return '';
+    return this.countries.find(x => x.id === id)?.name || '';
+  }
+
+  get selectedArrivalCountryName(): string {
+    const id = this.commonGroup.get('arrivalCountryId')?.value;
+    if (!id) return '';
+    return this.countries.find(x => x.id === id)?.name || '';
+  }
+
   constructor(
     private listingService: ListingService,
     private currencyService: CurrencyService,
+    private countryService: CountryService,
     private paymentMethodService: PaymentMethodService,
     private errorService: GlobalErrorService
   ) {}
 
   ngOnInit(): void {
     this.loadCurrencies();
+    this.loadCountries();
     this.loadPaymentMethods();
   }
 
   loadCurrencies(): void {
     this.currencyService.getCurrencies().subscribe({
       next: (res) => { this.currencies = res.currencies ?? []; },
+      error: (err) => this.errorService.handleHttpError(err),
+    });
+  }
+
+  loadCountries(): void {
+    this.countryService.getActiveCountries().subscribe({
+      next: (res) => { this.countries = res.countries ?? []; },
       error: (err) => this.errorService.handleHttpError(err),
     });
   }
@@ -246,9 +279,11 @@ export class AddListingComponent implements OnInit {
       phone: this.identityGroup.get('phone')!.value!,
       email: this.identityGroup.get('email')!.value!,
       isAdult: this.identityGroup.get('isAdult')!.value!,
-      departureLocation: this.commonGroup.get('departureLocation')!.value!,
-      arrivalLocation: this.commonGroup.get('arrivalLocation')!.value!,
-      pricePerGram: pricePerKg / 1000,
+      departureCountryId: this.commonGroup.get('departureCountryId')!.value!,
+      departureCity: this.commonGroup.get('departureCity')!.value!,
+      arrivalCountryId: this.commonGroup.get('arrivalCountryId')!.value!,
+      arrivalCity: this.commonGroup.get('arrivalCity')!.value!,
+      pricePerKg: pricePerKg,
       currencyId: this.commonGroup.get('currencyId')!.value!,
       paymentMethod: this.legalGroup.get('paymentMethod')!.value!,
       ...(isVoyageur

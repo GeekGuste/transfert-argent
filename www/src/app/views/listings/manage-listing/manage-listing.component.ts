@@ -53,7 +53,7 @@ export class ManageListingComponent implements OnInit {
     });
   }
 
-  get pricePerKg(): number { return (this.listing?.pricePerGram ?? 0) * 1000; }
+  get pricePerKg(): number { return this.listing?.pricePerKg ?? 0; }
   get weightKg(): number {
     return ((this.listing?.availableWeightInGrams ?? this.listing?.desiredWeightInGrams ?? 0)) / 1000;
   }

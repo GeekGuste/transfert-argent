@@ -47,7 +47,7 @@ export class ListingDetailsComponent implements OnInit {
   }
 
   get pricePerKg(): number {
-    return (this.listing?.pricePerGram ?? 0) * 1000;
+    return this.listing?.pricePerKg ?? 0;
   }
 
   get weightKg(): number {

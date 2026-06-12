@@ -1,4 +1,6 @@
 import { CountryService } from '@/app/core/service/ws/country/country.service';
+import { GlobalErrorService } from '@/app/core/service/global-error.service';
+import { CountryDto } from '@/app/api/webapiservice';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -14,11 +16,17 @@ declare var bootstrap: any;
 })
 export class ListCountryComponent implements OnInit {
   loading = false;
-  currentCountry: any = null;
+  updateLoading = false;
   editForm!: FormGroup;
   countries: any[] = [];
 
-  constructor(private countryService: CountryService, private fb: FormBuilder) {}
+  private modalInstance: any = null;
+
+  constructor(
+    private countryService: CountryService,
+    private errorService: GlobalErrorService,
+    private fb: FormBuilder
+  ) {}
 
   ngOnInit(): void {
     this.editForm = this.fb.group({
@@ -31,24 +39,27 @@ export class ListCountryComponent implements OnInit {
   }
 
   initCountries(): void {
+    this.loading = true;
     this.countryService.getCountries().subscribe({
-      next: (response: any) => { this.countries = response.countries ?? []; },
-      error: () => {},
+      next: (response: any) => {
+        this.countries = response.countries ?? [];
+        this.loading = false;
+      },
+      error: (err) => {
+        this.errorService.handleHttpError(err);
+        this.loading = false;
+      },
     });
-  }
-
-  editCountry(_country: any): void {
-    alert("Cette fonctionnalité n'est pas encore développée");
-  }
-
-  deleteCountry(_country: any): void {
-    alert("Cette fonctionnalité n'est pas encore développée");
   }
 
   openEditModal(country: any): void {
     this.editForm.patchValue(country);
-    const modal = new bootstrap.Modal(document.getElementById('editCountryModal'));
-    modal.show();
+    this.editForm.markAsUntouched();
+    const modalEl = document.getElementById('editCountryModal');
+    if (modalEl) {
+      this.modalInstance = new bootstrap.Modal(modalEl);
+      this.modalInstance.show();
+    }
   }
 
   updateCountry(): void {
@@ -56,7 +67,26 @@ export class ListCountryComponent implements OnInit {
       this.editForm.markAllAsTouched();
       return;
     }
-    // Update not yet available in new API
-    alert("Cette fonctionnalité n'est pas encore disponible");
+
+    const { id, name, code, isEnabled } = this.editForm.value;
+    const body = new CountryDto({ name, code, isEnabled });
+
+    this.updateLoading = true;
+    this.countryService.updateCountry(id, body).subscribe({
+      next: () => {
+        this.updateLoading = false;
+        this.modalInstance?.hide();
+        this.initCountries();
+        this.errorService.success('Pays mis à jour avec succès.');
+      },
+      error: (err) => {
+        this.updateLoading = false;
+        this.errorService.handleHttpError(err);
+      },
+    });
+  }
+
+  deleteCountry(_country: any): void {
+    alert("Cette fonctionnalité n'est pas encore développée");
   }
 }

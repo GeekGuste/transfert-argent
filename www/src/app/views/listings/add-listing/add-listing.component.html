@@ -230,20 +230,36 @@
 
           <div class="al-route-row">
             <div class="al-field-group flex-fill">
-              <label class="al-label"><i class="fas fa-map-marker-alt text-danger me-1"></i>Départ <span class="text-danger">*</span></label>
-              <input type="text" class="al-input" formControlName="departureLocation" placeholder="ex: Paris, France"
-                [class.al-input--error]="getControlError(commonGroup, 'departureLocation')" />
-              <span class="al-error" *ngIf="getControlError(commonGroup, 'departureLocation')">
-                {{ getControlError(commonGroup, 'departureLocation') }}
+              <label class="al-label"><i class="fas fa-map-marker-alt text-danger me-1"></i>Pays de départ <span class="text-danger">*</span></label>
+              <select class="al-select" formControlName="departureCountryId"
+                [class.al-input--error]="getControlError(commonGroup, 'departureCountryId')">
+                <option value="">Choisir un pays...</option>
+                <option *ngFor="let c of countries" [value]="c.id">{{ c.name }}</option>
+              </select>
+              <span class="al-error" *ngIf="getControlError(commonGroup, 'departureCountryId')">
+                {{ getControlError(commonGroup, 'departureCountryId') }}
+              </span>
+              <input type="text" class="al-input mt-2" formControlName="departureCity" placeholder="ex: Paris"
+                [class.al-input--error]="getControlError(commonGroup, 'departureCity')" />
+              <span class="al-error" *ngIf="getControlError(commonGroup, 'departureCity')">
+                {{ getControlError(commonGroup, 'departureCity') }}
               </span>
             </div>
             <div class="al-route-arrow"><i class="fas fa-long-arrow-alt-right"></i></div>
             <div class="al-field-group flex-fill">
-              <label class="al-label"><i class="fas fa-map-marker-alt text-success me-1"></i>Arrivée <span class="text-danger">*</span></label>
-              <input type="text" class="al-input" formControlName="arrivalLocation" placeholder="ex: Dakar, Sénégal"
-                [class.al-input--error]="getControlError(commonGroup, 'arrivalLocation')" />
-              <span class="al-error" *ngIf="getControlError(commonGroup, 'arrivalLocation')">
-                {{ getControlError(commonGroup, 'arrivalLocation') }}
+              <label class="al-label"><i class="fas fa-map-marker-alt text-success me-1"></i>Pays d'arrivée <span class="text-danger">*</span></label>
+              <select class="al-select" formControlName="arrivalCountryId"
+                [class.al-input--error]="getControlError(commonGroup, 'arrivalCountryId')">
+                <option value="">Choisir un pays...</option>
+                <option *ngFor="let c of countries" [value]="c.id">{{ c.name }}</option>
+              </select>
+              <span class="al-error" *ngIf="getControlError(commonGroup, 'arrivalCountryId')">
+                {{ getControlError(commonGroup, 'arrivalCountryId') }}
+              </span>
+              <input type="text" class="al-input mt-2" formControlName="arrivalCity" placeholder="ex: Dakar"
+                [class.al-input--error]="getControlError(commonGroup, 'arrivalCity')" />
+              <span class="al-error" *ngIf="getControlError(commonGroup, 'arrivalCity')">
+                {{ getControlError(commonGroup, 'arrivalCity') }}
               </span>
             </div>
           </div>
@@ -254,19 +270,16 @@
               <div class="al-input-addon">
                 <input type="number" class="al-input" formControlName="pricePerKg" min="0" step="0.5" placeholder="ex: 10"
                   [class.al-input--error]="getControlError(commonGroup, 'pricePerKg')" />
+                <select class="al-input-addon__select" formControlName="currencyId"
+                  [class.al-input--error]="getControlError(commonGroup, 'currencyId')">
+                  <option value="">Devise...</option>
+                  <option *ngFor="let c of currencies" [value]="c.id">{{ c.symbol || c.code }}</option>
+                </select>
                 <span class="al-input-addon__text">/kg</span>
               </div>
               <span class="al-error" *ngIf="getControlError(commonGroup, 'pricePerKg')">
                 {{ getControlError(commonGroup, 'pricePerKg') }}
               </span>
-            </div>
-            <div class="al-field-group" style="min-width:160px">
-              <label class="al-label">Devise <span class="text-danger">*</span></label>
-              <select class="al-select" formControlName="currencyId"
-                [class.al-input--error]="getControlError(commonGroup, 'currencyId')">
-                <option value="">Choisir...</option>
-                <option *ngFor="let c of currencies" [value]="c.id">{{ c.code }} {{ c.symbol }}</option>
-              </select>
               <span class="al-error" *ngIf="getControlError(commonGroup, 'currencyId')">
                 {{ getControlError(commonGroup, 'currencyId') }}
               </span>
@@ -429,22 +442,18 @@
 
         <ng-container *ngIf="currentStep() > 3">
           <div class="al-recap__divider"></div>
-          <div class="al-recap__row" *ngIf="commonGroup.get('departureLocation')?.value">
+          <div class="al-recap__row" *ngIf="commonGroup.get('departureCity')?.value">
             <span class="al-recap__key">Trajet</span>
             <span class="al-recap__val al-recap__val--route">
-              <span>{{ commonGroup.get('departureLocation')?.value }}</span>
+              <span>{{ commonGroup.get('departureCity')?.value }}{{ selectedDepartureCountryName ? ', ' + selectedDepartureCountryName : '' }}</span>
               <i class="fas fa-arrow-right mx-1 text-muted"></i>
-              <span>{{ commonGroup.get('arrivalLocation')?.value }}</span>
+              <span>{{ commonGroup.get('arrivalCity')?.value }}{{ selectedArrivalCountryName ? ', ' + selectedArrivalCountryName : '' }}</span>
             </span>
           </div>
           <div class="al-recap__row" *ngIf="commonGroup.get('pricePerKg')?.value">
             <span class="al-recap__key">Prix</span>
             <span class="al-recap__val al-recap__val--price">
-              {{ commonGroup.get('pricePerKg')?.value }}
-              <ng-container *ngFor="let c of currencies">
-                <span *ngIf="c.id === commonGroup.get('currencyId')?.value">{{ c.symbol }}</span>
-              </ng-container>
-              /kg
+              {{ commonGroup.get('pricePerKg')?.value }} {{ selectedCurrencySymbol || '' }}/kg
             </span>
           </div>
         </ng-container>

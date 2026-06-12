@@ -48,13 +48,10 @@
                   </td>
 
                   <td class="text-end">
-                    <a href="javascript:void(0);" (click)="editCountry(country)" class="me-0.5"><i
+                    <a href="javascript:void(0);" (click)="openEditModal(country)" class="me-1"><i
                         class="las la-pen text-secondary font-16"></i></a>
                     <a href="javascript:void(0);" (click)="deleteCountry(country)"><i
                         class="las la-trash-alt text-secondary font-16"></i></a>
-                    <!-- <ng-container *ngIf="(loading && currentCountry!==null && currentCountry.name === country.countryName)">
-                      <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                    </ng-container> -->
                   </td>
                 </tr>
               </ng-container>
@@ -102,7 +99,8 @@
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
             {{ 'COUNTRY.LIST.MODAL.CANCEL_BUTTON' | trl }}
           </button>
-          <button type="button" class="btn btn-primary" (click)="updateCountry()">
+          <button type="button" class="btn btn-primary" (click)="updateCountry()" [disabled]="updateLoading">
+            <span *ngIf="updateLoading" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
             {{ 'COUNTRY.LIST.MODAL.UPDATE_BUTTON' | trl }}
           </button>
         </div>

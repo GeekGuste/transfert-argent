@@ -75,6 +75,6 @@ export class ListListingComponent implements OnInit {
   }
 
   pricePerKg(listing: ListingDto): number {
-    return (listing.pricePerGram ?? 0) * 1000;
+    return listing.pricePerKg ?? 0;
   }
 }

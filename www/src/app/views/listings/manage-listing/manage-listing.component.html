@@ -48,9 +48,9 @@
               {{ listing.need?.key === NeedEnumDto.Traveler ? 'Voyageur' : 'Expéditeur' }}
             </span>
             <div class="mg-info-route__path">
-              <strong>{{ listing.departureLocation || '—' }}</strong>
+              <strong>{{ listing.departureCity || '—' }}{{ listing.departureCountry?.name ? ', ' + listing.departureCountry!.name : '' }}</strong>
               <i class="fas fa-long-arrow-alt-right mx-2 text-muted"></i>
-              <strong>{{ listing.arrivalLocation || '—' }}</strong>
+              <strong>{{ listing.arrivalCity || '—' }}{{ listing.arrivalCountry?.name ? ', ' + listing.arrivalCountry!.name : '' }}</strong>
             </div>
           </div>
 
@@ -67,7 +67,7 @@
             <i class="fas fa-weight-hanging"></i>{{ weightKg | number:'1.0-1' }} kg
           </span>
           <span class="mg-meta-item">
-            <i class="fas fa-tag"></i>{{ pricePerKg | number:'1.0-2' }}/kg
+            <i class="fas fa-tag"></i>{{ pricePerKg | number:'1.0-2' }} {{ listing.currency?.symbol || listing.currency?.code || '' }}/kg
           </span>
           <span class="mg-meta-item" *ngIf="listing.departureDate || listing.maxTravelDate">
             <i class="fas fa-calendar-alt"></i>
