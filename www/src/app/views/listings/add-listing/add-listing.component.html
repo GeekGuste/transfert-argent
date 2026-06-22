@@ -468,7 +468,7 @@
 
         <div class="al-recap__progress mt-3">
           <div class="al-recap__progress-bar"
-            [style.width.%]="((currentStep() - 1) / (activeSteps().length - 1)) * 100"></div>
+            [style.width.%]="(currentStep() / (activeSteps().length - 1)) * 100"></div>
         </div>
         <small class="al-recap__progress-label">
           Étape {{ currentStep() }} / {{ activeSteps().length - 1 }}
