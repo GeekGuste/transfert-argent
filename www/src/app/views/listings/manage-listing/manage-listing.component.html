@@ -5,10 +5,10 @@
   <div class="mg-page-header">
     <div class="mg-page-header__inner">
       <a routerLink="/forms/list" class="mg-back">
-        <i class="fas fa-arrow-left me-2"></i>Annonces
+        <i class="fas fa-arrow-left me-2"></i>{{ 'manage.back' | i18n }}
       </a>
       <div class="mg-page-header__title">
-        <i class="fas fa-key me-2"></i>Gestion de mon annonce
+        <i class="fas fa-key me-2"></i>{{ 'manage.title' | i18n }}
       </div>
     </div>
   </div>
@@ -24,9 +24,9 @@
     <!-- Error -->
     <div *ngIf="error && !loading" class="mg-error">
       <i class="fas fa-exclamation-triangle mg-error__icon"></i>
-      <h4>Lien invalide ou expiré</h4>
+      <h4>{{ 'manage.error.invalid' | i18n }}</h4>
       <p>{{ error }}</p>
-      <a routerLink="/forms/list" class="mg-btn mg-btn--outline mt-3">Voir les annonces</a>
+      <a routerLink="/forms/list" class="mg-btn mg-btn--outline mt-3">{{ 'manage.see_listings' | i18n }}</a>
     </div>
 
     <!-- Content -->
@@ -45,7 +45,7 @@
               [class.mg-info-route__badge--traveler]="listing.need?.key === NeedEnumDto.Traveler"
               [class.mg-info-route__badge--sender]="listing.need?.key === NeedEnumDto.Sender">
               <i [class]="listing.need?.key === NeedEnumDto.Traveler ? 'fas fa-plane me-1' : 'fas fa-box me-1'"></i>
-              {{ listing.need?.key === NeedEnumDto.Traveler ? 'Voyageur' : 'Expéditeur' }}
+              {{ listing.need?.key === NeedEnumDto.Traveler ? ('need.traveler' | i18n) : ('need.sender' | i18n) }}
             </span>
             <div class="mg-info-route__path">
               <strong>{{ listing.departureCity || '—' }}{{ listing.departureCountry?.name ? ', ' + listing.departureCountry!.name : '' }}</strong>
@@ -58,7 +58,7 @@
             [class.mg-status-badge--active]="listing.isActive"
             [class.mg-status-badge--inactive]="!listing.isActive">
             <span class="mg-status-badge__dot"></span>
-            {{ listing.isActive ? 'Active' : 'Inactive' }}
+            {{ listing.isActive ? ('manage.status.active' | i18n) : ('manage.status.inactive' | i18n) }}
           </div>
         </div>
 
@@ -85,12 +85,12 @@
             [disabled]="actionLoading || listing.isActive === true">
             <span *ngIf="actionLoading && !validatingApplicationId" class="spinner-border spinner-border-sm me-2"></span>
             <i *ngIf="!(actionLoading && !validatingApplicationId)" class="fas fa-check-circle me-2"></i>
-            Confirmer active
+            {{ 'manage.confirm_active' | i18n }}
           </button>
           <button class="mg-btn mg-btn--danger-outline"
             (click)="deactivate()"
             [disabled]="actionLoading || listing.isActive === false">
-            <i class="fas fa-ban me-2"></i>Désactiver
+            <i class="fas fa-ban me-2"></i>{{ 'manage.deactivate' | i18n }}
           </button>
         </div>
       </div>
@@ -99,7 +99,7 @@
       <div class="mg-card">
         <div class="mg-card__header">
           <h5 class="mg-card__header-title">
-            <i class="fas fa-inbox me-2"></i>Candidatures reçues
+            <i class="fas fa-inbox me-2"></i>{{ 'manage.applications' | i18n }}
           </h5>
           <span class="mg-badge-count">{{ listing.applicationsNumber ?? 0 }}</span>
         </div>
@@ -107,8 +107,8 @@
         <!-- Empty -->
         <div *ngIf="!listing.applications || listing.applications.length === 0" class="mg-empty">
           <i class="fas fa-inbox mg-empty__icon"></i>
-          <p>Aucune candidature pour le moment.</p>
-          <small>Partagez votre annonce pour recevoir des candidatures.</small>
+          <p>{{ 'manage.empty' | i18n }}</p>
+          <small>{{ 'manage.empty.sub' | i18n }}</small>
         </div>
 
         <!-- Application list -->
@@ -136,7 +136,7 @@
             <span *ngIf="actionLoading && validatingApplicationId === app.id"
               class="spinner-border spinner-border-sm me-2"></span>
             <i *ngIf="!(actionLoading && validatingApplicationId === app.id)" class="fas fa-handshake me-2"></i>
-            Valider
+            {{ 'manage.validate' | i18n }}
           </button>
         </div>
 
@@ -145,7 +145,7 @@
       <!-- Info note -->
       <div class="mg-info-note">
         <i class="fas fa-info-circle me-2"></i>
-        Valider une candidature désactivera votre annonce et notifiera le candidat par email.
+        {{ 'manage.info_note' | i18n }}
       </div>
 
     </ng-container>
