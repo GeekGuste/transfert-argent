@@ -6,11 +6,12 @@ import { ListingService } from '@/app/core/service/ws/listing/listing.service';
 import { GlobalErrorService } from '@/app/core/service/global-error.service';
 import { ApplicationInput, ListingDto, NeedEnumDto } from '@/app/api/webapiservice';
 import { NavbarComponent } from '@/app/shared/navbar/navbar.component';
+import { FrontI18nPipe } from '@/app/shared/pipes/front-i18n.pipe';
 
 @Component({
   selector: 'app-listing-details',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, NavbarComponent],
+  imports: [CommonModule, RouterModule, FormsModule, NavbarComponent, FrontI18nPipe],
   templateUrl: './listing-details.component.html',
   styleUrl: './listing-details.component.scss',
 })

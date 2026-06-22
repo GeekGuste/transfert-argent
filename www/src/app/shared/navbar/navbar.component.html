@@ -14,22 +14,32 @@
     <div class="gr-nav__links">
       <a routerLink="/" routerLinkActive="gr-nav__link--active" [routerLinkActiveOptions]="{exact:true}"
         class="gr-nav__link">
-        <i class="fas fa-home me-1"></i>Accueil
+        <i class="fas fa-home me-1"></i>{{ 'nav.home' | i18n }}
       </a>
       <a routerLink="/forms/list" routerLinkActive="gr-nav__link--active"
         class="gr-nav__link">
-        <i class="fas fa-list me-1"></i>Annonces
+        <i class="fas fa-list me-1"></i>{{ 'nav.listings' | i18n }}
       </a>
       <a routerLink="/forms" routerLinkActive="gr-nav__link--active" [routerLinkActiveOptions]="{exact:true}"
         class="gr-nav__link gr-nav__link--publish">
-        <i class="fas fa-plus me-1"></i>Publier
+        <i class="fas fa-plus me-1"></i>{{ 'nav.publish' | i18n }}
       </a>
+    </div>
+
+    <!-- Language switcher -->
+    <div class="gr-nav__lang">
+      <button class="gr-nav__lang-btn" [class.gr-nav__lang-btn--active]="currentLang === 'fr'" (click)="setLang('fr')">
+        🇫🇷 FR
+      </button>
+      <button class="gr-nav__lang-btn" [class.gr-nav__lang-btn--active]="currentLang === 'en'" (click)="setLang('en')">
+        🇬🇧 EN
+      </button>
     </div>
 
     <!-- Auth -->
     <div class="gr-nav__auth">
-      <a routerLink="/auth/log-in" class="gr-nav__link">Connexion</a>
-      <a routerLink="/auth/register" class="gr-nav__btn-register">S'inscrire</a>
+      <a routerLink="/auth/log-in" class="gr-nav__link">{{ 'nav.login' | i18n }}</a>
+      <a routerLink="/auth/register" class="gr-nav__btn-register">{{ 'nav.register' | i18n }}</a>
     </div>
 
     <!-- Mobile toggle -->
@@ -43,16 +53,25 @@
   <!-- Mobile drawer -->
   <div class="gr-nav__mobile" [class.gr-nav__mobile--open]="mobileOpen">
     <a routerLink="/" class="gr-nav__mobile-link" (click)="closeMobile()">
-      <i class="fas fa-home me-2"></i>Accueil
+      <i class="fas fa-home me-2"></i>{{ 'nav.home' | i18n }}
     </a>
     <a routerLink="/forms/list" class="gr-nav__mobile-link" (click)="closeMobile()">
-      <i class="fas fa-list me-2"></i>Annonces
+      <i class="fas fa-list me-2"></i>{{ 'nav.listings' | i18n }}
     </a>
     <a routerLink="/forms" class="gr-nav__mobile-link" (click)="closeMobile()">
-      <i class="fas fa-plus me-2"></i>Publier une annonce
+      <i class="fas fa-plus me-2"></i>{{ 'nav.publish.full' | i18n }}
     </a>
     <div class="gr-nav__mobile-divider"></div>
-    <a routerLink="/auth/log-in" class="gr-nav__mobile-link" (click)="closeMobile()">Connexion</a>
-    <a routerLink="/auth/register" class="gr-nav__mobile-btn" (click)="closeMobile()">S'inscrire</a>
+    <a routerLink="/auth/log-in" class="gr-nav__mobile-link" (click)="closeMobile()">{{ 'nav.login' | i18n }}</a>
+    <a routerLink="/auth/register" class="gr-nav__mobile-btn" (click)="closeMobile()">{{ 'nav.register' | i18n }}</a>
+    <div class="gr-nav__mobile-divider"></div>
+    <div class="gr-nav__mobile-lang">
+      <button class="gr-nav__lang-btn" [class.gr-nav__lang-btn--active]="currentLang === 'fr'" (click)="setLang('fr'); closeMobile()">
+        🇫🇷 FR
+      </button>
+      <button class="gr-nav__lang-btn" [class.gr-nav__lang-btn--active]="currentLang === 'en'" (click)="setLang('en'); closeMobile()">
+        🇬🇧 EN
+      </button>
+    </div>
   </div>
 </nav>

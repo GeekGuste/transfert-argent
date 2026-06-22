@@ -9,10 +9,12 @@ export class LanguageService {
     public language$: Observable<string> = this.languageSubject.asObservable();
 
     constructor() {
-        // Charger la langue depuis le localStorage si elle existe
-        const savedLanguage = localStorage.getItem('app_language');
-        if (savedLanguage) {
-            this.languageSubject.next(savedLanguage);
+        const saved = localStorage.getItem('app_language');
+        if (saved && ['fr', 'en'].includes(saved)) {
+            this.languageSubject.next(saved);
+        } else {
+            const browserLang = navigator.language?.split('-')[0];
+            this.languageSubject.next(browserLang === 'fr' ? 'fr' : 'en');
         }
     }
 

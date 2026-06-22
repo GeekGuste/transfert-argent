@@ -5,11 +5,11 @@
   <div class="ll-page-header">
     <div class="ll-page-header__inner">
       <div>
-        <h1 class="ll-title">Annonces de transfert</h1>
+        <h1 class="ll-title">{{ 'list.title' | i18n }}</h1>
         <p class="ll-subtitle">{{ listings.length }} annonce{{ listings.length !== 1 ? 's' : '' }} disponible{{ listings.length !== 1 ? 's' : '' }}</p>
       </div>
       <a routerLink="/forms" class="ll-btn-publish">
-        <i class="fas fa-plus me-2"></i>Publier une annonce
+        <i class="fas fa-plus me-2"></i>{{ 'list.publish' | i18n }}
       </a>
     </div>
   </div>
@@ -19,62 +19,62 @@
     <!-- Filters panel -->
     <aside class="ll-filters">
       <div class="ll-filters__header">
-        <span class="ll-filters__title"><i class="fas fa-sliders-h me-2"></i>Filtres</span>
+        <span class="ll-filters__title"><i class="fas fa-sliders-h me-2"></i>{{ 'list.filters.title' | i18n }}</span>
         <button *ngIf="hasActiveFilters" class="ll-filters__reset" (click)="resetFilters()">
-          Tout effacer
+          {{ 'list.filters.clear' | i18n }}
         </button>
       </div>
 
       <div class="ll-filter-group">
-        <label class="ll-filter-label">Type d'annonce</label>
+        <label class="ll-filter-label">{{ 'list.filters.type' | i18n }}</label>
         <div class="ll-filter-type">
           <label class="ll-filter-type__opt" [class.ll-filter-type__opt--active]="filterNeed === ''">
             <input type="radio" [(ngModel)]="filterNeed" value="" class="d-none" (change)="fetchListings()" />
-            Tous
+            {{ 'search.all' | i18n }}
           </label>
           <label class="ll-filter-type__opt" [class.ll-filter-type__opt--active]="filterNeed === NeedEnumDto.Traveler">
             <input type="radio" [(ngModel)]="filterNeed" [value]="NeedEnumDto.Traveler" class="d-none" (change)="fetchListings()" />
-            <i class="fas fa-plane me-1"></i>Voyageur
+            <i class="fas fa-plane me-1"></i>{{ 'need.traveler' | i18n }}
           </label>
           <label class="ll-filter-type__opt" [class.ll-filter-type__opt--active]="filterNeed === NeedEnumDto.Sender">
             <input type="radio" [(ngModel)]="filterNeed" [value]="NeedEnumDto.Sender" class="d-none" (change)="fetchListings()" />
-            <i class="fas fa-box me-1"></i>Expéditeur
+            <i class="fas fa-box me-1"></i>{{ 'need.sender' | i18n }}
           </label>
         </div>
       </div>
 
       <div class="ll-filter-group">
-        <label class="ll-filter-label"><i class="fas fa-map-marker-alt text-danger me-1"></i>Départ</label>
+        <label class="ll-filter-label"><i class="fas fa-map-marker-alt text-danger me-1"></i>{{ 'list.filters.departure' | i18n }}</label>
         <select class="ll-filter-input" [(ngModel)]="filterDepartureCountryId" (change)="fetchListings()">
-          <option value="">Tous les pays</option>
+          <option value="">{{ 'list.filters.countries' | i18n }}</option>
           <option *ngFor="let c of countries" [value]="c.id">{{ c.name }}</option>
         </select>
-        <input type="text" class="ll-filter-input mt-1" placeholder="Ville..." [(ngModel)]="filterDepartureCity"
+        <input type="text" class="ll-filter-input mt-1" [placeholder]="'list.filters.city' | i18n" [(ngModel)]="filterDepartureCity"
           (change)="fetchListings()" />
       </div>
 
       <div class="ll-filter-group">
-        <label class="ll-filter-label"><i class="fas fa-flag-checkered text-success me-1"></i>Arrivée</label>
+        <label class="ll-filter-label"><i class="fas fa-flag-checkered text-success me-1"></i>{{ 'list.filters.arrival' | i18n }}</label>
         <select class="ll-filter-input" [(ngModel)]="filterArrivalCountryId" (change)="fetchListings()">
-          <option value="">Tous les pays</option>
+          <option value="">{{ 'list.filters.countries' | i18n }}</option>
           <option *ngFor="let c of countries" [value]="c.id">{{ c.name }}</option>
         </select>
-        <input type="text" class="ll-filter-input mt-1" placeholder="Ville..." [(ngModel)]="filterArrivalCity"
+        <input type="text" class="ll-filter-input mt-1" [placeholder]="'list.filters.city' | i18n" [(ngModel)]="filterArrivalCity"
           (change)="fetchListings()" />
       </div>
 
       <div class="ll-filter-group">
-        <label class="ll-filter-label"><i class="fas fa-calendar me-1"></i>À partir du</label>
+        <label class="ll-filter-label"><i class="fas fa-calendar me-1"></i>{{ 'list.filters.from' | i18n }}</label>
         <input type="date" class="ll-filter-input" [(ngModel)]="filterDateFrom" (change)="fetchListings()" />
       </div>
 
       <div class="ll-filter-group">
-        <label class="ll-filter-label"><i class="fas fa-calendar-check me-1"></i>Jusqu'au</label>
+        <label class="ll-filter-label"><i class="fas fa-calendar-check me-1"></i>{{ 'list.filters.to' | i18n }}</label>
         <input type="date" class="ll-filter-input" [(ngModel)]="filterDateTo" (change)="fetchListings()" />
       </div>
 
       <button class="ll-btn-search" (click)="fetchListings()">
-        <i class="fas fa-search me-2"></i>Rechercher
+        <i class="fas fa-search me-2"></i>{{ 'list.filters.search' | i18n }}
       </button>
     </aside>
 
@@ -116,8 +116,8 @@
         <p *ngIf="hasActiveFilters">Essayez de modifier vos critères de recherche.</p>
         <p *ngIf="!hasActiveFilters">Soyez le premier à publier une annonce !</p>
         <div class="d-flex gap-2 justify-content-center mt-3">
-          <button *ngIf="hasActiveFilters" class="ll-btn-outline" (click)="resetFilters()">Effacer les filtres</button>
-          <a routerLink="/forms" class="ll-btn-publish">Publier une annonce</a>
+          <button *ngIf="hasActiveFilters" class="ll-btn-outline" (click)="resetFilters()">{{ 'list.filters.clear' | i18n }}</button>
+          <a routerLink="/forms" class="ll-btn-publish">{{ 'list.publish' | i18n }}</a>
         </div>
       </div>
 
@@ -135,7 +135,7 @@
             [class.ll-card__badge--traveler]="listing.need?.key === NeedEnumDto.Traveler"
             [class.ll-card__badge--sender]="listing.need?.key === NeedEnumDto.Sender">
             <i [class]="listing.need?.key === NeedEnumDto.Traveler ? 'fas fa-plane me-1' : 'fas fa-box me-1'"></i>
-            {{ listing.need?.key === NeedEnumDto.Traveler ? 'Voyageur' : 'Expéditeur' }}
+            {{ listing.need?.key === NeedEnumDto.Traveler ? ('need.traveler' | i18n) : ('need.sender' | i18n) }}
           </div>
 
           <!-- Route -->
