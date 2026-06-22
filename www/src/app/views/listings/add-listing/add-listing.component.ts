@@ -8,7 +8,7 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { FrontI18nPipe } from '@/app/shared/pipes/front-i18n.pipe';
+import { TrlPipe } from '@alrevele/translator';
 import { ListingService } from '@/app/core/service/ws/listing/listing.service';
 import { CurrencyService } from '@/app/core/service/ws/currency/currency.service';
 import { CountryService } from '@/app/core/service/ws/country/country.service';
@@ -27,7 +27,7 @@ import {
 @Component({
   selector: 'app-add-listing',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, NavbarComponent, FrontI18nPipe],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, NavbarComponent, TrlPipe],
   templateUrl: './add-listing.component.html',
   styleUrls: ['./add-listing.component.scss'],
 })
@@ -43,19 +43,19 @@ export class AddListingComponent implements OnInit {
   submitError: string | null = null;
 
   readonly stepsVoyageur = [
-    { id: 1, labelKey: 'add.step.profile', icon: 'fas fa-user' },
-    { id: 2, labelKey: 'add.step.travel', icon: 'fas fa-plane' },
-    { id: 3, labelKey: 'add.step.route', icon: 'fas fa-route' },
-    { id: 4, labelKey: 'add.step.conditions', icon: 'fas fa-credit-card' },
-    { id: 5, labelKey: 'add.step.confirm', icon: 'fas fa-check-circle' },
+    { id: 1, labelKey: 'ADD-LISTING.STEP.PROFILE', icon: 'fas fa-user' },
+    { id: 2, labelKey: 'ADD-LISTING.STEP.TRAVEL', icon: 'fas fa-plane' },
+    { id: 3, labelKey: 'ADD-LISTING.STEP.ROUTE', icon: 'fas fa-route' },
+    { id: 4, labelKey: 'ADD-LISTING.STEP.CONDITIONS', icon: 'fas fa-credit-card' },
+    { id: 5, labelKey: 'ADD-LISTING.STEP.CONFIRM', icon: 'fas fa-check-circle' },
   ];
 
   readonly stepsChercheur = [
-    { id: 1, labelKey: 'add.step.profile', icon: 'fas fa-user' },
-    { id: 2, labelKey: 'add.step.parcel', icon: 'fas fa-box' },
-    { id: 3, labelKey: 'add.step.route', icon: 'fas fa-route' },
-    { id: 4, labelKey: 'add.step.conditions', icon: 'fas fa-credit-card' },
-    { id: 5, labelKey: 'add.step.confirm', icon: 'fas fa-check-circle' },
+    { id: 1, labelKey: 'ADD-LISTING.STEP.PROFILE', icon: 'fas fa-user' },
+    { id: 2, labelKey: 'ADD-LISTING.STEP.PARCEL', icon: 'fas fa-box' },
+    { id: 3, labelKey: 'ADD-LISTING.STEP.ROUTE', icon: 'fas fa-route' },
+    { id: 4, labelKey: 'ADD-LISTING.STEP.CONDITIONS', icon: 'fas fa-credit-card' },
+    { id: 5, labelKey: 'ADD-LISTING.STEP.CONFIRM', icon: 'fas fa-check-circle' },
   ];
 
   currentStep = signal(1);
