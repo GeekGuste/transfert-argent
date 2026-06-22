@@ -4,61 +4,59 @@
     <div class="hero-left">
       <div class="trust-badge">
         <i class="fas fa-shield-alt badge-icon"></i>
-        <span>Plateforme sécurisée et certifiée</span>
+        <span>{{ 'home.badge' | i18n }}</span>
       </div>
 
       <h1 class="hero-title">
-        Envoyez vos colis de ville en ville, partout dans le monde, en toute <span class="gradient-text">confiance</span>
+        {{ 'home.hero.title' | i18n }} <span class="gradient-text">{{ 'home.hero.accent' | i18n }}</span>
       </h1>
 
-      <p class="hero-subtitle">
-        Voyageurs et expéditeurs en relation directe, sans intermédiaire. Simple, transparent, sans frais cachés.
-      </p>
+      <p class="hero-subtitle">{{ 'home.hero.sub' | i18n }}</p>
 
       <!-- Quick search bar -->
       <div class="hero-search-bar">
         <div class="hero-search-field">
-          <label class="hero-search-label"><i class="fas fa-map-marker-alt"></i> Départ</label>
+          <label class="hero-search-label"><i class="fas fa-map-marker-alt"></i> {{ 'search.departure' | i18n }}</label>
           <select class="hero-search-input hero-search-select" [(ngModel)]="searchDepartureCountryId">
-            <option value="">Pays...</option>
+            <option value="">{{ 'search.country' | i18n }}</option>
             <option *ngFor="let c of countries" [value]="c.id">{{ c.name }}</option>
           </select>
-          <input type="text" class="hero-search-input hero-search-city" placeholder="Ville..." [(ngModel)]="searchDepartureCity" />
+          <input type="text" class="hero-search-input hero-search-city" [placeholder]="'search.city' | i18n" [(ngModel)]="searchDepartureCity" />
         </div>
         <div class="hero-search-sep"><i class="fas fa-long-arrow-alt-right"></i></div>
         <div class="hero-search-field">
-          <label class="hero-search-label"><i class="fas fa-flag-checkered"></i> Arrivée</label>
+          <label class="hero-search-label"><i class="fas fa-flag-checkered"></i> {{ 'search.arrival' | i18n }}</label>
           <select class="hero-search-input hero-search-select" [(ngModel)]="searchArrivalCountryId">
-            <option value="">Pays...</option>
+            <option value="">{{ 'search.country' | i18n }}</option>
             <option *ngFor="let c of countries" [value]="c.id">{{ c.name }}</option>
           </select>
-          <input type="text" class="hero-search-input hero-search-city" placeholder="Ville..." [(ngModel)]="searchArrivalCity" />
+          <input type="text" class="hero-search-input hero-search-city" [placeholder]="'search.city' | i18n" [(ngModel)]="searchArrivalCity" />
         </div>
         <div class="hero-search-field hero-search-field--sm">
-          <label class="hero-search-label"><i class="fas fa-filter"></i> Type</label>
+          <label class="hero-search-label"><i class="fas fa-filter"></i> {{ 'search.type' | i18n }}</label>
           <select class="hero-search-input hero-search-select" [(ngModel)]="searchType">
-            <option value="">Tous</option>
-            <option [value]="NeedEnumDto.Traveler">Voyageur</option>
-            <option [value]="NeedEnumDto.Sender">Expéditeur</option>
+            <option value="">{{ 'search.all' | i18n }}</option>
+            <option [value]="NeedEnumDto.Traveler">{{ 'need.traveler' | i18n }}</option>
+            <option [value]="NeedEnumDto.Sender">{{ 'need.sender' | i18n }}</option>
           </select>
         </div>
         <button class="hero-search-btn" (click)="quickSearch()">
-          <i class="fas fa-search me-2"></i>Rechercher
+          <i class="fas fa-search me-2"></i>{{ 'search.btn' | i18n }}
         </button>
       </div>
 
       <div class="hero-stats">
         <div class="stat-item">
           <div class="stat-number">10K+</div>
-          <div class="stat-label">Membres actifs</div>
+          <div class="stat-label">{{ 'stat.members' | i18n }}</div>
         </div>
         <div class="stat-item">
           <div class="stat-number">15K+</div>
-          <div class="stat-label">Colis livrés</div>
+          <div class="stat-label">{{ 'stat.parcels' | i18n }}</div>
         </div>
         <div class="stat-item">
           <div class="stat-number">98%</div>
-          <div class="stat-label">Satisfaction</div>
+          <div class="stat-label">{{ 'stat.satisfaction' | i18n }}</div>
         </div>
       </div>
     </div>
@@ -70,10 +68,10 @@
             <i class="fas fa-plane"></i>
           </div>
           <div class="hero-action-body">
-            <strong>Vous voyagez ?</strong>
-            <span>Monétisez votre bagage disponible</span>
+            <strong>{{ 'home.hero.traveler.q' | i18n }}</strong>
+            <span>{{ 'home.hero.traveler.sub' | i18n }}</span>
           </div>
-          <a routerLink="/forms" class="hero-action-btn">Publier <i class="fas fa-arrow-right ms-1"></i></a>
+          <a routerLink="/forms" class="hero-action-btn">{{ 'home.hero.traveler.cta' | i18n }} <i class="fas fa-arrow-right ms-1"></i></a>
         </div>
         <div class="hero-action-divider"></div>
         <div class="hero-action-item">
@@ -81,14 +79,14 @@
             <i class="fas fa-box"></i>
           </div>
           <div class="hero-action-body">
-            <strong>Vous expédiez ?</strong>
-            <span>Trouvez un voyageur de confiance</span>
+            <strong>{{ 'home.hero.sender.q' | i18n }}</strong>
+            <span>{{ 'home.hero.sender.sub' | i18n }}</span>
           </div>
-          <a routerLink="/forms" class="hero-action-btn">Trouver <i class="fas fa-arrow-right ms-1"></i></a>
+          <a routerLink="/forms" class="hero-action-btn">{{ 'home.hero.sender.cta' | i18n }} <i class="fas fa-arrow-right ms-1"></i></a>
         </div>
         <div class="hero-action-divider"></div>
         <a routerLink="/forms/list" class="hero-browse-link">
-          <i class="fas fa-list me-2"></i>Voir toutes les annonces
+          <i class="fas fa-list me-2"></i>{{ 'home.hero.browse' | i18n }}
         </a>
       </div>
     </div>
@@ -98,8 +96,8 @@
 <!-- SECTION: RECENT LISTINGS -->
 <section class="listings-section">
   <div class="section-header">
-    <h2 class="section-title section-title--dark">Annonces récentes</h2>
-    <p class="section-subtitle section-subtitle--dark">Voyageurs et expéditeurs disponibles dès maintenant</p>
+    <h2 class="section-title section-title--dark">{{ 'home.recent.title' | i18n }}</h2>
+    <p class="section-subtitle section-subtitle--dark">{{ 'home.recent.sub' | i18n }}</p>
   </div>
 
   <div class="listings-grid" *ngIf="!listingsLoading">
@@ -108,7 +106,7 @@
         [class.listing-card__badge--traveler]="listing.need?.key === NeedEnumDto.Traveler"
         [class.listing-card__badge--sender]="listing.need?.key === NeedEnumDto.Sender">
         <i [class]="listing.need?.key === NeedEnumDto.Traveler ? 'fas fa-plane me-1' : 'fas fa-box me-1'"></i>
-        {{ listing.need?.label }}
+        {{ listing.need?.key === NeedEnumDto.Traveler ? ('need.traveler' | i18n) : ('need.sender' | i18n) }}
       </div>
       <div class="listing-card__route">
         <span class="listing-card__loc">{{ listing.departureCity || '—' }}{{ listing.departureCountry?.name ? ', ' + listing.departureCountry!.name : '' }}</span>
@@ -117,10 +115,10 @@
       </div>
       <div class="listing-card__meta">
         <span class="listing-card__weight" *ngIf="listing.need?.key === NeedEnumDto.Traveler && listing.availableWeightInGrams">
-          <i class="fas fa-weight-hanging me-1"></i>{{ weightKg(listing.availableWeightInGrams) }} kg dispo
+          <i class="fas fa-weight-hanging me-1"></i>{{ weightKg(listing.availableWeightInGrams) }} {{ 'listing.kg.avail' | i18n }}
         </span>
         <span class="listing-card__weight" *ngIf="listing.need?.key === NeedEnumDto.Sender && listing.desiredWeightInGrams">
-          <i class="fas fa-weight-hanging me-1"></i>{{ weightKg(listing.desiredWeightInGrams) }} kg souhaités
+          <i class="fas fa-weight-hanging me-1"></i>{{ weightKg(listing.desiredWeightInGrams) }} {{ 'listing.kg.wanted' | i18n }}
         </span>
         <span class="listing-card__price" *ngIf="listing.pricePerKg">
           {{ pricePerKg(listing) | number:'1.0-2' }} {{ listing.currency?.symbol || listing.currency?.code || '' }}/kg
@@ -129,7 +127,7 @@
     </a>
     <div *ngIf="recentListings.length === 0" class="listings-empty">
       <i class="fas fa-search listings-empty__icon"></i>
-      <p>Aucune annonce pour le moment. <a routerLink="/forms" class="listings-empty__link">Soyez le premier !</a></p>
+      <p>{{ 'home.recent.empty' | i18n }} <a routerLink="/forms" class="listings-empty__link">{{ 'home.recent.first' | i18n }}</a></p>
     </div>
   </div>
 
@@ -139,7 +137,7 @@
 
   <div class="listings-footer" *ngIf="recentListings.length > 0">
     <a routerLink="/forms/list" class="btn-see-all">
-      Voir toutes les annonces <i class="fas fa-arrow-right ms-2"></i>
+      {{ 'home.recent.seeall' | i18n }} <i class="fas fa-arrow-right ms-2"></i>
     </a>
   </div>
 </section>
@@ -147,8 +145,8 @@
 <!-- SECTION 2: COMMENT ÇA MARCHE -->
 <section class="how-it-works-section">
   <div class="section-header">
-    <h2 class="section-title">Comment ça marche ?</h2>
-    <p class="section-subtitle">Trois étapes simples pour commencer</p>
+    <h2 class="section-title">{{ 'home.how.title' | i18n }}</h2>
+    <p class="section-subtitle">{{ 'home.how.sub' | i18n }}</p>
   </div>
 
   <div class="steps-grid">
@@ -157,8 +155,8 @@
       <div class="step-icon">
         <i [class]="step.icon" style="font-size:2rem;color:currentColor"></i>
       </div>
-      <h3 class="step-title">{{ step.title }}</h3>
-      <p class="step-description">{{ step.description }}</p>
+      <h3 class="step-title">{{ step.titleKey | i18n }}</h3>
+      <p class="step-description">{{ step.descKey | i18n }}</p>
     </div>
   </div>
 </section>
@@ -166,56 +164,30 @@
 <!-- SECTION 3: SERVICES -->
 <section class="services-section">
   <div class="section-header">
-    <h2 class="section-title">Nos services</h2>
-    <p class="section-subtitle">Des solutions adaptées à vos besoins</p>
+    <h2 class="section-title">{{ 'home.services.title' | i18n }}</h2>
+    <p class="section-subtitle">{{ 'home.services.sub' | i18n }}</p>
   </div>
 
   <div class="services-grid">
     <!-- Transfert d'argent -->
     <div class="service-card">
       <div class="service-icon-wrapper">
-        <img src="/assets/images/home/transfer-money-icon.png" alt="Transfert d'argent" class="service-icon">
+        <img src="/assets/images/home/transfer-money-icon.png" alt="Transfer" class="service-icon">
       </div>
-      <h3 class="service-title">Transfert d'argent entre particuliers</h3>
-      <p class="service-description">
-        Envoyez de l'argent rapidement et en toute sécurité vers des comptes bancaires ou mobile money partout dans le
-        monde.
-      </p>
+      <h3 class="service-title">{{ 'home.services.transfer.title' | i18n }}</h3>
+      <p class="service-description">{{ 'home.services.transfer.desc' | i18n }}</p>
       <ul class="service-features">
-        <li>
-          <svg class="check-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2">
+        <li *ngFor="let fk of ['home.services.transfer.f1','home.services.transfer.f2','home.services.transfer.f3','home.services.transfer.f4']">
+          <svg class="check-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="20 6 9 17 4 12"></polyline>
           </svg>
-          <span>Transferts instantanés ou en 24h</span>
-        </li>
-        <li>
-          <svg class="check-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2">
-            <polyline points="20 6 9 17 4 12"></polyline>
-          </svg>
-          <span>Frais transparents et compétitifs</span>
-        </li>
-        <li>
-          <svg class="check-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2">
-            <polyline points="20 6 9 17 4 12"></polyline>
-          </svg>
-          <span>Paiements 100% sécurisés</span>
-        </li>
-        <li>
-          <svg class="check-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2">
-            <polyline points="20 6 9 17 4 12"></polyline>
-          </svg>
-          <span>Suivi en temps réel</span>
+          <span>{{ fk | i18n }}</span>
         </li>
       </ul>
       <a routerLink="/create-transfer" class="service-cta">
-        Commencer un transfert
+        {{ 'home.services.transfer.cta' | i18n }}
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="5" y1="12" x2="19" y2="12"></line>
-          <polyline points="12 5 19 12 12 19"></polyline>
+          <line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline>
         </svg>
       </a>
     </div>
@@ -223,47 +195,22 @@
     <!-- Envoi de colis -->
     <div class="service-card">
       <div class="service-icon-wrapper">
-        <img src="/assets/images/home/send-parcel-icon.png" alt="Envoi de colis" class="service-icon">
+        <img src="/assets/images/home/send-parcel-icon.png" alt="Parcel" class="service-icon">
       </div>
-      <h3 class="service-title">Envoi de colis sécurisé</h3>
-      <p class="service-description">
-        Connectez-vous avec des voyageurs de confiance pour envoyer vos colis d'une ville à l'autre, où que vous soyez dans le monde.
-      </p>
+      <h3 class="service-title">{{ 'home.services.parcel.title' | i18n }}</h3>
+      <p class="service-description">{{ 'home.services.parcel.desc' | i18n }}</p>
       <ul class="service-features">
-        <li>
-          <svg class="check-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2">
+        <li *ngFor="let fk of ['home.services.parcel.f1','home.services.parcel.f2','home.services.parcel.f3','home.services.parcel.f4']">
+          <svg class="check-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="20 6 9 17 4 12"></polyline>
           </svg>
-          <span>Réseau de transporteurs vérifiés</span>
-        </li>
-        <li>
-          <svg class="check-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2">
-            <polyline points="20 6 9 17 4 12"></polyline>
-          </svg>
-          <span>Assurance et protection</span>
-        </li>
-        <li>
-          <svg class="check-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2">
-            <polyline points="20 6 9 17 4 12"></polyline>
-          </svg>
-          <span>Suivi GPS en temps réel</span>
-        </li>
-        <li>
-          <svg class="check-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2">
-            <polyline points="20 6 9 17 4 12"></polyline>
-          </svg>
-          <span>Prix négociables</span>
+          <span>{{ fk | i18n }}</span>
         </li>
       </ul>
       <a routerLink="/create-parcel" class="service-cta">
-        Envoyer un colis
+        {{ 'home.services.parcel.cta' | i18n }}
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="5" y1="12" x2="19" y2="12"></line>
-          <polyline points="12 5 19 12 12 19"></polyline>
+          <line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline>
         </svg>
       </a>
     </div>
@@ -273,8 +220,8 @@
 <!-- SECTION 4: VALEURS -->
 <section class="values-section">
   <div class="section-header">
-    <h2 class="section-title">Nos valeurs</h2>
-    <p class="section-subtitle">Ce qui nous rend différents</p>
+    <h2 class="section-title">{{ 'home.values.title' | i18n }}</h2>
+    <p class="section-subtitle">{{ 'home.values.sub' | i18n }}</p>
   </div>
 
   <div class="values-grid">
@@ -284,10 +231,10 @@
           <path [attr.d]="value.iconPath"></path>
         </svg>
       </div>
-      <h3 class="value-title">{{ value.title }}</h3>
-      <p class="value-description">{{ value.description }}</p>
-      <div class="value-stat" *ngIf="value.stat">
-        <span class="value-stat-number">{{ value.stat }}</span>
+      <h3 class="value-title">{{ value.titleKey | i18n }}</h3>
+      <p class="value-description">{{ value.descKey | i18n }}</p>
+      <div class="value-stat">
+        <span class="value-stat-number">{{ value.statKey | i18n }}</span>
       </div>
     </div>
   </div>
@@ -296,8 +243,8 @@
 <!-- SECTION 5: PREUVES DE CONFIANCE -->
 <section class="trust-section">
   <div class="section-header">
-    <h2 class="section-title">Ils nous font confiance</h2>
-    <p class="section-subtitle">Découvrez les témoignages de notre communauté</p>
+    <h2 class="section-title">{{ 'home.trust.title' | i18n }}</h2>
+    <p class="section-subtitle">{{ 'home.trust.sub' | i18n }}</p>
   </div>
 
   <div class="testimonials-grid">
@@ -310,9 +257,7 @@
         </div>
         <div class="testimonial-rating">
           <svg *ngFor="let star of [1,2,3,4,5]" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-            <polygon
-              points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-            </polygon>
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
           </svg>
         </div>
       </div>
@@ -324,19 +269,19 @@
   <div class="stats-banner">
     <div class="stat-banner-item">
       <div class="stat-banner-number">{{ stats.users }}</div>
-      <div class="stat-banner-label">Utilisateurs actifs</div>
+      <div class="stat-banner-label">{{ 'home.stats.users' | i18n }}</div>
     </div>
     <div class="stat-banner-item">
       <div class="stat-banner-number">{{ stats.transferred }}</div>
-      <div class="stat-banner-label">Montant transféré</div>
+      <div class="stat-banner-label">{{ 'home.stats.transferred' | i18n }}</div>
     </div>
     <div class="stat-banner-item">
       <div class="stat-banner-number">{{ stats.parcels }}</div>
-      <div class="stat-banner-label">Colis livrés</div>
+      <div class="stat-banner-label">{{ 'home.stats.parcels' | i18n }}</div>
     </div>
     <div class="stat-banner-item">
       <div class="stat-banner-number">{{ stats.satisfaction }}</div>
-      <div class="stat-banner-label">Taux de satisfaction</div>
+      <div class="stat-banner-label">{{ 'home.stats.satisfaction' | i18n }}</div>
     </div>
   </div>
 </section>
@@ -344,21 +289,20 @@
 <!-- SECTION 6: FAQ -->
 <section class="faq-section">
   <div class="section-header">
-    <h2 class="section-title">Questions fréquentes</h2>
-    <p class="section-subtitle">Tout ce que vous devez savoir</p>
+    <h2 class="section-title">{{ 'home.faq.title' | i18n }}</h2>
+    <p class="section-subtitle">{{ 'home.faq.sub' | i18n }}</p>
   </div>
 
   <div class="faq-container">
     <div class="faq-item" *ngFor="let faq of faqs; let i = index" [class.active]="faq.open">
       <button class="faq-question" (click)="toggleFaq(i)">
-        <span>{{ faq.question }}</span>
-        <svg class="faq-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-          stroke-width="2">
+        <span>{{ faq.questionKey | i18n }}</span>
+        <svg class="faq-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <polyline points="6 9 12 15 18 9"></polyline>
         </svg>
       </button>
       <div class="faq-answer" [class.show]="faq.open">
-        <p>{{ faq.answer }}</p>
+        <p>{{ faq.answerKey | i18n }}</p>
       </div>
     </div>
   </div>

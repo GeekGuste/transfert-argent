@@ -6,11 +6,12 @@ import { ListingService } from '@/app/core/service/ws/listing/listing.service';
 import { CountryService } from '@/app/core/service/ws/country/country.service';
 import { CountryDto, ListingDto, NeedEnumDto } from '@/app/api/webapiservice';
 import { NavbarComponent } from '@/app/shared/navbar/navbar.component';
+import { FrontI18nPipe } from '@/app/shared/pipes/front-i18n.pipe';
 
 @Component({
   selector: 'app-list-listing',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, NavbarComponent],
+  imports: [CommonModule, RouterModule, FormsModule, NavbarComponent, FrontI18nPipe],
   templateUrl: './list-listing.component.html',
   styleUrls: ['./list-listing.component.scss'],
 })

@@ -5,11 +5,12 @@ import { ListingService } from '@/app/core/service/ws/listing/listing.service';
 import { GlobalErrorService } from '@/app/core/service/global-error.service';
 import { ApplicationDto, ListingDto, NeedEnumDto } from '@/app/api/webapiservice';
 import { NavbarComponent } from '@/app/shared/navbar/navbar.component';
+import { FrontI18nPipe } from '@/app/shared/pipes/front-i18n.pipe';
 
 @Component({
   selector: 'app-manage-listing',
   standalone: true,
-  imports: [CommonModule, RouterModule, NavbarComponent],
+  imports: [CommonModule, RouterModule, NavbarComponent, FrontI18nPipe],
   templateUrl: './manage-listing.component.html',
   styleUrl: './manage-listing.component.scss',
 })
