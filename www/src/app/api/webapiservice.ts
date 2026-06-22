@@ -21,6 +21,1366 @@ export class Client {
     /**
      * @return OK
      */
+    createApplication(body: ApplicationInput): Promise<void> {
+        let url_ = this.baseUrl + "/applications";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processCreateApplication(_response);
+        });
+    }
+
+    protected processCreateApplication(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    getApplications(): Promise<GetApplicationsOutput> {
+        let url_ = this.baseUrl + "/applications";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetApplications(_response);
+        });
+    }
+
+    protected processGetApplications(response: Response): Promise<GetApplicationsOutput> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GetApplicationsOutput.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<GetApplicationsOutput>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    deleteApplication(applicationId: string): Promise<void> {
+        let url_ = this.baseUrl + "/applications/{applicationId}";
+        if (applicationId === undefined || applicationId === null)
+            throw new Error("The parameter 'applicationId' must be defined.");
+        url_ = url_.replace("{applicationId}", encodeURIComponent("" + applicationId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "DELETE",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processDeleteApplication(_response);
+        });
+    }
+
+    protected processDeleteApplication(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    createCountry(body: CountryDto): Promise<void> {
+        let url_ = this.baseUrl + "/countries";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processCreateCountry(_response);
+        });
+    }
+
+    protected processCreateCountry(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    getCountries(): Promise<GetCountriesOutput> {
+        let url_ = this.baseUrl + "/countries";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetCountries(_response);
+        });
+    }
+
+    protected processGetCountries(response: Response): Promise<GetCountriesOutput> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GetCountriesOutput.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<GetCountriesOutput>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    getActiveCountries(): Promise<GetCountriesOutput> {
+        let url_ = this.baseUrl + "/countries/active";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetActiveCountries(_response);
+        });
+    }
+
+    protected processGetActiveCountries(response: Response): Promise<GetCountriesOutput> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GetCountriesOutput.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<GetCountriesOutput>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    updateCountry(id: string, body: CountryDto): Promise<void> {
+        let url_ = this.baseUrl + "/countries/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processUpdateCountry(_response);
+        });
+    }
+
+    protected processUpdateCountry(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    createCurrency(body: CurrencyDto): Promise<void> {
+        let url_ = this.baseUrl + "/currency";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processCreateCurrency(_response);
+        });
+    }
+
+    protected processCreateCurrency(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    getCurrencies(): Promise<CurrencyOutput> {
+        let url_ = this.baseUrl + "/currency";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetCurrencies(_response);
+        });
+    }
+
+    protected processGetCurrencies(response: Response): Promise<CurrencyOutput> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = CurrencyOutput.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<CurrencyOutput>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    updateCurrency(currencyId: string, body: CurrencyDto): Promise<void> {
+        let url_ = this.baseUrl + "/currency/{currencyId}";
+        if (currencyId === undefined || currencyId === null)
+            throw new Error("The parameter 'currencyId' must be defined.");
+        url_ = url_.replace("{currencyId}", encodeURIComponent("" + currencyId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processUpdateCurrency(_response);
+        });
+    }
+
+    protected processUpdateCurrency(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    deleteCurrency(currencyId: string): Promise<void> {
+        let url_ = this.baseUrl + "/currency/{currencyId}";
+        if (currencyId === undefined || currencyId === null)
+            throw new Error("The parameter 'currencyId' must be defined.");
+        url_ = url_.replace("{currencyId}", encodeURIComponent("" + currencyId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "DELETE",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processDeleteCurrency(_response);
+        });
+    }
+
+    protected processDeleteCurrency(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    createListing(body: ListingInput): Promise<ListingDto> {
+        let url_ = this.baseUrl + "/listings";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processCreateListing(_response);
+        });
+    }
+
+    protected processCreateListing(response: Response): Promise<ListingDto> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ListingDto.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ListingDto>(null as any);
+    }
+
+    /**
+     * @param departureCountryId (optional) 
+     * @param departureCity (optional) 
+     * @param arrivalCountryId (optional) 
+     * @param arrivalCity (optional) 
+     * @param need (optional) 
+     * @param dateFrom (optional) 
+     * @param dateTo (optional) 
+     * @return OK
+     */
+    getListings(departureCountryId: string | undefined, departureCity: string | undefined, arrivalCountryId: string | undefined, arrivalCity: string | undefined, need: NeedEnumDto | undefined, dateFrom: Date | undefined, dateTo: Date | undefined): Promise<GetListingsOutput> {
+        let url_ = this.baseUrl + "/listings?";
+        if (departureCountryId === null)
+            throw new Error("The parameter 'departureCountryId' cannot be null.");
+        else if (departureCountryId !== undefined)
+            url_ += "DepartureCountryId=" + encodeURIComponent("" + departureCountryId) + "&";
+        if (departureCity === null)
+            throw new Error("The parameter 'departureCity' cannot be null.");
+        else if (departureCity !== undefined)
+            url_ += "DepartureCity=" + encodeURIComponent("" + departureCity) + "&";
+        if (arrivalCountryId === null)
+            throw new Error("The parameter 'arrivalCountryId' cannot be null.");
+        else if (arrivalCountryId !== undefined)
+            url_ += "ArrivalCountryId=" + encodeURIComponent("" + arrivalCountryId) + "&";
+        if (arrivalCity === null)
+            throw new Error("The parameter 'arrivalCity' cannot be null.");
+        else if (arrivalCity !== undefined)
+            url_ += "ArrivalCity=" + encodeURIComponent("" + arrivalCity) + "&";
+        if (need === null)
+            throw new Error("The parameter 'need' cannot be null.");
+        else if (need !== undefined)
+            url_ += "Need=" + encodeURIComponent("" + need) + "&";
+        if (dateFrom === null)
+            throw new Error("The parameter 'dateFrom' cannot be null.");
+        else if (dateFrom !== undefined)
+            url_ += "DateFrom=" + encodeURIComponent(dateFrom ? "" + dateFrom.toISOString() : "") + "&";
+        if (dateTo === null)
+            throw new Error("The parameter 'dateTo' cannot be null.");
+        else if (dateTo !== undefined)
+            url_ += "DateTo=" + encodeURIComponent(dateTo ? "" + dateTo.toISOString() : "") + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetListings(_response);
+        });
+    }
+
+    protected processGetListings(response: Response): Promise<GetListingsOutput> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GetListingsOutput.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<GetListingsOutput>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    getListingById(listingId: string): Promise<ListingDto> {
+        let url_ = this.baseUrl + "/listings/{listingId}";
+        if (listingId === undefined || listingId === null)
+            throw new Error("The parameter 'listingId' must be defined.");
+        url_ = url_.replace("{listingId}", encodeURIComponent("" + listingId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetListingById(_response);
+        });
+    }
+
+    protected processGetListingById(response: Response): Promise<ListingDto> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ListingDto.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ListingDto>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    deleteListing(listingId: string): Promise<void> {
+        let url_ = this.baseUrl + "/listings/{listingId}";
+        if (listingId === undefined || listingId === null)
+            throw new Error("The parameter 'listingId' must be defined.");
+        url_ = url_.replace("{listingId}", encodeURIComponent("" + listingId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "DELETE",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processDeleteListing(_response);
+        });
+    }
+
+    protected processDeleteListing(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    getListingByToken(token: string): Promise<ListingDto> {
+        let url_ = this.baseUrl + "/listings/access/{token}";
+        if (token === undefined || token === null)
+            throw new Error("The parameter 'token' must be defined.");
+        url_ = url_.replace("{token}", encodeURIComponent("" + token));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetListingByToken(_response);
+        });
+    }
+
+    protected processGetListingByToken(response: Response): Promise<ListingDto> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ListingDto.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ListingDto>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    updateListingByToken(token: string, body: UpdateListingInput): Promise<ListingDto> {
+        let url_ = this.baseUrl + "/listings/access/{token}";
+        if (token === undefined || token === null)
+            throw new Error("The parameter 'token' must be defined.");
+        url_ = url_.replace("{token}", encodeURIComponent("" + token));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processUpdateListingByToken(_response);
+        });
+    }
+
+    protected processUpdateListingByToken(response: Response): Promise<ListingDto> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ListingDto.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ListingDto>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    deactivateListing(token: string): Promise<void> {
+        let url_ = this.baseUrl + "/listings/access/{token}";
+        if (token === undefined || token === null)
+            throw new Error("The parameter 'token' must be defined.");
+        url_ = url_.replace("{token}", encodeURIComponent("" + token));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "DELETE",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processDeactivateListing(_response);
+        });
+    }
+
+    protected processDeactivateListing(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    confirmListingActive(token: string): Promise<void> {
+        let url_ = this.baseUrl + "/listings/access/{token}/confirm";
+        if (token === undefined || token === null)
+            throw new Error("The parameter 'token' must be defined.");
+        url_ = url_.replace("{token}", encodeURIComponent("" + token));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processConfirmListingActive(_response);
+        });
+    }
+
+    protected processConfirmListingActive(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    validateApplication(token: string, applicationId: string): Promise<void> {
+        let url_ = this.baseUrl + "/listings/access/{token}/applications/{applicationId}/validate";
+        if (token === undefined || token === null)
+            throw new Error("The parameter 'token' must be defined.");
+        url_ = url_.replace("{token}", encodeURIComponent("" + token));
+        if (applicationId === undefined || applicationId === null)
+            throw new Error("The parameter 'applicationId' must be defined.");
+        url_ = url_.replace("{applicationId}", encodeURIComponent("" + applicationId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "POST",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processValidateApplication(_response);
+        });
+    }
+
+    protected processValidateApplication(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    getPaymentMethods(): Promise<PaymentMethodDto[]> {
+        let url_ = this.baseUrl + "/paymentMethods";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetPaymentMethods(_response);
+        });
+    }
+
+    protected processGetPaymentMethods(response: Response): Promise<PaymentMethodDto[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(PaymentMethodDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<PaymentMethodDto[]>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    createService(body: ServiceDto): Promise<void> {
+        let url_ = this.baseUrl + "/services";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processCreateService(_response);
+        });
+    }
+
+    protected processCreateService(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    getServices(): Promise<GetServiceOutput> {
+        let url_ = this.baseUrl + "/services";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetServices(_response);
+        });
+    }
+
+    protected processGetServices(response: Response): Promise<GetServiceOutput> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GetServiceOutput.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<GetServiceOutput>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    updateService(id: string, body: ServiceDto): Promise<void> {
+        let url_ = this.baseUrl + "/services/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processUpdateService(_response);
+        });
+    }
+
+    protected processUpdateService(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    addCountryToService(id: string, countryId: string): Promise<Task> {
+        let url_ = this.baseUrl + "/services/{id}/add-country?";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (countryId === undefined || countryId === null)
+            throw new Error("The parameter 'countryId' must be defined and cannot be null.");
+        else
+            url_ += "countryId=" + encodeURIComponent("" + countryId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "PATCH",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processAddCountryToService(_response);
+        });
+    }
+
+    protected processAddCountryToService(response: Response): Promise<Task> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Task.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<Task>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    removeCountryFromService(id: string, countryId: string): Promise<Task> {
+        let url_ = this.baseUrl + "/services/{id}/remove-country?";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (countryId === undefined || countryId === null)
+            throw new Error("The parameter 'countryId' must be defined and cannot be null.");
+        else
+            url_ += "countryId=" + encodeURIComponent("" + countryId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "PATCH",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processRemoveCountryFromService(_response);
+        });
+    }
+
+    protected processRemoveCountryFromService(response: Response): Promise<Task> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = Task.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<Task>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    createSubscription(body: CreateSubscriptionInput): Promise<void> {
+        let url_ = this.baseUrl + "/subscriptions";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processCreateSubscription(_response);
+        });
+    }
+
+    protected processCreateSubscription(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    getSubscriptions(): Promise<SubscriptionOutput[]> {
+        let url_ = this.baseUrl + "/subscriptions";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetSubscriptions(_response);
+        });
+    }
+
+    protected processGetSubscriptions(response: Response): Promise<SubscriptionOutput[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(SubscriptionOutput.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<SubscriptionOutput[]>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    updateSubscription(subscriptionId: string, body: UpdateSubscriptionInput): Promise<void> {
+        let url_ = this.baseUrl + "/subscriptions/{subscriptionId}";
+        if (subscriptionId === undefined || subscriptionId === null)
+            throw new Error("The parameter 'subscriptionId' must be defined.");
+        url_ = url_.replace("{subscriptionId}", encodeURIComponent("" + subscriptionId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processUpdateSubscription(_response);
+        });
+    }
+
+    protected processUpdateSubscription(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    getSubscriptionById(subscriptionId: string): Promise<SubscriptionOutput> {
+        let url_ = this.baseUrl + "/subscriptions/{subscriptionId}";
+        if (subscriptionId === undefined || subscriptionId === null)
+            throw new Error("The parameter 'subscriptionId' must be defined.");
+        url_ = url_.replace("{subscriptionId}", encodeURIComponent("" + subscriptionId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetSubscriptionById(_response);
+        });
+    }
+
+    protected processGetSubscriptionById(response: Response): Promise<SubscriptionOutput> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = SubscriptionOutput.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<SubscriptionOutput>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    deleteSubscription(subscriptionId: string): Promise<void> {
+        let url_ = this.baseUrl + "/subscriptions/{subscriptionId}";
+        if (subscriptionId === undefined || subscriptionId === null)
+            throw new Error("The parameter 'subscriptionId' must be defined.");
+        url_ = url_.replace("{subscriptionId}", encodeURIComponent("" + subscriptionId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "DELETE",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processDeleteSubscription(_response);
+        });
+    }
+
+    protected processDeleteSubscription(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    getSubscriptionFrequencies(): Promise<SubscriptionFrequencyItemDto[]> {
+        let url_ = this.baseUrl + "/subscriptions/frequencies";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetSubscriptionFrequencies(_response);
+        });
+    }
+
+    protected processGetSubscriptionFrequencies(response: Response): Promise<SubscriptionFrequencyItemDto[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(SubscriptionFrequencyItemDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<SubscriptionFrequencyItemDto[]>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    removeServiceFromSubscription(subscriptionId: string, serviceId: string): Promise<void> {
+        let url_ = this.baseUrl + "/subscriptions/{subscriptionId}/remove-service/{serviceId}";
+        if (subscriptionId === undefined || subscriptionId === null)
+            throw new Error("The parameter 'subscriptionId' must be defined.");
+        url_ = url_.replace("{subscriptionId}", encodeURIComponent("" + subscriptionId));
+        if (serviceId === undefined || serviceId === null)
+            throw new Error("The parameter 'serviceId' must be defined.");
+        url_ = url_.replace("{serviceId}", encodeURIComponent("" + serviceId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "PATCH",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processRemoveServiceFromSubscription(_response);
+        });
+    }
+
+    protected processRemoveServiceFromSubscription(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    addServiceToSubscription(subscriptionId: string, serviceId: string): Promise<void> {
+        let url_ = this.baseUrl + "/subscriptions/{subscriptionId}/add-service/{serviceId}";
+        if (subscriptionId === undefined || subscriptionId === null)
+            throw new Error("The parameter 'subscriptionId' must be defined.");
+        url_ = url_.replace("{subscriptionId}", encodeURIComponent("" + subscriptionId));
+        if (serviceId === undefined || serviceId === null)
+            throw new Error("The parameter 'serviceId' must be defined.");
+        url_ = url_.replace("{serviceId}", encodeURIComponent("" + serviceId));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "PATCH",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processAddServiceToSubscription(_response);
+        });
+    }
+
+    protected processAddServiceToSubscription(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
     register(body: AccountRegisterDto): Promise<boolean> {
         let url_ = this.baseUrl + "/users/register";
         url_ = url_.replace(/[?&]$/, "");
@@ -104,7 +1464,91 @@ export class Client {
     /**
      * @return OK
      */
-    meGET(): Promise<void> {
+    verifyEmail(body: VerifyEmailInput): Promise<boolean> {
+        let url_ = this.baseUrl + "/users/verify-email";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processVerifyEmail(_response);
+        });
+    }
+
+    protected processVerifyEmail(response: Response): Promise<boolean> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<boolean>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    resendVerificationCode(email: string): Promise<boolean> {
+        let url_ = this.baseUrl + "/users/resend-code?";
+        if (email === undefined || email === null)
+            throw new Error("The parameter 'email' must be defined and cannot be null.");
+        else
+            url_ += "email=" + encodeURIComponent("" + email) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processResendVerificationCode(_response);
+        });
+    }
+
+    protected processResendVerificationCode(response: Response): Promise<boolean> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<boolean>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    getCurrentUser(): Promise<void> {
         let url_ = this.baseUrl + "/users/me";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -115,11 +1559,11 @@ export class Client {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processMeGET(_response);
+            return this.processGetCurrentUser(_response);
         });
     }
 
-    protected processMeGET(response: Response): Promise<void> {
+    protected processGetCurrentUser(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -137,7 +1581,7 @@ export class Client {
     /**
      * @return OK
      */
-    mePUT(body: UpdateUserDto): Promise<void> {
+    updateCurrentUser(body: UpdateUserDto): Promise<void> {
         let url_ = this.baseUrl + "/users/me";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -152,11 +1596,11 @@ export class Client {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processMePUT(_response);
+            return this.processUpdateCurrentUser(_response);
         });
     }
 
-    protected processMePUT(response: Response): Promise<void> {
+    protected processUpdateCurrentUser(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -174,7 +1618,95 @@ export class Client {
     /**
      * @return OK
      */
-    updatePassword(body: ChangePasswordDto): Promise<void> {
+    getUsers(): Promise<ApplicationUserDto[]> {
+        let url_ = this.baseUrl + "/users/users";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetUsers(_response);
+        });
+    }
+
+    protected processGetUsers(response: Response): Promise<ApplicationUserDto[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(ApplicationUserDto.fromJS(item));
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ApplicationUserDto[]>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    getRoles(): Promise<string[]> {
+        let url_ = this.baseUrl + "/users/users/roles";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetRoles(_response);
+        });
+    }
+
+    protected processGetRoles(response: Response): Promise<string[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            if (Array.isArray(resultData200)) {
+                result200 = [] as any;
+                for (let item of resultData200)
+                    result200!.push(item);
+            }
+            else {
+                result200 = <any>null;
+            }
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<string[]>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    changePassword(body: ChangePasswordDto): Promise<void> {
         let url_ = this.baseUrl + "/users/me/update-password";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -189,11 +1721,11 @@ export class Client {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processUpdatePassword(_response);
+            return this.processChangePassword(_response);
         });
     }
 
-    protected processUpdatePassword(response: Response): Promise<void> {
+    protected processChangePassword(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -211,7 +1743,86 @@ export class Client {
     /**
      * @return OK
      */
-    users(id: string, body: UpdateUserDto): Promise<void> {
+    sendResetPasswordCode(email: string): Promise<void> {
+        let url_ = this.baseUrl + "/users/me/reset-password?";
+        if (email === undefined || email === null)
+            throw new Error("The parameter 'email' must be defined and cannot be null.");
+        else
+            url_ += "email=" + encodeURIComponent("" + email) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processSendResetPasswordCode(_response);
+        });
+    }
+
+    protected processSendResetPasswordCode(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    resetPassword(body: ResetPasswordDto): Promise<boolean> {
+        let url_ = this.baseUrl + "/users/me/reset-password";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processResetPassword(_response);
+        });
+    }
+
+    protected processResetPassword(response: Response): Promise<boolean> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+                result200 = resultData200 !== undefined ? resultData200 : <any>null;
+    
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<boolean>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    updateUser(id: string, body: UpdateUserDto): Promise<void> {
         let url_ = this.baseUrl + "/users/users/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -229,11 +1840,11 @@ export class Client {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processUsers(_response);
+            return this.processUpdateUser(_response);
         });
     }
 
-    protected processUsers(response: Response): Promise<void> {
+    protected processUpdateUser(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -251,7 +1862,7 @@ export class Client {
     /**
      * @return OK
      */
-    password(id: string, body: ChangePasswordDto): Promise<void> {
+    changeUserPassword(id: string, body: ChangePasswordDto): Promise<void> {
         let url_ = this.baseUrl + "/users/users/{id}/password";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -269,11 +1880,11 @@ export class Client {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processPassword(_response);
+            return this.processChangeUserPassword(_response);
         });
     }
 
-    protected processPassword(response: Response): Promise<void> {
+    protected processChangeUserPassword(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -291,7 +1902,7 @@ export class Client {
     /**
      * @return OK
      */
-    disable(id: string): Promise<void> {
+    disableUser(id: string): Promise<void> {
         let url_ = this.baseUrl + "/users/users/{id}/disable";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -305,11 +1916,11 @@ export class Client {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processDisable(_response);
+            return this.processDisableUser(_response);
         });
     }
 
-    protected processDisable(response: Response): Promise<void> {
+    protected processDisableUser(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -327,7 +1938,7 @@ export class Client {
     /**
      * @return OK
      */
-    enable(id: string): Promise<void> {
+    enableUser(id: string): Promise<void> {
         let url_ = this.baseUrl + "/users/users/{id}/enable";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -341,11 +1952,11 @@ export class Client {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processEnable(_response);
+            return this.processEnableUser(_response);
         });
     }
 
-    protected processEnable(response: Response): Promise<void> {
+    protected processEnableUser(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -363,7 +1974,7 @@ export class Client {
     /**
      * @return OK
      */
-    rolesPOST(id: string, body: RoleDto): Promise<void> {
+    addRole(id: string, body: RoleDto): Promise<void> {
         let url_ = this.baseUrl + "/users/users/{id}/roles";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -381,11 +1992,11 @@ export class Client {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processRolesPOST(_response);
+            return this.processAddRole(_response);
         });
     }
 
-    protected processRolesPOST(response: Response): Promise<void> {
+    protected processAddRole(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -403,7 +2014,7 @@ export class Client {
     /**
      * @return OK
      */
-    rolesDELETE(id: string, role: string): Promise<void> {
+    removeRole(id: string, role: string): Promise<void> {
         let url_ = this.baseUrl + "/users/users/{id}/roles/{role}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -420,11 +2031,11 @@ export class Client {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processRolesDELETE(_response);
+            return this.processRemoveRole(_response);
         });
     }
 
-    protected processRolesDELETE(response: Response): Promise<void> {
+    protected processRemoveRole(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -483,6 +2094,8 @@ export class AccountRegisterDto implements IAccountRegisterDto {
     password?: string | undefined;
     firstName?: string | undefined;
     lastName?: string | undefined;
+    phone?: string | undefined;
+    birthDay?: Date;
 
     constructor(data?: IAccountRegisterDto) {
         if (data) {
@@ -499,6 +2112,8 @@ export class AccountRegisterDto implements IAccountRegisterDto {
             this.password = _data["password"];
             this.firstName = _data["firstName"];
             this.lastName = _data["lastName"];
+            this.phone = _data["phone"];
+            this.birthDay = _data["birthDay"] ? new Date(_data["birthDay"].toString()) : <any>undefined;
         }
     }
 
@@ -515,6 +2130,8 @@ export class AccountRegisterDto implements IAccountRegisterDto {
         data["password"] = this.password;
         data["firstName"] = this.firstName;
         data["lastName"] = this.lastName;
+        data["phone"] = this.phone;
+        data["birthDay"] = this.birthDay ? this.birthDay.toISOString() : <any>undefined;
         return data;
     }
 }
@@ -524,6 +2141,8 @@ export interface IAccountRegisterDto {
     password?: string | undefined;
     firstName?: string | undefined;
     lastName?: string | undefined;
+    phone?: string | undefined;
+    birthDay?: Date;
 }
 
 export class AccountRequest implements IAccountRequest {
@@ -566,6 +2185,438 @@ export interface IAccountRequest {
     password?: string | undefined;
 }
 
+export class AggregateException implements IAggregateException {
+    targetSite?: MethodBase;
+    readonly data?: { [key: string]: any; } | undefined;
+    innerException?: Exception;
+    helpLink?: string | undefined;
+    source?: string | undefined;
+    hResult?: number;
+    readonly stackTrace?: string | undefined;
+    readonly innerExceptions?: Exception[] | undefined;
+    readonly message?: string | undefined;
+
+    constructor(data?: IAggregateException) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.targetSite = _data["targetSite"] ? MethodBase.fromJS(_data["targetSite"]) : <any>undefined;
+            if (_data["data"]) {
+                (<any>this).data = {} as any;
+                for (let key in _data["data"]) {
+                    if (_data["data"].hasOwnProperty(key))
+                        (<any>(<any>this).data)![key] = _data["data"][key];
+                }
+            }
+            this.innerException = _data["innerException"] ? Exception.fromJS(_data["innerException"]) : <any>undefined;
+            this.helpLink = _data["helpLink"];
+            this.source = _data["source"];
+            this.hResult = _data["hResult"];
+            (<any>this).stackTrace = _data["stackTrace"];
+            if (Array.isArray(_data["innerExceptions"])) {
+                (<any>this).innerExceptions = [] as any;
+                for (let item of _data["innerExceptions"])
+                    (<any>this).innerExceptions!.push(Exception.fromJS(item));
+            }
+            (<any>this).message = _data["message"];
+        }
+    }
+
+    static fromJS(data: any): AggregateException {
+        data = typeof data === 'object' ? data : {};
+        let result = new AggregateException();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["targetSite"] = this.targetSite ? this.targetSite.toJSON() : <any>undefined;
+        if (this.data) {
+            data["data"] = {};
+            for (let key in this.data) {
+                if (this.data.hasOwnProperty(key))
+                    (<any>data["data"])[key] = (<any>this.data)[key];
+            }
+        }
+        data["innerException"] = this.innerException ? this.innerException.toJSON() : <any>undefined;
+        data["helpLink"] = this.helpLink;
+        data["source"] = this.source;
+        data["hResult"] = this.hResult;
+        data["stackTrace"] = this.stackTrace;
+        if (Array.isArray(this.innerExceptions)) {
+            data["innerExceptions"] = [];
+            for (let item of this.innerExceptions)
+                data["innerExceptions"].push(item ? item.toJSON() : <any>undefined);
+        }
+        data["message"] = this.message;
+        return data;
+    }
+}
+
+export interface IAggregateException {
+    targetSite?: MethodBase;
+    data?: { [key: string]: any; } | undefined;
+    innerException?: Exception;
+    helpLink?: string | undefined;
+    source?: string | undefined;
+    hResult?: number;
+    stackTrace?: string | undefined;
+    innerExceptions?: Exception[] | undefined;
+    message?: string | undefined;
+}
+
+export class ApplicationDto implements IApplicationDto {
+    id?: string | undefined;
+    lastName?: string | undefined;
+    firstName?: string | undefined;
+    phone?: string | undefined;
+    email?: string | undefined;
+    isAdult?: boolean;
+    dateCreation?: Date;
+    listingId?: string | undefined;
+    description?: string | undefined;
+
+    constructor(data?: IApplicationDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.lastName = _data["lastName"];
+            this.firstName = _data["firstName"];
+            this.phone = _data["phone"];
+            this.email = _data["email"];
+            this.isAdult = _data["isAdult"];
+            this.dateCreation = _data["dateCreation"] ? new Date(_data["dateCreation"].toString()) : <any>undefined;
+            this.listingId = _data["listingId"];
+            this.description = _data["description"];
+        }
+    }
+
+    static fromJS(data: any): ApplicationDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ApplicationDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["lastName"] = this.lastName;
+        data["firstName"] = this.firstName;
+        data["phone"] = this.phone;
+        data["email"] = this.email;
+        data["isAdult"] = this.isAdult;
+        data["dateCreation"] = this.dateCreation ? this.dateCreation.toISOString() : <any>undefined;
+        data["listingId"] = this.listingId;
+        data["description"] = this.description;
+        return data;
+    }
+}
+
+export interface IApplicationDto {
+    id?: string | undefined;
+    lastName?: string | undefined;
+    firstName?: string | undefined;
+    phone?: string | undefined;
+    email?: string | undefined;
+    isAdult?: boolean;
+    dateCreation?: Date;
+    listingId?: string | undefined;
+    description?: string | undefined;
+}
+
+export class ApplicationInput implements IApplicationInput {
+    lastName?: string | undefined;
+    firstName?: string | undefined;
+    phone?: string | undefined;
+    email?: string | undefined;
+    isAdult?: boolean;
+    description?: string | undefined;
+    listingId?: string | undefined;
+
+    constructor(data?: IApplicationInput) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.lastName = _data["lastName"];
+            this.firstName = _data["firstName"];
+            this.phone = _data["phone"];
+            this.email = _data["email"];
+            this.isAdult = _data["isAdult"];
+            this.description = _data["description"];
+            this.listingId = _data["listingId"];
+        }
+    }
+
+    static fromJS(data: any): ApplicationInput {
+        data = typeof data === 'object' ? data : {};
+        let result = new ApplicationInput();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["lastName"] = this.lastName;
+        data["firstName"] = this.firstName;
+        data["phone"] = this.phone;
+        data["email"] = this.email;
+        data["isAdult"] = this.isAdult;
+        data["description"] = this.description;
+        data["listingId"] = this.listingId;
+        return data;
+    }
+}
+
+export interface IApplicationInput {
+    lastName?: string | undefined;
+    firstName?: string | undefined;
+    phone?: string | undefined;
+    email?: string | undefined;
+    isAdult?: boolean;
+    description?: string | undefined;
+    listingId?: string | undefined;
+}
+
+export class ApplicationUserDto implements IApplicationUserDto {
+    id?: string | undefined;
+    userName?: string | undefined;
+    firstName?: string | undefined;
+    lastName?: string | undefined;
+    isEnabled?: boolean;
+    phone?: string | undefined;
+    birthDay?: Date;
+    roles?: RoleDto[] | undefined;
+
+    constructor(data?: IApplicationUserDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.userName = _data["userName"];
+            this.firstName = _data["firstName"];
+            this.lastName = _data["lastName"];
+            this.isEnabled = _data["isEnabled"];
+            this.phone = _data["phone"];
+            this.birthDay = _data["birthDay"] ? new Date(_data["birthDay"].toString()) : <any>undefined;
+            if (Array.isArray(_data["roles"])) {
+                this.roles = [] as any;
+                for (let item of _data["roles"])
+                    this.roles!.push(RoleDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): ApplicationUserDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ApplicationUserDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["userName"] = this.userName;
+        data["firstName"] = this.firstName;
+        data["lastName"] = this.lastName;
+        data["isEnabled"] = this.isEnabled;
+        data["phone"] = this.phone;
+        data["birthDay"] = this.birthDay ? this.birthDay.toISOString() : <any>undefined;
+        if (Array.isArray(this.roles)) {
+            data["roles"] = [];
+            for (let item of this.roles)
+                data["roles"].push(item ? item.toJSON() : <any>undefined);
+        }
+        return data;
+    }
+}
+
+export interface IApplicationUserDto {
+    id?: string | undefined;
+    userName?: string | undefined;
+    firstName?: string | undefined;
+    lastName?: string | undefined;
+    isEnabled?: boolean;
+    phone?: string | undefined;
+    birthDay?: Date;
+    roles?: RoleDto[] | undefined;
+}
+
+export class Assembly implements IAssembly {
+    readonly definedTypes?: TypeInfo[] | undefined;
+    readonly exportedTypes?: Type[] | undefined;
+    readonly codeBase?: string | undefined;
+    entryPoint?: MethodInfo;
+    readonly fullName?: string | undefined;
+    readonly imageRuntimeVersion?: string | undefined;
+    readonly isDynamic?: boolean;
+    readonly location?: string | undefined;
+    readonly reflectionOnly?: boolean;
+    readonly isCollectible?: boolean;
+    readonly isFullyTrusted?: boolean;
+    readonly customAttributes?: CustomAttributeData[] | undefined;
+    readonly escapedCodeBase?: string | undefined;
+    manifestModule?: Module;
+    readonly modules?: Module[] | undefined;
+    readonly globalAssemblyCache?: boolean;
+    readonly hostContext?: number;
+    securityRuleSet?: SecurityRuleSet;
+
+    constructor(data?: IAssembly) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["definedTypes"])) {
+                (<any>this).definedTypes = [] as any;
+                for (let item of _data["definedTypes"])
+                    (<any>this).definedTypes!.push(TypeInfo.fromJS(item));
+            }
+            if (Array.isArray(_data["exportedTypes"])) {
+                (<any>this).exportedTypes = [] as any;
+                for (let item of _data["exportedTypes"])
+                    (<any>this).exportedTypes!.push(Type.fromJS(item));
+            }
+            (<any>this).codeBase = _data["codeBase"];
+            this.entryPoint = _data["entryPoint"] ? MethodInfo.fromJS(_data["entryPoint"]) : <any>undefined;
+            (<any>this).fullName = _data["fullName"];
+            (<any>this).imageRuntimeVersion = _data["imageRuntimeVersion"];
+            (<any>this).isDynamic = _data["isDynamic"];
+            (<any>this).location = _data["location"];
+            (<any>this).reflectionOnly = _data["reflectionOnly"];
+            (<any>this).isCollectible = _data["isCollectible"];
+            (<any>this).isFullyTrusted = _data["isFullyTrusted"];
+            if (Array.isArray(_data["customAttributes"])) {
+                (<any>this).customAttributes = [] as any;
+                for (let item of _data["customAttributes"])
+                    (<any>this).customAttributes!.push(CustomAttributeData.fromJS(item));
+            }
+            (<any>this).escapedCodeBase = _data["escapedCodeBase"];
+            this.manifestModule = _data["manifestModule"] ? Module.fromJS(_data["manifestModule"]) : <any>undefined;
+            if (Array.isArray(_data["modules"])) {
+                (<any>this).modules = [] as any;
+                for (let item of _data["modules"])
+                    (<any>this).modules!.push(Module.fromJS(item));
+            }
+            (<any>this).globalAssemblyCache = _data["globalAssemblyCache"];
+            (<any>this).hostContext = _data["hostContext"];
+            this.securityRuleSet = _data["securityRuleSet"];
+        }
+    }
+
+    static fromJS(data: any): Assembly {
+        data = typeof data === 'object' ? data : {};
+        let result = new Assembly();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.definedTypes)) {
+            data["definedTypes"] = [];
+            for (let item of this.definedTypes)
+                data["definedTypes"].push(item ? item.toJSON() : <any>undefined);
+        }
+        if (Array.isArray(this.exportedTypes)) {
+            data["exportedTypes"] = [];
+            for (let item of this.exportedTypes)
+                data["exportedTypes"].push(item ? item.toJSON() : <any>undefined);
+        }
+        data["codeBase"] = this.codeBase;
+        data["entryPoint"] = this.entryPoint ? this.entryPoint.toJSON() : <any>undefined;
+        data["fullName"] = this.fullName;
+        data["imageRuntimeVersion"] = this.imageRuntimeVersion;
+        data["isDynamic"] = this.isDynamic;
+        data["location"] = this.location;
+        data["reflectionOnly"] = this.reflectionOnly;
+        data["isCollectible"] = this.isCollectible;
+        data["isFullyTrusted"] = this.isFullyTrusted;
+        if (Array.isArray(this.customAttributes)) {
+            data["customAttributes"] = [];
+            for (let item of this.customAttributes)
+                data["customAttributes"].push(item ? item.toJSON() : <any>undefined);
+        }
+        data["escapedCodeBase"] = this.escapedCodeBase;
+        data["manifestModule"] = this.manifestModule ? this.manifestModule.toJSON() : <any>undefined;
+        if (Array.isArray(this.modules)) {
+            data["modules"] = [];
+            for (let item of this.modules)
+                data["modules"].push(item ? item.toJSON() : <any>undefined);
+        }
+        data["globalAssemblyCache"] = this.globalAssemblyCache;
+        data["hostContext"] = this.hostContext;
+        data["securityRuleSet"] = this.securityRuleSet;
+        return data;
+    }
+}
+
+export interface IAssembly {
+    definedTypes?: TypeInfo[] | undefined;
+    exportedTypes?: Type[] | undefined;
+    codeBase?: string | undefined;
+    entryPoint?: MethodInfo;
+    fullName?: string | undefined;
+    imageRuntimeVersion?: string | undefined;
+    isDynamic?: boolean;
+    location?: string | undefined;
+    reflectionOnly?: boolean;
+    isCollectible?: boolean;
+    isFullyTrusted?: boolean;
+    customAttributes?: CustomAttributeData[] | undefined;
+    escapedCodeBase?: string | undefined;
+    manifestModule?: Module;
+    modules?: Module[] | undefined;
+    globalAssemblyCache?: boolean;
+    hostContext?: number;
+    securityRuleSet?: SecurityRuleSet;
+}
+
+export enum CallingConventions {
+    _1 = 1,
+    _2 = 2,
+    _3 = 3,
+    _32 = 32,
+    _64 = 64,
+}
+
 export class ChangePasswordDto implements IChangePasswordDto {
     newPassword?: string | undefined;
 
@@ -602,6 +2653,2382 @@ export interface IChangePasswordDto {
     newPassword?: string | undefined;
 }
 
+export class ConstructorInfo implements IConstructorInfo {
+    readonly name?: string | undefined;
+    declaringType?: Type;
+    reflectedType?: Type;
+    module?: Module;
+    readonly customAttributes?: CustomAttributeData[] | undefined;
+    readonly isCollectible?: boolean;
+    readonly metadataToken?: number;
+    attributes?: MethodAttributes;
+    methodImplementationFlags?: MethodImplAttributes;
+    callingConvention?: CallingConventions;
+    readonly isAbstract?: boolean;
+    readonly isConstructor?: boolean;
+    readonly isFinal?: boolean;
+    readonly isHideBySig?: boolean;
+    readonly isSpecialName?: boolean;
+    readonly isStatic?: boolean;
+    readonly isVirtual?: boolean;
+    readonly isAssembly?: boolean;
+    readonly isFamily?: boolean;
+    readonly isFamilyAndAssembly?: boolean;
+    readonly isFamilyOrAssembly?: boolean;
+    readonly isPrivate?: boolean;
+    readonly isPublic?: boolean;
+    readonly isConstructedGenericMethod?: boolean;
+    readonly isGenericMethod?: boolean;
+    readonly isGenericMethodDefinition?: boolean;
+    readonly containsGenericParameters?: boolean;
+    methodHandle?: RuntimeMethodHandle;
+    readonly isSecurityCritical?: boolean;
+    readonly isSecuritySafeCritical?: boolean;
+    readonly isSecurityTransparent?: boolean;
+    memberType?: MemberTypes;
+
+    constructor(data?: IConstructorInfo) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            (<any>this).name = _data["name"];
+            this.declaringType = _data["declaringType"] ? Type.fromJS(_data["declaringType"]) : <any>undefined;
+            this.reflectedType = _data["reflectedType"] ? Type.fromJS(_data["reflectedType"]) : <any>undefined;
+            this.module = _data["module"] ? Module.fromJS(_data["module"]) : <any>undefined;
+            if (Array.isArray(_data["customAttributes"])) {
+                (<any>this).customAttributes = [] as any;
+                for (let item of _data["customAttributes"])
+                    (<any>this).customAttributes!.push(CustomAttributeData.fromJS(item));
+            }
+            (<any>this).isCollectible = _data["isCollectible"];
+            (<any>this).metadataToken = _data["metadataToken"];
+            this.attributes = _data["attributes"];
+            this.methodImplementationFlags = _data["methodImplementationFlags"];
+            this.callingConvention = _data["callingConvention"];
+            (<any>this).isAbstract = _data["isAbstract"];
+            (<any>this).isConstructor = _data["isConstructor"];
+            (<any>this).isFinal = _data["isFinal"];
+            (<any>this).isHideBySig = _data["isHideBySig"];
+            (<any>this).isSpecialName = _data["isSpecialName"];
+            (<any>this).isStatic = _data["isStatic"];
+            (<any>this).isVirtual = _data["isVirtual"];
+            (<any>this).isAssembly = _data["isAssembly"];
+            (<any>this).isFamily = _data["isFamily"];
+            (<any>this).isFamilyAndAssembly = _data["isFamilyAndAssembly"];
+            (<any>this).isFamilyOrAssembly = _data["isFamilyOrAssembly"];
+            (<any>this).isPrivate = _data["isPrivate"];
+            (<any>this).isPublic = _data["isPublic"];
+            (<any>this).isConstructedGenericMethod = _data["isConstructedGenericMethod"];
+            (<any>this).isGenericMethod = _data["isGenericMethod"];
+            (<any>this).isGenericMethodDefinition = _data["isGenericMethodDefinition"];
+            (<any>this).containsGenericParameters = _data["containsGenericParameters"];
+            this.methodHandle = _data["methodHandle"] ? RuntimeMethodHandle.fromJS(_data["methodHandle"]) : <any>undefined;
+            (<any>this).isSecurityCritical = _data["isSecurityCritical"];
+            (<any>this).isSecuritySafeCritical = _data["isSecuritySafeCritical"];
+            (<any>this).isSecurityTransparent = _data["isSecurityTransparent"];
+            this.memberType = _data["memberType"];
+        }
+    }
+
+    static fromJS(data: any): ConstructorInfo {
+        data = typeof data === 'object' ? data : {};
+        let result = new ConstructorInfo();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["declaringType"] = this.declaringType ? this.declaringType.toJSON() : <any>undefined;
+        data["reflectedType"] = this.reflectedType ? this.reflectedType.toJSON() : <any>undefined;
+        data["module"] = this.module ? this.module.toJSON() : <any>undefined;
+        if (Array.isArray(this.customAttributes)) {
+            data["customAttributes"] = [];
+            for (let item of this.customAttributes)
+                data["customAttributes"].push(item ? item.toJSON() : <any>undefined);
+        }
+        data["isCollectible"] = this.isCollectible;
+        data["metadataToken"] = this.metadataToken;
+        data["attributes"] = this.attributes;
+        data["methodImplementationFlags"] = this.methodImplementationFlags;
+        data["callingConvention"] = this.callingConvention;
+        data["isAbstract"] = this.isAbstract;
+        data["isConstructor"] = this.isConstructor;
+        data["isFinal"] = this.isFinal;
+        data["isHideBySig"] = this.isHideBySig;
+        data["isSpecialName"] = this.isSpecialName;
+        data["isStatic"] = this.isStatic;
+        data["isVirtual"] = this.isVirtual;
+        data["isAssembly"] = this.isAssembly;
+        data["isFamily"] = this.isFamily;
+        data["isFamilyAndAssembly"] = this.isFamilyAndAssembly;
+        data["isFamilyOrAssembly"] = this.isFamilyOrAssembly;
+        data["isPrivate"] = this.isPrivate;
+        data["isPublic"] = this.isPublic;
+        data["isConstructedGenericMethod"] = this.isConstructedGenericMethod;
+        data["isGenericMethod"] = this.isGenericMethod;
+        data["isGenericMethodDefinition"] = this.isGenericMethodDefinition;
+        data["containsGenericParameters"] = this.containsGenericParameters;
+        data["methodHandle"] = this.methodHandle ? this.methodHandle.toJSON() : <any>undefined;
+        data["isSecurityCritical"] = this.isSecurityCritical;
+        data["isSecuritySafeCritical"] = this.isSecuritySafeCritical;
+        data["isSecurityTransparent"] = this.isSecurityTransparent;
+        data["memberType"] = this.memberType;
+        return data;
+    }
+}
+
+export interface IConstructorInfo {
+    name?: string | undefined;
+    declaringType?: Type;
+    reflectedType?: Type;
+    module?: Module;
+    customAttributes?: CustomAttributeData[] | undefined;
+    isCollectible?: boolean;
+    metadataToken?: number;
+    attributes?: MethodAttributes;
+    methodImplementationFlags?: MethodImplAttributes;
+    callingConvention?: CallingConventions;
+    isAbstract?: boolean;
+    isConstructor?: boolean;
+    isFinal?: boolean;
+    isHideBySig?: boolean;
+    isSpecialName?: boolean;
+    isStatic?: boolean;
+    isVirtual?: boolean;
+    isAssembly?: boolean;
+    isFamily?: boolean;
+    isFamilyAndAssembly?: boolean;
+    isFamilyOrAssembly?: boolean;
+    isPrivate?: boolean;
+    isPublic?: boolean;
+    isConstructedGenericMethod?: boolean;
+    isGenericMethod?: boolean;
+    isGenericMethodDefinition?: boolean;
+    containsGenericParameters?: boolean;
+    methodHandle?: RuntimeMethodHandle;
+    isSecurityCritical?: boolean;
+    isSecuritySafeCritical?: boolean;
+    isSecurityTransparent?: boolean;
+    memberType?: MemberTypes;
+}
+
+export class CountryDto implements ICountryDto {
+    id?: string | undefined;
+    name?: string | undefined;
+    code?: string | undefined;
+    isEnabled?: boolean;
+
+    constructor(data?: ICountryDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.code = _data["code"];
+            this.isEnabled = _data["isEnabled"];
+        }
+    }
+
+    static fromJS(data: any): CountryDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CountryDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["code"] = this.code;
+        data["isEnabled"] = this.isEnabled;
+        return data;
+    }
+}
+
+export interface ICountryDto {
+    id?: string | undefined;
+    name?: string | undefined;
+    code?: string | undefined;
+    isEnabled?: boolean;
+}
+
+export class CreateSubscriptionInput implements ICreateSubscriptionInput {
+    name?: string | undefined;
+    amount?: number;
+    currencyId?: string | undefined;
+    frequency?: SubscriptionFrequencyDto;
+    serviceIds?: string[] | undefined;
+
+    constructor(data?: ICreateSubscriptionInput) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.amount = _data["amount"];
+            this.currencyId = _data["currencyId"];
+            this.frequency = _data["frequency"];
+            if (Array.isArray(_data["serviceIds"])) {
+                this.serviceIds = [] as any;
+                for (let item of _data["serviceIds"])
+                    this.serviceIds!.push(item);
+            }
+        }
+    }
+
+    static fromJS(data: any): CreateSubscriptionInput {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateSubscriptionInput();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["amount"] = this.amount;
+        data["currencyId"] = this.currencyId;
+        data["frequency"] = this.frequency;
+        if (Array.isArray(this.serviceIds)) {
+            data["serviceIds"] = [];
+            for (let item of this.serviceIds)
+                data["serviceIds"].push(item);
+        }
+        return data;
+    }
+}
+
+export interface ICreateSubscriptionInput {
+    name?: string | undefined;
+    amount?: number;
+    currencyId?: string | undefined;
+    frequency?: SubscriptionFrequencyDto;
+    serviceIds?: string[] | undefined;
+}
+
+export class CurrencyDto implements ICurrencyDto {
+    code?: string | undefined;
+    label?: string | undefined;
+    symbol?: string | undefined;
+
+    constructor(data?: ICurrencyDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.code = _data["code"];
+            this.label = _data["label"];
+            this.symbol = _data["symbol"];
+        }
+    }
+
+    static fromJS(data: any): CurrencyDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new CurrencyDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["code"] = this.code;
+        data["label"] = this.label;
+        data["symbol"] = this.symbol;
+        return data;
+    }
+}
+
+export interface ICurrencyDto {
+    code?: string | undefined;
+    label?: string | undefined;
+    symbol?: string | undefined;
+}
+
+export class CurrencyOutput implements ICurrencyOutput {
+    currencies?: GetCurrencyDto[] | undefined;
+
+    constructor(data?: ICurrencyOutput) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["currencies"])) {
+                this.currencies = [] as any;
+                for (let item of _data["currencies"])
+                    this.currencies!.push(GetCurrencyDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): CurrencyOutput {
+        data = typeof data === 'object' ? data : {};
+        let result = new CurrencyOutput();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.currencies)) {
+            data["currencies"] = [];
+            for (let item of this.currencies)
+                data["currencies"].push(item ? item.toJSON() : <any>undefined);
+        }
+        return data;
+    }
+}
+
+export interface ICurrencyOutput {
+    currencies?: GetCurrencyDto[] | undefined;
+}
+
+export class CustomAttributeData implements ICustomAttributeData {
+    attributeType?: Type;
+    constructor_?: ConstructorInfo;
+    readonly constructorArguments?: CustomAttributeTypedArgument[] | undefined;
+    readonly namedArguments?: CustomAttributeNamedArgument[] | undefined;
+
+    constructor(data?: ICustomAttributeData) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.attributeType = _data["attributeType"] ? Type.fromJS(_data["attributeType"]) : <any>undefined;
+            this.constructor_ = _data["constructor"] ? ConstructorInfo.fromJS(_data["constructor"]) : <any>undefined;
+            if (Array.isArray(_data["constructorArguments"])) {
+                (<any>this).constructorArguments = [] as any;
+                for (let item of _data["constructorArguments"])
+                    (<any>this).constructorArguments!.push(CustomAttributeTypedArgument.fromJS(item));
+            }
+            if (Array.isArray(_data["namedArguments"])) {
+                (<any>this).namedArguments = [] as any;
+                for (let item of _data["namedArguments"])
+                    (<any>this).namedArguments!.push(CustomAttributeNamedArgument.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): CustomAttributeData {
+        data = typeof data === 'object' ? data : {};
+        let result = new CustomAttributeData();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["attributeType"] = this.attributeType ? this.attributeType.toJSON() : <any>undefined;
+        data["constructor"] = this.constructor_ ? this.constructor_.toJSON() : <any>undefined;
+        if (Array.isArray(this.constructorArguments)) {
+            data["constructorArguments"] = [];
+            for (let item of this.constructorArguments)
+                data["constructorArguments"].push(item ? item.toJSON() : <any>undefined);
+        }
+        if (Array.isArray(this.namedArguments)) {
+            data["namedArguments"] = [];
+            for (let item of this.namedArguments)
+                data["namedArguments"].push(item ? item.toJSON() : <any>undefined);
+        }
+        return data;
+    }
+}
+
+export interface ICustomAttributeData {
+    attributeType?: Type;
+    constructor_?: ConstructorInfo;
+    constructorArguments?: CustomAttributeTypedArgument[] | undefined;
+    namedArguments?: CustomAttributeNamedArgument[] | undefined;
+}
+
+export class CustomAttributeNamedArgument implements ICustomAttributeNamedArgument {
+    memberInfo?: MemberInfo;
+    typedValue?: CustomAttributeTypedArgument;
+    readonly memberName?: string | undefined;
+    readonly isField?: boolean;
+
+    constructor(data?: ICustomAttributeNamedArgument) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.memberInfo = _data["memberInfo"] ? MemberInfo.fromJS(_data["memberInfo"]) : <any>undefined;
+            this.typedValue = _data["typedValue"] ? CustomAttributeTypedArgument.fromJS(_data["typedValue"]) : <any>undefined;
+            (<any>this).memberName = _data["memberName"];
+            (<any>this).isField = _data["isField"];
+        }
+    }
+
+    static fromJS(data: any): CustomAttributeNamedArgument {
+        data = typeof data === 'object' ? data : {};
+        let result = new CustomAttributeNamedArgument();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["memberInfo"] = this.memberInfo ? this.memberInfo.toJSON() : <any>undefined;
+        data["typedValue"] = this.typedValue ? this.typedValue.toJSON() : <any>undefined;
+        data["memberName"] = this.memberName;
+        data["isField"] = this.isField;
+        return data;
+    }
+}
+
+export interface ICustomAttributeNamedArgument {
+    memberInfo?: MemberInfo;
+    typedValue?: CustomAttributeTypedArgument;
+    memberName?: string | undefined;
+    isField?: boolean;
+}
+
+export class CustomAttributeTypedArgument implements ICustomAttributeTypedArgument {
+    argumentType?: Type;
+    value?: any | undefined;
+
+    constructor(data?: ICustomAttributeTypedArgument) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.argumentType = _data["argumentType"] ? Type.fromJS(_data["argumentType"]) : <any>undefined;
+            this.value = _data["value"];
+        }
+    }
+
+    static fromJS(data: any): CustomAttributeTypedArgument {
+        data = typeof data === 'object' ? data : {};
+        let result = new CustomAttributeTypedArgument();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["argumentType"] = this.argumentType ? this.argumentType.toJSON() : <any>undefined;
+        data["value"] = this.value;
+        return data;
+    }
+}
+
+export interface ICustomAttributeTypedArgument {
+    argumentType?: Type;
+    value?: any | undefined;
+}
+
+export enum EventAttributes {
+    _0 = 0,
+    _512 = 512,
+    _1024 = 1024,
+}
+
+export class EventInfo implements IEventInfo {
+    readonly name?: string | undefined;
+    declaringType?: Type;
+    reflectedType?: Type;
+    module?: Module;
+    readonly customAttributes?: CustomAttributeData[] | undefined;
+    readonly isCollectible?: boolean;
+    readonly metadataToken?: number;
+    memberType?: MemberTypes;
+    attributes?: EventAttributes;
+    readonly isSpecialName?: boolean;
+    addMethod?: MethodInfo;
+    removeMethod?: MethodInfo;
+    raiseMethod?: MethodInfo;
+    readonly isMulticast?: boolean;
+    eventHandlerType?: Type;
+
+    constructor(data?: IEventInfo) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            (<any>this).name = _data["name"];
+            this.declaringType = _data["declaringType"] ? Type.fromJS(_data["declaringType"]) : <any>undefined;
+            this.reflectedType = _data["reflectedType"] ? Type.fromJS(_data["reflectedType"]) : <any>undefined;
+            this.module = _data["module"] ? Module.fromJS(_data["module"]) : <any>undefined;
+            if (Array.isArray(_data["customAttributes"])) {
+                (<any>this).customAttributes = [] as any;
+                for (let item of _data["customAttributes"])
+                    (<any>this).customAttributes!.push(CustomAttributeData.fromJS(item));
+            }
+            (<any>this).isCollectible = _data["isCollectible"];
+            (<any>this).metadataToken = _data["metadataToken"];
+            this.memberType = _data["memberType"];
+            this.attributes = _data["attributes"];
+            (<any>this).isSpecialName = _data["isSpecialName"];
+            this.addMethod = _data["addMethod"] ? MethodInfo.fromJS(_data["addMethod"]) : <any>undefined;
+            this.removeMethod = _data["removeMethod"] ? MethodInfo.fromJS(_data["removeMethod"]) : <any>undefined;
+            this.raiseMethod = _data["raiseMethod"] ? MethodInfo.fromJS(_data["raiseMethod"]) : <any>undefined;
+            (<any>this).isMulticast = _data["isMulticast"];
+            this.eventHandlerType = _data["eventHandlerType"] ? Type.fromJS(_data["eventHandlerType"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): EventInfo {
+        data = typeof data === 'object' ? data : {};
+        let result = new EventInfo();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["declaringType"] = this.declaringType ? this.declaringType.toJSON() : <any>undefined;
+        data["reflectedType"] = this.reflectedType ? this.reflectedType.toJSON() : <any>undefined;
+        data["module"] = this.module ? this.module.toJSON() : <any>undefined;
+        if (Array.isArray(this.customAttributes)) {
+            data["customAttributes"] = [];
+            for (let item of this.customAttributes)
+                data["customAttributes"].push(item ? item.toJSON() : <any>undefined);
+        }
+        data["isCollectible"] = this.isCollectible;
+        data["metadataToken"] = this.metadataToken;
+        data["memberType"] = this.memberType;
+        data["attributes"] = this.attributes;
+        data["isSpecialName"] = this.isSpecialName;
+        data["addMethod"] = this.addMethod ? this.addMethod.toJSON() : <any>undefined;
+        data["removeMethod"] = this.removeMethod ? this.removeMethod.toJSON() : <any>undefined;
+        data["raiseMethod"] = this.raiseMethod ? this.raiseMethod.toJSON() : <any>undefined;
+        data["isMulticast"] = this.isMulticast;
+        data["eventHandlerType"] = this.eventHandlerType ? this.eventHandlerType.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IEventInfo {
+    name?: string | undefined;
+    declaringType?: Type;
+    reflectedType?: Type;
+    module?: Module;
+    customAttributes?: CustomAttributeData[] | undefined;
+    isCollectible?: boolean;
+    metadataToken?: number;
+    memberType?: MemberTypes;
+    attributes?: EventAttributes;
+    isSpecialName?: boolean;
+    addMethod?: MethodInfo;
+    removeMethod?: MethodInfo;
+    raiseMethod?: MethodInfo;
+    isMulticast?: boolean;
+    eventHandlerType?: Type;
+}
+
+export class Exception implements IException {
+    targetSite?: MethodBase;
+    readonly message?: string | undefined;
+    readonly data?: { [key: string]: any; } | undefined;
+    innerException?: Exception;
+    helpLink?: string | undefined;
+    source?: string | undefined;
+    hResult?: number;
+    readonly stackTrace?: string | undefined;
+
+    constructor(data?: IException) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.targetSite = _data["targetSite"] ? MethodBase.fromJS(_data["targetSite"]) : <any>undefined;
+            (<any>this).message = _data["message"];
+            if (_data["data"]) {
+                (<any>this).data = {} as any;
+                for (let key in _data["data"]) {
+                    if (_data["data"].hasOwnProperty(key))
+                        (<any>(<any>this).data)![key] = _data["data"][key];
+                }
+            }
+            this.innerException = _data["innerException"] ? Exception.fromJS(_data["innerException"]) : <any>undefined;
+            this.helpLink = _data["helpLink"];
+            this.source = _data["source"];
+            this.hResult = _data["hResult"];
+            (<any>this).stackTrace = _data["stackTrace"];
+        }
+    }
+
+    static fromJS(data: any): Exception {
+        data = typeof data === 'object' ? data : {};
+        let result = new Exception();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["targetSite"] = this.targetSite ? this.targetSite.toJSON() : <any>undefined;
+        data["message"] = this.message;
+        if (this.data) {
+            data["data"] = {};
+            for (let key in this.data) {
+                if (this.data.hasOwnProperty(key))
+                    (<any>data["data"])[key] = (<any>this.data)[key];
+            }
+        }
+        data["innerException"] = this.innerException ? this.innerException.toJSON() : <any>undefined;
+        data["helpLink"] = this.helpLink;
+        data["source"] = this.source;
+        data["hResult"] = this.hResult;
+        data["stackTrace"] = this.stackTrace;
+        return data;
+    }
+}
+
+export interface IException {
+    targetSite?: MethodBase;
+    message?: string | undefined;
+    data?: { [key: string]: any; } | undefined;
+    innerException?: Exception;
+    helpLink?: string | undefined;
+    source?: string | undefined;
+    hResult?: number;
+    stackTrace?: string | undefined;
+}
+
+export enum FieldAttributes {
+    _0 = 0,
+    _1 = 1,
+    _2 = 2,
+    _3 = 3,
+    _4 = 4,
+    _5 = 5,
+    _6 = 6,
+    _7 = 7,
+    _16 = 16,
+    _32 = 32,
+    _64 = 64,
+    _128 = 128,
+    _256 = 256,
+    _512 = 512,
+    _1024 = 1024,
+    _4096 = 4096,
+    _8192 = 8192,
+    _32768 = 32768,
+    _38144 = 38144,
+}
+
+export class FieldInfo implements IFieldInfo {
+    readonly name?: string | undefined;
+    declaringType?: Type;
+    reflectedType?: Type;
+    module?: Module;
+    readonly customAttributes?: CustomAttributeData[] | undefined;
+    readonly isCollectible?: boolean;
+    readonly metadataToken?: number;
+    memberType?: MemberTypes;
+    attributes?: FieldAttributes;
+    fieldType?: Type;
+    readonly isInitOnly?: boolean;
+    readonly isLiteral?: boolean;
+    readonly isNotSerialized?: boolean;
+    readonly isPinvokeImpl?: boolean;
+    readonly isSpecialName?: boolean;
+    readonly isStatic?: boolean;
+    readonly isAssembly?: boolean;
+    readonly isFamily?: boolean;
+    readonly isFamilyAndAssembly?: boolean;
+    readonly isFamilyOrAssembly?: boolean;
+    readonly isPrivate?: boolean;
+    readonly isPublic?: boolean;
+    readonly isSecurityCritical?: boolean;
+    readonly isSecuritySafeCritical?: boolean;
+    readonly isSecurityTransparent?: boolean;
+    fieldHandle?: RuntimeFieldHandle;
+
+    constructor(data?: IFieldInfo) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            (<any>this).name = _data["name"];
+            this.declaringType = _data["declaringType"] ? Type.fromJS(_data["declaringType"]) : <any>undefined;
+            this.reflectedType = _data["reflectedType"] ? Type.fromJS(_data["reflectedType"]) : <any>undefined;
+            this.module = _data["module"] ? Module.fromJS(_data["module"]) : <any>undefined;
+            if (Array.isArray(_data["customAttributes"])) {
+                (<any>this).customAttributes = [] as any;
+                for (let item of _data["customAttributes"])
+                    (<any>this).customAttributes!.push(CustomAttributeData.fromJS(item));
+            }
+            (<any>this).isCollectible = _data["isCollectible"];
+            (<any>this).metadataToken = _data["metadataToken"];
+            this.memberType = _data["memberType"];
+            this.attributes = _data["attributes"];
+            this.fieldType = _data["fieldType"] ? Type.fromJS(_data["fieldType"]) : <any>undefined;
+            (<any>this).isInitOnly = _data["isInitOnly"];
+            (<any>this).isLiteral = _data["isLiteral"];
+            (<any>this).isNotSerialized = _data["isNotSerialized"];
+            (<any>this).isPinvokeImpl = _data["isPinvokeImpl"];
+            (<any>this).isSpecialName = _data["isSpecialName"];
+            (<any>this).isStatic = _data["isStatic"];
+            (<any>this).isAssembly = _data["isAssembly"];
+            (<any>this).isFamily = _data["isFamily"];
+            (<any>this).isFamilyAndAssembly = _data["isFamilyAndAssembly"];
+            (<any>this).isFamilyOrAssembly = _data["isFamilyOrAssembly"];
+            (<any>this).isPrivate = _data["isPrivate"];
+            (<any>this).isPublic = _data["isPublic"];
+            (<any>this).isSecurityCritical = _data["isSecurityCritical"];
+            (<any>this).isSecuritySafeCritical = _data["isSecuritySafeCritical"];
+            (<any>this).isSecurityTransparent = _data["isSecurityTransparent"];
+            this.fieldHandle = _data["fieldHandle"] ? RuntimeFieldHandle.fromJS(_data["fieldHandle"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): FieldInfo {
+        data = typeof data === 'object' ? data : {};
+        let result = new FieldInfo();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["declaringType"] = this.declaringType ? this.declaringType.toJSON() : <any>undefined;
+        data["reflectedType"] = this.reflectedType ? this.reflectedType.toJSON() : <any>undefined;
+        data["module"] = this.module ? this.module.toJSON() : <any>undefined;
+        if (Array.isArray(this.customAttributes)) {
+            data["customAttributes"] = [];
+            for (let item of this.customAttributes)
+                data["customAttributes"].push(item ? item.toJSON() : <any>undefined);
+        }
+        data["isCollectible"] = this.isCollectible;
+        data["metadataToken"] = this.metadataToken;
+        data["memberType"] = this.memberType;
+        data["attributes"] = this.attributes;
+        data["fieldType"] = this.fieldType ? this.fieldType.toJSON() : <any>undefined;
+        data["isInitOnly"] = this.isInitOnly;
+        data["isLiteral"] = this.isLiteral;
+        data["isNotSerialized"] = this.isNotSerialized;
+        data["isPinvokeImpl"] = this.isPinvokeImpl;
+        data["isSpecialName"] = this.isSpecialName;
+        data["isStatic"] = this.isStatic;
+        data["isAssembly"] = this.isAssembly;
+        data["isFamily"] = this.isFamily;
+        data["isFamilyAndAssembly"] = this.isFamilyAndAssembly;
+        data["isFamilyOrAssembly"] = this.isFamilyOrAssembly;
+        data["isPrivate"] = this.isPrivate;
+        data["isPublic"] = this.isPublic;
+        data["isSecurityCritical"] = this.isSecurityCritical;
+        data["isSecuritySafeCritical"] = this.isSecuritySafeCritical;
+        data["isSecurityTransparent"] = this.isSecurityTransparent;
+        data["fieldHandle"] = this.fieldHandle ? this.fieldHandle.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IFieldInfo {
+    name?: string | undefined;
+    declaringType?: Type;
+    reflectedType?: Type;
+    module?: Module;
+    customAttributes?: CustomAttributeData[] | undefined;
+    isCollectible?: boolean;
+    metadataToken?: number;
+    memberType?: MemberTypes;
+    attributes?: FieldAttributes;
+    fieldType?: Type;
+    isInitOnly?: boolean;
+    isLiteral?: boolean;
+    isNotSerialized?: boolean;
+    isPinvokeImpl?: boolean;
+    isSpecialName?: boolean;
+    isStatic?: boolean;
+    isAssembly?: boolean;
+    isFamily?: boolean;
+    isFamilyAndAssembly?: boolean;
+    isFamilyOrAssembly?: boolean;
+    isPrivate?: boolean;
+    isPublic?: boolean;
+    isSecurityCritical?: boolean;
+    isSecuritySafeCritical?: boolean;
+    isSecurityTransparent?: boolean;
+    fieldHandle?: RuntimeFieldHandle;
+}
+
+export enum GenericParameterAttributes {
+    _0 = 0,
+    _1 = 1,
+    _2 = 2,
+    _3 = 3,
+    _4 = 4,
+    _8 = 8,
+    _16 = 16,
+    _28 = 28,
+    _32 = 32,
+}
+
+export class GetApplicationsOutput implements IGetApplicationsOutput {
+    applications?: ApplicationDto[] | undefined;
+
+    constructor(data?: IGetApplicationsOutput) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["applications"])) {
+                this.applications = [] as any;
+                for (let item of _data["applications"])
+                    this.applications!.push(ApplicationDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): GetApplicationsOutput {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetApplicationsOutput();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.applications)) {
+            data["applications"] = [];
+            for (let item of this.applications)
+                data["applications"].push(item ? item.toJSON() : <any>undefined);
+        }
+        return data;
+    }
+}
+
+export interface IGetApplicationsOutput {
+    applications?: ApplicationDto[] | undefined;
+}
+
+export class GetCountriesOutput implements IGetCountriesOutput {
+    countries?: CountryDto[] | undefined;
+
+    constructor(data?: IGetCountriesOutput) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["countries"])) {
+                this.countries = [] as any;
+                for (let item of _data["countries"])
+                    this.countries!.push(CountryDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): GetCountriesOutput {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetCountriesOutput();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.countries)) {
+            data["countries"] = [];
+            for (let item of this.countries)
+                data["countries"].push(item ? item.toJSON() : <any>undefined);
+        }
+        return data;
+    }
+}
+
+export interface IGetCountriesOutput {
+    countries?: CountryDto[] | undefined;
+}
+
+export class GetCurrencyDto implements IGetCurrencyDto {
+    code?: string | undefined;
+    label?: string | undefined;
+    symbol?: string | undefined;
+    id?: string | undefined;
+
+    constructor(data?: IGetCurrencyDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.code = _data["code"];
+            this.label = _data["label"];
+            this.symbol = _data["symbol"];
+            this.id = _data["id"];
+        }
+    }
+
+    static fromJS(data: any): GetCurrencyDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetCurrencyDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["code"] = this.code;
+        data["label"] = this.label;
+        data["symbol"] = this.symbol;
+        data["id"] = this.id;
+        return data;
+    }
+}
+
+export interface IGetCurrencyDto {
+    code?: string | undefined;
+    label?: string | undefined;
+    symbol?: string | undefined;
+    id?: string | undefined;
+}
+
+export class GetListingsOutput implements IGetListingsOutput {
+    listings?: ListingDto[] | undefined;
+
+    constructor(data?: IGetListingsOutput) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["listings"])) {
+                this.listings = [] as any;
+                for (let item of _data["listings"])
+                    this.listings!.push(ListingDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): GetListingsOutput {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetListingsOutput();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.listings)) {
+            data["listings"] = [];
+            for (let item of this.listings)
+                data["listings"].push(item ? item.toJSON() : <any>undefined);
+        }
+        return data;
+    }
+}
+
+export interface IGetListingsOutput {
+    listings?: ListingDto[] | undefined;
+}
+
+export class GetServiceOutput implements IGetServiceOutput {
+    services?: ServiceDto[] | undefined;
+
+    constructor(data?: IGetServiceOutput) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["services"])) {
+                this.services = [] as any;
+                for (let item of _data["services"])
+                    this.services!.push(ServiceDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): GetServiceOutput {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetServiceOutput();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.services)) {
+            data["services"] = [];
+            for (let item of this.services)
+                data["services"].push(item ? item.toJSON() : <any>undefined);
+        }
+        return data;
+    }
+}
+
+export interface IGetServiceOutput {
+    services?: ServiceDto[] | undefined;
+}
+
+export class ICustomAttributeProvider implements IICustomAttributeProvider {
+
+    constructor(data?: IICustomAttributeProvider) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+    }
+
+    static fromJS(data: any): ICustomAttributeProvider {
+        data = typeof data === 'object' ? data : {};
+        let result = new ICustomAttributeProvider();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        return data;
+    }
+}
+
+export interface IICustomAttributeProvider {
+}
+
+export class IntPtr implements IIntPtr {
+
+    constructor(data?: IIntPtr) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+    }
+
+    static fromJS(data: any): IntPtr {
+        data = typeof data === 'object' ? data : {};
+        let result = new IntPtr();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        return data;
+    }
+}
+
+export interface IIntPtr {
+}
+
+export enum LayoutKind {
+    _0 = 0,
+    _2 = 2,
+    _3 = 3,
+}
+
+export class ListingDto implements IListingDto {
+    id?: string | undefined;
+    need?: NeedDto;
+    lastName?: string | undefined;
+    firstName?: string | undefined;
+    phone?: string | undefined;
+    email?: string | undefined;
+    isAdult?: boolean;
+    departureDate?: Date | undefined;
+    arrivalDate?: Date | undefined;
+    availableWeightInGrams?: number | undefined;
+    maxTravelDate?: Date | undefined;
+    desiredWeightInGrams?: number | undefined;
+    departureCountryId?: string | undefined;
+    departureCity?: string | undefined;
+    departureCountry?: CountryDto;
+    arrivalCountryId?: string | undefined;
+    arrivalCity?: string | undefined;
+    arrivalCountry?: CountryDto;
+    pricePerKg?: number;
+    currencyId?: string | undefined;
+    currency?: CurrencyDto;
+    serviceId?: string | undefined;
+    paymentMethod?: string | undefined;
+    isActive?: boolean;
+    accessToken?: string | undefined;
+    dateCreation?: Date;
+    applicationsNumber?: number;
+    applications?: ApplicationDto[] | undefined;
+
+    constructor(data?: IListingDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.need = _data["need"] ? NeedDto.fromJS(_data["need"]) : <any>undefined;
+            this.lastName = _data["lastName"];
+            this.firstName = _data["firstName"];
+            this.phone = _data["phone"];
+            this.email = _data["email"];
+            this.isAdult = _data["isAdult"];
+            this.departureDate = _data["departureDate"] ? new Date(_data["departureDate"].toString()) : <any>undefined;
+            this.arrivalDate = _data["arrivalDate"] ? new Date(_data["arrivalDate"].toString()) : <any>undefined;
+            this.availableWeightInGrams = _data["availableWeightInGrams"];
+            this.maxTravelDate = _data["maxTravelDate"] ? new Date(_data["maxTravelDate"].toString()) : <any>undefined;
+            this.desiredWeightInGrams = _data["desiredWeightInGrams"];
+            this.departureCountryId = _data["departureCountryId"];
+            this.departureCity = _data["departureCity"];
+            this.departureCountry = _data["departureCountry"] ? CountryDto.fromJS(_data["departureCountry"]) : <any>undefined;
+            this.arrivalCountryId = _data["arrivalCountryId"];
+            this.arrivalCity = _data["arrivalCity"];
+            this.arrivalCountry = _data["arrivalCountry"] ? CountryDto.fromJS(_data["arrivalCountry"]) : <any>undefined;
+            this.pricePerKg = _data["pricePerKg"];
+            this.currencyId = _data["currencyId"];
+            this.currency = _data["currency"] ? CurrencyDto.fromJS(_data["currency"]) : <any>undefined;
+            this.serviceId = _data["serviceId"];
+            this.paymentMethod = _data["paymentMethod"];
+            this.isActive = _data["isActive"];
+            this.accessToken = _data["accessToken"];
+            this.dateCreation = _data["dateCreation"] ? new Date(_data["dateCreation"].toString()) : <any>undefined;
+            this.applicationsNumber = _data["applicationsNumber"];
+            if (Array.isArray(_data["applications"])) {
+                this.applications = [] as any;
+                for (let item of _data["applications"])
+                    this.applications!.push(ApplicationDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): ListingDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ListingDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["need"] = this.need ? this.need.toJSON() : <any>undefined;
+        data["lastName"] = this.lastName;
+        data["firstName"] = this.firstName;
+        data["phone"] = this.phone;
+        data["email"] = this.email;
+        data["isAdult"] = this.isAdult;
+        data["departureDate"] = this.departureDate ? this.departureDate.toISOString() : <any>undefined;
+        data["arrivalDate"] = this.arrivalDate ? this.arrivalDate.toISOString() : <any>undefined;
+        data["availableWeightInGrams"] = this.availableWeightInGrams;
+        data["maxTravelDate"] = this.maxTravelDate ? this.maxTravelDate.toISOString() : <any>undefined;
+        data["desiredWeightInGrams"] = this.desiredWeightInGrams;
+        data["departureCountryId"] = this.departureCountryId;
+        data["departureCity"] = this.departureCity;
+        data["departureCountry"] = this.departureCountry ? this.departureCountry.toJSON() : <any>undefined;
+        data["arrivalCountryId"] = this.arrivalCountryId;
+        data["arrivalCity"] = this.arrivalCity;
+        data["arrivalCountry"] = this.arrivalCountry ? this.arrivalCountry.toJSON() : <any>undefined;
+        data["pricePerKg"] = this.pricePerKg;
+        data["currencyId"] = this.currencyId;
+        data["currency"] = this.currency ? this.currency.toJSON() : <any>undefined;
+        data["serviceId"] = this.serviceId;
+        data["paymentMethod"] = this.paymentMethod;
+        data["isActive"] = this.isActive;
+        data["accessToken"] = this.accessToken;
+        data["dateCreation"] = this.dateCreation ? this.dateCreation.toISOString() : <any>undefined;
+        data["applicationsNumber"] = this.applicationsNumber;
+        if (Array.isArray(this.applications)) {
+            data["applications"] = [];
+            for (let item of this.applications)
+                data["applications"].push(item ? item.toJSON() : <any>undefined);
+        }
+        return data;
+    }
+}
+
+export interface IListingDto {
+    id?: string | undefined;
+    need?: NeedDto;
+    lastName?: string | undefined;
+    firstName?: string | undefined;
+    phone?: string | undefined;
+    email?: string | undefined;
+    isAdult?: boolean;
+    departureDate?: Date | undefined;
+    arrivalDate?: Date | undefined;
+    availableWeightInGrams?: number | undefined;
+    maxTravelDate?: Date | undefined;
+    desiredWeightInGrams?: number | undefined;
+    departureCountryId?: string | undefined;
+    departureCity?: string | undefined;
+    departureCountry?: CountryDto;
+    arrivalCountryId?: string | undefined;
+    arrivalCity?: string | undefined;
+    arrivalCountry?: CountryDto;
+    pricePerKg?: number;
+    currencyId?: string | undefined;
+    currency?: CurrencyDto;
+    serviceId?: string | undefined;
+    paymentMethod?: string | undefined;
+    isActive?: boolean;
+    accessToken?: string | undefined;
+    dateCreation?: Date;
+    applicationsNumber?: number;
+    applications?: ApplicationDto[] | undefined;
+}
+
+export class ListingInput implements IListingInput {
+    need?: NeedEnumDto;
+    lastName?: string | undefined;
+    firstName?: string | undefined;
+    phone?: string | undefined;
+    email?: string | undefined;
+    isAdult?: boolean;
+    departureDate?: Date | undefined;
+    arrivalDate?: Date | undefined;
+    availableWeightInGrams?: number | undefined;
+    maxTravelDate?: Date | undefined;
+    desiredWeightInGrams?: number | undefined;
+    departureCountryId?: string | undefined;
+    departureCity?: string | undefined;
+    arrivalCountryId?: string | undefined;
+    arrivalCity?: string | undefined;
+    pricePerKg?: number;
+    currencyId?: string | undefined;
+    serviceId?: string | undefined;
+    paymentMethod?: string | undefined;
+
+    constructor(data?: IListingInput) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.need = _data["need"];
+            this.lastName = _data["lastName"];
+            this.firstName = _data["firstName"];
+            this.phone = _data["phone"];
+            this.email = _data["email"];
+            this.isAdult = _data["isAdult"];
+            this.departureDate = _data["departureDate"] ? new Date(_data["departureDate"].toString()) : <any>undefined;
+            this.arrivalDate = _data["arrivalDate"] ? new Date(_data["arrivalDate"].toString()) : <any>undefined;
+            this.availableWeightInGrams = _data["availableWeightInGrams"];
+            this.maxTravelDate = _data["maxTravelDate"] ? new Date(_data["maxTravelDate"].toString()) : <any>undefined;
+            this.desiredWeightInGrams = _data["desiredWeightInGrams"];
+            this.departureCountryId = _data["departureCountryId"];
+            this.departureCity = _data["departureCity"];
+            this.arrivalCountryId = _data["arrivalCountryId"];
+            this.arrivalCity = _data["arrivalCity"];
+            this.pricePerKg = _data["pricePerKg"];
+            this.currencyId = _data["currencyId"];
+            this.serviceId = _data["serviceId"];
+            this.paymentMethod = _data["paymentMethod"];
+        }
+    }
+
+    static fromJS(data: any): ListingInput {
+        data = typeof data === 'object' ? data : {};
+        let result = new ListingInput();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["need"] = this.need;
+        data["lastName"] = this.lastName;
+        data["firstName"] = this.firstName;
+        data["phone"] = this.phone;
+        data["email"] = this.email;
+        data["isAdult"] = this.isAdult;
+        data["departureDate"] = this.departureDate ? this.departureDate.toISOString() : <any>undefined;
+        data["arrivalDate"] = this.arrivalDate ? this.arrivalDate.toISOString() : <any>undefined;
+        data["availableWeightInGrams"] = this.availableWeightInGrams;
+        data["maxTravelDate"] = this.maxTravelDate ? this.maxTravelDate.toISOString() : <any>undefined;
+        data["desiredWeightInGrams"] = this.desiredWeightInGrams;
+        data["departureCountryId"] = this.departureCountryId;
+        data["departureCity"] = this.departureCity;
+        data["arrivalCountryId"] = this.arrivalCountryId;
+        data["arrivalCity"] = this.arrivalCity;
+        data["pricePerKg"] = this.pricePerKg;
+        data["currencyId"] = this.currencyId;
+        data["serviceId"] = this.serviceId;
+        data["paymentMethod"] = this.paymentMethod;
+        return data;
+    }
+}
+
+export interface IListingInput {
+    need?: NeedEnumDto;
+    lastName?: string | undefined;
+    firstName?: string | undefined;
+    phone?: string | undefined;
+    email?: string | undefined;
+    isAdult?: boolean;
+    departureDate?: Date | undefined;
+    arrivalDate?: Date | undefined;
+    availableWeightInGrams?: number | undefined;
+    maxTravelDate?: Date | undefined;
+    desiredWeightInGrams?: number | undefined;
+    departureCountryId?: string | undefined;
+    departureCity?: string | undefined;
+    arrivalCountryId?: string | undefined;
+    arrivalCity?: string | undefined;
+    pricePerKg?: number;
+    currencyId?: string | undefined;
+    serviceId?: string | undefined;
+    paymentMethod?: string | undefined;
+}
+
+export class MemberInfo implements IMemberInfo {
+    memberType?: MemberTypes;
+    readonly name?: string | undefined;
+    declaringType?: Type;
+    reflectedType?: Type;
+    module?: Module;
+    readonly customAttributes?: CustomAttributeData[] | undefined;
+    readonly isCollectible?: boolean;
+    readonly metadataToken?: number;
+
+    constructor(data?: IMemberInfo) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.memberType = _data["memberType"];
+            (<any>this).name = _data["name"];
+            this.declaringType = _data["declaringType"] ? Type.fromJS(_data["declaringType"]) : <any>undefined;
+            this.reflectedType = _data["reflectedType"] ? Type.fromJS(_data["reflectedType"]) : <any>undefined;
+            this.module = _data["module"] ? Module.fromJS(_data["module"]) : <any>undefined;
+            if (Array.isArray(_data["customAttributes"])) {
+                (<any>this).customAttributes = [] as any;
+                for (let item of _data["customAttributes"])
+                    (<any>this).customAttributes!.push(CustomAttributeData.fromJS(item));
+            }
+            (<any>this).isCollectible = _data["isCollectible"];
+            (<any>this).metadataToken = _data["metadataToken"];
+        }
+    }
+
+    static fromJS(data: any): MemberInfo {
+        data = typeof data === 'object' ? data : {};
+        let result = new MemberInfo();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["memberType"] = this.memberType;
+        data["name"] = this.name;
+        data["declaringType"] = this.declaringType ? this.declaringType.toJSON() : <any>undefined;
+        data["reflectedType"] = this.reflectedType ? this.reflectedType.toJSON() : <any>undefined;
+        data["module"] = this.module ? this.module.toJSON() : <any>undefined;
+        if (Array.isArray(this.customAttributes)) {
+            data["customAttributes"] = [];
+            for (let item of this.customAttributes)
+                data["customAttributes"].push(item ? item.toJSON() : <any>undefined);
+        }
+        data["isCollectible"] = this.isCollectible;
+        data["metadataToken"] = this.metadataToken;
+        return data;
+    }
+}
+
+export interface IMemberInfo {
+    memberType?: MemberTypes;
+    name?: string | undefined;
+    declaringType?: Type;
+    reflectedType?: Type;
+    module?: Module;
+    customAttributes?: CustomAttributeData[] | undefined;
+    isCollectible?: boolean;
+    metadataToken?: number;
+}
+
+export enum MemberTypes {
+    _1 = 1,
+    _2 = 2,
+    _4 = 4,
+    _8 = 8,
+    _16 = 16,
+    _32 = 32,
+    _64 = 64,
+    _128 = 128,
+    _191 = 191,
+}
+
+export enum MethodAttributes {
+    _0 = 0,
+    _1 = 1,
+    _2 = 2,
+    _3 = 3,
+    _4 = 4,
+    _5 = 5,
+    _6 = 6,
+    _7 = 7,
+    _8 = 8,
+    _16 = 16,
+    _32 = 32,
+    _64 = 64,
+    _128 = 128,
+    _256 = 256,
+    _512 = 512,
+    _1024 = 1024,
+    _2048 = 2048,
+    _4096 = 4096,
+    _8192 = 8192,
+    _16384 = 16384,
+    _32768 = 32768,
+    _53248 = 53248,
+}
+
+export class MethodBase implements IMethodBase {
+    memberType?: MemberTypes;
+    readonly name?: string | undefined;
+    declaringType?: Type;
+    reflectedType?: Type;
+    module?: Module;
+    readonly customAttributes?: CustomAttributeData[] | undefined;
+    readonly isCollectible?: boolean;
+    readonly metadataToken?: number;
+    attributes?: MethodAttributes;
+    methodImplementationFlags?: MethodImplAttributes;
+    callingConvention?: CallingConventions;
+    readonly isAbstract?: boolean;
+    readonly isConstructor?: boolean;
+    readonly isFinal?: boolean;
+    readonly isHideBySig?: boolean;
+    readonly isSpecialName?: boolean;
+    readonly isStatic?: boolean;
+    readonly isVirtual?: boolean;
+    readonly isAssembly?: boolean;
+    readonly isFamily?: boolean;
+    readonly isFamilyAndAssembly?: boolean;
+    readonly isFamilyOrAssembly?: boolean;
+    readonly isPrivate?: boolean;
+    readonly isPublic?: boolean;
+    readonly isConstructedGenericMethod?: boolean;
+    readonly isGenericMethod?: boolean;
+    readonly isGenericMethodDefinition?: boolean;
+    readonly containsGenericParameters?: boolean;
+    methodHandle?: RuntimeMethodHandle;
+    readonly isSecurityCritical?: boolean;
+    readonly isSecuritySafeCritical?: boolean;
+    readonly isSecurityTransparent?: boolean;
+
+    constructor(data?: IMethodBase) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.memberType = _data["memberType"];
+            (<any>this).name = _data["name"];
+            this.declaringType = _data["declaringType"] ? Type.fromJS(_data["declaringType"]) : <any>undefined;
+            this.reflectedType = _data["reflectedType"] ? Type.fromJS(_data["reflectedType"]) : <any>undefined;
+            this.module = _data["module"] ? Module.fromJS(_data["module"]) : <any>undefined;
+            if (Array.isArray(_data["customAttributes"])) {
+                (<any>this).customAttributes = [] as any;
+                for (let item of _data["customAttributes"])
+                    (<any>this).customAttributes!.push(CustomAttributeData.fromJS(item));
+            }
+            (<any>this).isCollectible = _data["isCollectible"];
+            (<any>this).metadataToken = _data["metadataToken"];
+            this.attributes = _data["attributes"];
+            this.methodImplementationFlags = _data["methodImplementationFlags"];
+            this.callingConvention = _data["callingConvention"];
+            (<any>this).isAbstract = _data["isAbstract"];
+            (<any>this).isConstructor = _data["isConstructor"];
+            (<any>this).isFinal = _data["isFinal"];
+            (<any>this).isHideBySig = _data["isHideBySig"];
+            (<any>this).isSpecialName = _data["isSpecialName"];
+            (<any>this).isStatic = _data["isStatic"];
+            (<any>this).isVirtual = _data["isVirtual"];
+            (<any>this).isAssembly = _data["isAssembly"];
+            (<any>this).isFamily = _data["isFamily"];
+            (<any>this).isFamilyAndAssembly = _data["isFamilyAndAssembly"];
+            (<any>this).isFamilyOrAssembly = _data["isFamilyOrAssembly"];
+            (<any>this).isPrivate = _data["isPrivate"];
+            (<any>this).isPublic = _data["isPublic"];
+            (<any>this).isConstructedGenericMethod = _data["isConstructedGenericMethod"];
+            (<any>this).isGenericMethod = _data["isGenericMethod"];
+            (<any>this).isGenericMethodDefinition = _data["isGenericMethodDefinition"];
+            (<any>this).containsGenericParameters = _data["containsGenericParameters"];
+            this.methodHandle = _data["methodHandle"] ? RuntimeMethodHandle.fromJS(_data["methodHandle"]) : <any>undefined;
+            (<any>this).isSecurityCritical = _data["isSecurityCritical"];
+            (<any>this).isSecuritySafeCritical = _data["isSecuritySafeCritical"];
+            (<any>this).isSecurityTransparent = _data["isSecurityTransparent"];
+        }
+    }
+
+    static fromJS(data: any): MethodBase {
+        data = typeof data === 'object' ? data : {};
+        let result = new MethodBase();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["memberType"] = this.memberType;
+        data["name"] = this.name;
+        data["declaringType"] = this.declaringType ? this.declaringType.toJSON() : <any>undefined;
+        data["reflectedType"] = this.reflectedType ? this.reflectedType.toJSON() : <any>undefined;
+        data["module"] = this.module ? this.module.toJSON() : <any>undefined;
+        if (Array.isArray(this.customAttributes)) {
+            data["customAttributes"] = [];
+            for (let item of this.customAttributes)
+                data["customAttributes"].push(item ? item.toJSON() : <any>undefined);
+        }
+        data["isCollectible"] = this.isCollectible;
+        data["metadataToken"] = this.metadataToken;
+        data["attributes"] = this.attributes;
+        data["methodImplementationFlags"] = this.methodImplementationFlags;
+        data["callingConvention"] = this.callingConvention;
+        data["isAbstract"] = this.isAbstract;
+        data["isConstructor"] = this.isConstructor;
+        data["isFinal"] = this.isFinal;
+        data["isHideBySig"] = this.isHideBySig;
+        data["isSpecialName"] = this.isSpecialName;
+        data["isStatic"] = this.isStatic;
+        data["isVirtual"] = this.isVirtual;
+        data["isAssembly"] = this.isAssembly;
+        data["isFamily"] = this.isFamily;
+        data["isFamilyAndAssembly"] = this.isFamilyAndAssembly;
+        data["isFamilyOrAssembly"] = this.isFamilyOrAssembly;
+        data["isPrivate"] = this.isPrivate;
+        data["isPublic"] = this.isPublic;
+        data["isConstructedGenericMethod"] = this.isConstructedGenericMethod;
+        data["isGenericMethod"] = this.isGenericMethod;
+        data["isGenericMethodDefinition"] = this.isGenericMethodDefinition;
+        data["containsGenericParameters"] = this.containsGenericParameters;
+        data["methodHandle"] = this.methodHandle ? this.methodHandle.toJSON() : <any>undefined;
+        data["isSecurityCritical"] = this.isSecurityCritical;
+        data["isSecuritySafeCritical"] = this.isSecuritySafeCritical;
+        data["isSecurityTransparent"] = this.isSecurityTransparent;
+        return data;
+    }
+}
+
+export interface IMethodBase {
+    memberType?: MemberTypes;
+    name?: string | undefined;
+    declaringType?: Type;
+    reflectedType?: Type;
+    module?: Module;
+    customAttributes?: CustomAttributeData[] | undefined;
+    isCollectible?: boolean;
+    metadataToken?: number;
+    attributes?: MethodAttributes;
+    methodImplementationFlags?: MethodImplAttributes;
+    callingConvention?: CallingConventions;
+    isAbstract?: boolean;
+    isConstructor?: boolean;
+    isFinal?: boolean;
+    isHideBySig?: boolean;
+    isSpecialName?: boolean;
+    isStatic?: boolean;
+    isVirtual?: boolean;
+    isAssembly?: boolean;
+    isFamily?: boolean;
+    isFamilyAndAssembly?: boolean;
+    isFamilyOrAssembly?: boolean;
+    isPrivate?: boolean;
+    isPublic?: boolean;
+    isConstructedGenericMethod?: boolean;
+    isGenericMethod?: boolean;
+    isGenericMethodDefinition?: boolean;
+    containsGenericParameters?: boolean;
+    methodHandle?: RuntimeMethodHandle;
+    isSecurityCritical?: boolean;
+    isSecuritySafeCritical?: boolean;
+    isSecurityTransparent?: boolean;
+}
+
+export enum MethodImplAttributes {
+    _0 = 0,
+    _1 = 1,
+    _2 = 2,
+    _3 = 3,
+    _4 = 4,
+    _8 = 8,
+    _16 = 16,
+    _32 = 32,
+    _64 = 64,
+    _128 = 128,
+    _256 = 256,
+    _512 = 512,
+    _4096 = 4096,
+    _65535 = 65535,
+}
+
+export class MethodInfo implements IMethodInfo {
+    readonly name?: string | undefined;
+    declaringType?: Type;
+    reflectedType?: Type;
+    module?: Module;
+    readonly customAttributes?: CustomAttributeData[] | undefined;
+    readonly isCollectible?: boolean;
+    readonly metadataToken?: number;
+    attributes?: MethodAttributes;
+    methodImplementationFlags?: MethodImplAttributes;
+    callingConvention?: CallingConventions;
+    readonly isAbstract?: boolean;
+    readonly isConstructor?: boolean;
+    readonly isFinal?: boolean;
+    readonly isHideBySig?: boolean;
+    readonly isSpecialName?: boolean;
+    readonly isStatic?: boolean;
+    readonly isVirtual?: boolean;
+    readonly isAssembly?: boolean;
+    readonly isFamily?: boolean;
+    readonly isFamilyAndAssembly?: boolean;
+    readonly isFamilyOrAssembly?: boolean;
+    readonly isPrivate?: boolean;
+    readonly isPublic?: boolean;
+    readonly isConstructedGenericMethod?: boolean;
+    readonly isGenericMethod?: boolean;
+    readonly isGenericMethodDefinition?: boolean;
+    readonly containsGenericParameters?: boolean;
+    methodHandle?: RuntimeMethodHandle;
+    readonly isSecurityCritical?: boolean;
+    readonly isSecuritySafeCritical?: boolean;
+    readonly isSecurityTransparent?: boolean;
+    memberType?: MemberTypes;
+    returnParameter?: ParameterInfo;
+    returnType?: Type;
+    returnTypeCustomAttributes?: ICustomAttributeProvider;
+
+    constructor(data?: IMethodInfo) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            (<any>this).name = _data["name"];
+            this.declaringType = _data["declaringType"] ? Type.fromJS(_data["declaringType"]) : <any>undefined;
+            this.reflectedType = _data["reflectedType"] ? Type.fromJS(_data["reflectedType"]) : <any>undefined;
+            this.module = _data["module"] ? Module.fromJS(_data["module"]) : <any>undefined;
+            if (Array.isArray(_data["customAttributes"])) {
+                (<any>this).customAttributes = [] as any;
+                for (let item of _data["customAttributes"])
+                    (<any>this).customAttributes!.push(CustomAttributeData.fromJS(item));
+            }
+            (<any>this).isCollectible = _data["isCollectible"];
+            (<any>this).metadataToken = _data["metadataToken"];
+            this.attributes = _data["attributes"];
+            this.methodImplementationFlags = _data["methodImplementationFlags"];
+            this.callingConvention = _data["callingConvention"];
+            (<any>this).isAbstract = _data["isAbstract"];
+            (<any>this).isConstructor = _data["isConstructor"];
+            (<any>this).isFinal = _data["isFinal"];
+            (<any>this).isHideBySig = _data["isHideBySig"];
+            (<any>this).isSpecialName = _data["isSpecialName"];
+            (<any>this).isStatic = _data["isStatic"];
+            (<any>this).isVirtual = _data["isVirtual"];
+            (<any>this).isAssembly = _data["isAssembly"];
+            (<any>this).isFamily = _data["isFamily"];
+            (<any>this).isFamilyAndAssembly = _data["isFamilyAndAssembly"];
+            (<any>this).isFamilyOrAssembly = _data["isFamilyOrAssembly"];
+            (<any>this).isPrivate = _data["isPrivate"];
+            (<any>this).isPublic = _data["isPublic"];
+            (<any>this).isConstructedGenericMethod = _data["isConstructedGenericMethod"];
+            (<any>this).isGenericMethod = _data["isGenericMethod"];
+            (<any>this).isGenericMethodDefinition = _data["isGenericMethodDefinition"];
+            (<any>this).containsGenericParameters = _data["containsGenericParameters"];
+            this.methodHandle = _data["methodHandle"] ? RuntimeMethodHandle.fromJS(_data["methodHandle"]) : <any>undefined;
+            (<any>this).isSecurityCritical = _data["isSecurityCritical"];
+            (<any>this).isSecuritySafeCritical = _data["isSecuritySafeCritical"];
+            (<any>this).isSecurityTransparent = _data["isSecurityTransparent"];
+            this.memberType = _data["memberType"];
+            this.returnParameter = _data["returnParameter"] ? ParameterInfo.fromJS(_data["returnParameter"]) : <any>undefined;
+            this.returnType = _data["returnType"] ? Type.fromJS(_data["returnType"]) : <any>undefined;
+            this.returnTypeCustomAttributes = _data["returnTypeCustomAttributes"] ? ICustomAttributeProvider.fromJS(_data["returnTypeCustomAttributes"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): MethodInfo {
+        data = typeof data === 'object' ? data : {};
+        let result = new MethodInfo();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["declaringType"] = this.declaringType ? this.declaringType.toJSON() : <any>undefined;
+        data["reflectedType"] = this.reflectedType ? this.reflectedType.toJSON() : <any>undefined;
+        data["module"] = this.module ? this.module.toJSON() : <any>undefined;
+        if (Array.isArray(this.customAttributes)) {
+            data["customAttributes"] = [];
+            for (let item of this.customAttributes)
+                data["customAttributes"].push(item ? item.toJSON() : <any>undefined);
+        }
+        data["isCollectible"] = this.isCollectible;
+        data["metadataToken"] = this.metadataToken;
+        data["attributes"] = this.attributes;
+        data["methodImplementationFlags"] = this.methodImplementationFlags;
+        data["callingConvention"] = this.callingConvention;
+        data["isAbstract"] = this.isAbstract;
+        data["isConstructor"] = this.isConstructor;
+        data["isFinal"] = this.isFinal;
+        data["isHideBySig"] = this.isHideBySig;
+        data["isSpecialName"] = this.isSpecialName;
+        data["isStatic"] = this.isStatic;
+        data["isVirtual"] = this.isVirtual;
+        data["isAssembly"] = this.isAssembly;
+        data["isFamily"] = this.isFamily;
+        data["isFamilyAndAssembly"] = this.isFamilyAndAssembly;
+        data["isFamilyOrAssembly"] = this.isFamilyOrAssembly;
+        data["isPrivate"] = this.isPrivate;
+        data["isPublic"] = this.isPublic;
+        data["isConstructedGenericMethod"] = this.isConstructedGenericMethod;
+        data["isGenericMethod"] = this.isGenericMethod;
+        data["isGenericMethodDefinition"] = this.isGenericMethodDefinition;
+        data["containsGenericParameters"] = this.containsGenericParameters;
+        data["methodHandle"] = this.methodHandle ? this.methodHandle.toJSON() : <any>undefined;
+        data["isSecurityCritical"] = this.isSecurityCritical;
+        data["isSecuritySafeCritical"] = this.isSecuritySafeCritical;
+        data["isSecurityTransparent"] = this.isSecurityTransparent;
+        data["memberType"] = this.memberType;
+        data["returnParameter"] = this.returnParameter ? this.returnParameter.toJSON() : <any>undefined;
+        data["returnType"] = this.returnType ? this.returnType.toJSON() : <any>undefined;
+        data["returnTypeCustomAttributes"] = this.returnTypeCustomAttributes ? this.returnTypeCustomAttributes.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IMethodInfo {
+    name?: string | undefined;
+    declaringType?: Type;
+    reflectedType?: Type;
+    module?: Module;
+    customAttributes?: CustomAttributeData[] | undefined;
+    isCollectible?: boolean;
+    metadataToken?: number;
+    attributes?: MethodAttributes;
+    methodImplementationFlags?: MethodImplAttributes;
+    callingConvention?: CallingConventions;
+    isAbstract?: boolean;
+    isConstructor?: boolean;
+    isFinal?: boolean;
+    isHideBySig?: boolean;
+    isSpecialName?: boolean;
+    isStatic?: boolean;
+    isVirtual?: boolean;
+    isAssembly?: boolean;
+    isFamily?: boolean;
+    isFamilyAndAssembly?: boolean;
+    isFamilyOrAssembly?: boolean;
+    isPrivate?: boolean;
+    isPublic?: boolean;
+    isConstructedGenericMethod?: boolean;
+    isGenericMethod?: boolean;
+    isGenericMethodDefinition?: boolean;
+    containsGenericParameters?: boolean;
+    methodHandle?: RuntimeMethodHandle;
+    isSecurityCritical?: boolean;
+    isSecuritySafeCritical?: boolean;
+    isSecurityTransparent?: boolean;
+    memberType?: MemberTypes;
+    returnParameter?: ParameterInfo;
+    returnType?: Type;
+    returnTypeCustomAttributes?: ICustomAttributeProvider;
+}
+
+export class Module implements IModule {
+    assembly?: Assembly;
+    readonly fullyQualifiedName?: string | undefined;
+    readonly name?: string | undefined;
+    readonly mdStreamVersion?: number;
+    readonly moduleVersionId?: string;
+    readonly scopeName?: string | undefined;
+    moduleHandle?: ModuleHandle;
+    readonly customAttributes?: CustomAttributeData[] | undefined;
+    readonly metadataToken?: number;
+
+    constructor(data?: IModule) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.assembly = _data["assembly"] ? Assembly.fromJS(_data["assembly"]) : <any>undefined;
+            (<any>this).fullyQualifiedName = _data["fullyQualifiedName"];
+            (<any>this).name = _data["name"];
+            (<any>this).mdStreamVersion = _data["mdStreamVersion"];
+            (<any>this).moduleVersionId = _data["moduleVersionId"];
+            (<any>this).scopeName = _data["scopeName"];
+            this.moduleHandle = _data["moduleHandle"] ? ModuleHandle.fromJS(_data["moduleHandle"]) : <any>undefined;
+            if (Array.isArray(_data["customAttributes"])) {
+                (<any>this).customAttributes = [] as any;
+                for (let item of _data["customAttributes"])
+                    (<any>this).customAttributes!.push(CustomAttributeData.fromJS(item));
+            }
+            (<any>this).metadataToken = _data["metadataToken"];
+        }
+    }
+
+    static fromJS(data: any): Module {
+        data = typeof data === 'object' ? data : {};
+        let result = new Module();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["assembly"] = this.assembly ? this.assembly.toJSON() : <any>undefined;
+        data["fullyQualifiedName"] = this.fullyQualifiedName;
+        data["name"] = this.name;
+        data["mdStreamVersion"] = this.mdStreamVersion;
+        data["moduleVersionId"] = this.moduleVersionId;
+        data["scopeName"] = this.scopeName;
+        data["moduleHandle"] = this.moduleHandle ? this.moduleHandle.toJSON() : <any>undefined;
+        if (Array.isArray(this.customAttributes)) {
+            data["customAttributes"] = [];
+            for (let item of this.customAttributes)
+                data["customAttributes"].push(item ? item.toJSON() : <any>undefined);
+        }
+        data["metadataToken"] = this.metadataToken;
+        return data;
+    }
+}
+
+export interface IModule {
+    assembly?: Assembly;
+    fullyQualifiedName?: string | undefined;
+    name?: string | undefined;
+    mdStreamVersion?: number;
+    moduleVersionId?: string;
+    scopeName?: string | undefined;
+    moduleHandle?: ModuleHandle;
+    customAttributes?: CustomAttributeData[] | undefined;
+    metadataToken?: number;
+}
+
+export class ModuleHandle implements IModuleHandle {
+    readonly mdStreamVersion?: number;
+
+    constructor(data?: IModuleHandle) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            (<any>this).mdStreamVersion = _data["mdStreamVersion"];
+        }
+    }
+
+    static fromJS(data: any): ModuleHandle {
+        data = typeof data === 'object' ? data : {};
+        let result = new ModuleHandle();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["mdStreamVersion"] = this.mdStreamVersion;
+        return data;
+    }
+}
+
+export interface IModuleHandle {
+    mdStreamVersion?: number;
+}
+
+export class NeedDto implements INeedDto {
+    key?: NeedEnumDto;
+    label?: string | undefined;
+
+    constructor(data?: INeedDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.key = _data["key"];
+            this.label = _data["label"];
+        }
+    }
+
+    static fromJS(data: any): NeedDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new NeedDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["key"] = this.key;
+        data["label"] = this.label;
+        return data;
+    }
+}
+
+export interface INeedDto {
+    key?: NeedEnumDto;
+    label?: string | undefined;
+}
+
+export enum NeedEnumDto {
+    Traveler = "Traveler",
+    Sender = "Sender",
+}
+
+export enum ParameterAttributes {
+    _0 = 0,
+    _1 = 1,
+    _2 = 2,
+    _4 = 4,
+    _8 = 8,
+    _16 = 16,
+    _4096 = 4096,
+    _8192 = 8192,
+    _16384 = 16384,
+    _32768 = 32768,
+    _61440 = 61440,
+}
+
+export class ParameterInfo implements IParameterInfo {
+    attributes?: ParameterAttributes;
+    member?: MemberInfo;
+    readonly name?: string | undefined;
+    parameterType?: Type;
+    readonly position?: number;
+    readonly isIn?: boolean;
+    readonly isLcid?: boolean;
+    readonly isOptional?: boolean;
+    readonly isOut?: boolean;
+    readonly isRetval?: boolean;
+    readonly defaultValue?: any | undefined;
+    readonly rawDefaultValue?: any | undefined;
+    readonly hasDefaultValue?: boolean;
+    readonly customAttributes?: CustomAttributeData[] | undefined;
+    readonly metadataToken?: number;
+
+    constructor(data?: IParameterInfo) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.attributes = _data["attributes"];
+            this.member = _data["member"] ? MemberInfo.fromJS(_data["member"]) : <any>undefined;
+            (<any>this).name = _data["name"];
+            this.parameterType = _data["parameterType"] ? Type.fromJS(_data["parameterType"]) : <any>undefined;
+            (<any>this).position = _data["position"];
+            (<any>this).isIn = _data["isIn"];
+            (<any>this).isLcid = _data["isLcid"];
+            (<any>this).isOptional = _data["isOptional"];
+            (<any>this).isOut = _data["isOut"];
+            (<any>this).isRetval = _data["isRetval"];
+            (<any>this).defaultValue = _data["defaultValue"];
+            (<any>this).rawDefaultValue = _data["rawDefaultValue"];
+            (<any>this).hasDefaultValue = _data["hasDefaultValue"];
+            if (Array.isArray(_data["customAttributes"])) {
+                (<any>this).customAttributes = [] as any;
+                for (let item of _data["customAttributes"])
+                    (<any>this).customAttributes!.push(CustomAttributeData.fromJS(item));
+            }
+            (<any>this).metadataToken = _data["metadataToken"];
+        }
+    }
+
+    static fromJS(data: any): ParameterInfo {
+        data = typeof data === 'object' ? data : {};
+        let result = new ParameterInfo();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["attributes"] = this.attributes;
+        data["member"] = this.member ? this.member.toJSON() : <any>undefined;
+        data["name"] = this.name;
+        data["parameterType"] = this.parameterType ? this.parameterType.toJSON() : <any>undefined;
+        data["position"] = this.position;
+        data["isIn"] = this.isIn;
+        data["isLcid"] = this.isLcid;
+        data["isOptional"] = this.isOptional;
+        data["isOut"] = this.isOut;
+        data["isRetval"] = this.isRetval;
+        data["defaultValue"] = this.defaultValue;
+        data["rawDefaultValue"] = this.rawDefaultValue;
+        data["hasDefaultValue"] = this.hasDefaultValue;
+        if (Array.isArray(this.customAttributes)) {
+            data["customAttributes"] = [];
+            for (let item of this.customAttributes)
+                data["customAttributes"].push(item ? item.toJSON() : <any>undefined);
+        }
+        data["metadataToken"] = this.metadataToken;
+        return data;
+    }
+}
+
+export interface IParameterInfo {
+    attributes?: ParameterAttributes;
+    member?: MemberInfo;
+    name?: string | undefined;
+    parameterType?: Type;
+    position?: number;
+    isIn?: boolean;
+    isLcid?: boolean;
+    isOptional?: boolean;
+    isOut?: boolean;
+    isRetval?: boolean;
+    defaultValue?: any | undefined;
+    rawDefaultValue?: any | undefined;
+    hasDefaultValue?: boolean;
+    customAttributes?: CustomAttributeData[] | undefined;
+    metadataToken?: number;
+}
+
+export class PaymentMethodDto implements IPaymentMethodDto {
+    key?: PaymentMethodEnumDto;
+    label?: string | undefined;
+
+    constructor(data?: IPaymentMethodDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.key = _data["key"];
+            this.label = _data["label"];
+        }
+    }
+
+    static fromJS(data: any): PaymentMethodDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PaymentMethodDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["key"] = this.key;
+        data["label"] = this.label;
+        return data;
+    }
+}
+
+export interface IPaymentMethodDto {
+    key?: PaymentMethodEnumDto;
+    label?: string | undefined;
+}
+
+export enum PaymentMethodEnumDto {
+    Cash = "Cash",
+    CreditCard = "CreditCard",
+    PayPal = "PayPal",
+    BankTransfer = "BankTransfer",
+    MobilePayment = "MobilePayment",
+    All = "All",
+    Other = "Other",
+}
+
+export enum PropertyAttributes {
+    _0 = 0,
+    _512 = 512,
+    _1024 = 1024,
+    _4096 = 4096,
+    _8192 = 8192,
+    _16384 = 16384,
+    _32768 = 32768,
+    _62464 = 62464,
+}
+
+export class PropertyInfo implements IPropertyInfo {
+    readonly name?: string | undefined;
+    declaringType?: Type;
+    reflectedType?: Type;
+    module?: Module;
+    readonly customAttributes?: CustomAttributeData[] | undefined;
+    readonly isCollectible?: boolean;
+    readonly metadataToken?: number;
+    memberType?: MemberTypes;
+    propertyType?: Type;
+    attributes?: PropertyAttributes;
+    readonly isSpecialName?: boolean;
+    readonly canRead?: boolean;
+    readonly canWrite?: boolean;
+    getMethod?: MethodInfo;
+    setMethod?: MethodInfo;
+
+    constructor(data?: IPropertyInfo) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            (<any>this).name = _data["name"];
+            this.declaringType = _data["declaringType"] ? Type.fromJS(_data["declaringType"]) : <any>undefined;
+            this.reflectedType = _data["reflectedType"] ? Type.fromJS(_data["reflectedType"]) : <any>undefined;
+            this.module = _data["module"] ? Module.fromJS(_data["module"]) : <any>undefined;
+            if (Array.isArray(_data["customAttributes"])) {
+                (<any>this).customAttributes = [] as any;
+                for (let item of _data["customAttributes"])
+                    (<any>this).customAttributes!.push(CustomAttributeData.fromJS(item));
+            }
+            (<any>this).isCollectible = _data["isCollectible"];
+            (<any>this).metadataToken = _data["metadataToken"];
+            this.memberType = _data["memberType"];
+            this.propertyType = _data["propertyType"] ? Type.fromJS(_data["propertyType"]) : <any>undefined;
+            this.attributes = _data["attributes"];
+            (<any>this).isSpecialName = _data["isSpecialName"];
+            (<any>this).canRead = _data["canRead"];
+            (<any>this).canWrite = _data["canWrite"];
+            this.getMethod = _data["getMethod"] ? MethodInfo.fromJS(_data["getMethod"]) : <any>undefined;
+            this.setMethod = _data["setMethod"] ? MethodInfo.fromJS(_data["setMethod"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): PropertyInfo {
+        data = typeof data === 'object' ? data : {};
+        let result = new PropertyInfo();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["declaringType"] = this.declaringType ? this.declaringType.toJSON() : <any>undefined;
+        data["reflectedType"] = this.reflectedType ? this.reflectedType.toJSON() : <any>undefined;
+        data["module"] = this.module ? this.module.toJSON() : <any>undefined;
+        if (Array.isArray(this.customAttributes)) {
+            data["customAttributes"] = [];
+            for (let item of this.customAttributes)
+                data["customAttributes"].push(item ? item.toJSON() : <any>undefined);
+        }
+        data["isCollectible"] = this.isCollectible;
+        data["metadataToken"] = this.metadataToken;
+        data["memberType"] = this.memberType;
+        data["propertyType"] = this.propertyType ? this.propertyType.toJSON() : <any>undefined;
+        data["attributes"] = this.attributes;
+        data["isSpecialName"] = this.isSpecialName;
+        data["canRead"] = this.canRead;
+        data["canWrite"] = this.canWrite;
+        data["getMethod"] = this.getMethod ? this.getMethod.toJSON() : <any>undefined;
+        data["setMethod"] = this.setMethod ? this.setMethod.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IPropertyInfo {
+    name?: string | undefined;
+    declaringType?: Type;
+    reflectedType?: Type;
+    module?: Module;
+    customAttributes?: CustomAttributeData[] | undefined;
+    isCollectible?: boolean;
+    metadataToken?: number;
+    memberType?: MemberTypes;
+    propertyType?: Type;
+    attributes?: PropertyAttributes;
+    isSpecialName?: boolean;
+    canRead?: boolean;
+    canWrite?: boolean;
+    getMethod?: MethodInfo;
+    setMethod?: MethodInfo;
+}
+
+export class ResetPasswordDto implements IResetPasswordDto {
+    newPassword?: string | undefined;
+    email?: string | undefined;
+    code?: string | undefined;
+
+    constructor(data?: IResetPasswordDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.newPassword = _data["newPassword"];
+            this.email = _data["email"];
+            this.code = _data["code"];
+        }
+    }
+
+    static fromJS(data: any): ResetPasswordDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ResetPasswordDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["newPassword"] = this.newPassword;
+        data["email"] = this.email;
+        data["code"] = this.code;
+        return data;
+    }
+}
+
+export interface IResetPasswordDto {
+    newPassword?: string | undefined;
+    email?: string | undefined;
+    code?: string | undefined;
+}
+
 export class RoleDto implements IRoleDto {
     role?: string | undefined;
 
@@ -636,6 +5063,420 @@ export class RoleDto implements IRoleDto {
 
 export interface IRoleDto {
     role?: string | undefined;
+}
+
+export class RuntimeFieldHandle implements IRuntimeFieldHandle {
+    value?: IntPtr;
+
+    constructor(data?: IRuntimeFieldHandle) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.value = _data["value"] ? IntPtr.fromJS(_data["value"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): RuntimeFieldHandle {
+        data = typeof data === 'object' ? data : {};
+        let result = new RuntimeFieldHandle();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["value"] = this.value ? this.value.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IRuntimeFieldHandle {
+    value?: IntPtr;
+}
+
+export class RuntimeMethodHandle implements IRuntimeMethodHandle {
+    value?: IntPtr;
+
+    constructor(data?: IRuntimeMethodHandle) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.value = _data["value"] ? IntPtr.fromJS(_data["value"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): RuntimeMethodHandle {
+        data = typeof data === 'object' ? data : {};
+        let result = new RuntimeMethodHandle();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["value"] = this.value ? this.value.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IRuntimeMethodHandle {
+    value?: IntPtr;
+}
+
+export class RuntimeTypeHandle implements IRuntimeTypeHandle {
+    value?: IntPtr;
+
+    constructor(data?: IRuntimeTypeHandle) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.value = _data["value"] ? IntPtr.fromJS(_data["value"]) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): RuntimeTypeHandle {
+        data = typeof data === 'object' ? data : {};
+        let result = new RuntimeTypeHandle();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["value"] = this.value ? this.value.toJSON() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IRuntimeTypeHandle {
+    value?: IntPtr;
+}
+
+export enum SecurityRuleSet {
+    _0 = 0,
+    _1 = 1,
+    _2 = 2,
+}
+
+export class ServiceDto implements IServiceDto {
+    id?: string | undefined;
+    name?: string | undefined;
+    description?: string | undefined;
+    isEnabled?: boolean;
+    countries?: CountryDto[] | undefined;
+
+    constructor(data?: IServiceDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.description = _data["description"];
+            this.isEnabled = _data["isEnabled"];
+            if (Array.isArray(_data["countries"])) {
+                this.countries = [] as any;
+                for (let item of _data["countries"])
+                    this.countries!.push(CountryDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): ServiceDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ServiceDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["description"] = this.description;
+        data["isEnabled"] = this.isEnabled;
+        if (Array.isArray(this.countries)) {
+            data["countries"] = [];
+            for (let item of this.countries)
+                data["countries"].push(item ? item.toJSON() : <any>undefined);
+        }
+        return data;
+    }
+}
+
+export interface IServiceDto {
+    id?: string | undefined;
+    name?: string | undefined;
+    description?: string | undefined;
+    isEnabled?: boolean;
+    countries?: CountryDto[] | undefined;
+}
+
+export class StructLayoutAttribute implements IStructLayoutAttribute {
+    readonly typeId?: any | undefined;
+    value?: LayoutKind;
+
+    constructor(data?: IStructLayoutAttribute) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            (<any>this).typeId = _data["typeId"];
+            this.value = _data["value"];
+        }
+    }
+
+    static fromJS(data: any): StructLayoutAttribute {
+        data = typeof data === 'object' ? data : {};
+        let result = new StructLayoutAttribute();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["typeId"] = this.typeId;
+        data["value"] = this.value;
+        return data;
+    }
+}
+
+export interface IStructLayoutAttribute {
+    typeId?: any | undefined;
+    value?: LayoutKind;
+}
+
+export enum SubscriptionFrequencyDto {
+    DAILY = "DAILY",
+    WEEKLY = "WEEKLY",
+    MONTHLY = "MONTHLY",
+    YEARLY = "YEARLY",
+}
+
+export class SubscriptionFrequencyItemDto implements ISubscriptionFrequencyItemDto {
+    label?: string | undefined;
+    frequency?: SubscriptionFrequencyDto;
+
+    constructor(data?: ISubscriptionFrequencyItemDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.label = _data["label"];
+            this.frequency = _data["frequency"];
+        }
+    }
+
+    static fromJS(data: any): SubscriptionFrequencyItemDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new SubscriptionFrequencyItemDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["label"] = this.label;
+        data["frequency"] = this.frequency;
+        return data;
+    }
+}
+
+export interface ISubscriptionFrequencyItemDto {
+    label?: string | undefined;
+    frequency?: SubscriptionFrequencyDto;
+}
+
+export class SubscriptionOutput implements ISubscriptionOutput {
+    id?: string | undefined;
+    name?: string | undefined;
+    amount?: number;
+    currency?: CurrencyDto;
+    frequency?: SubscriptionFrequencyDto;
+    services?: ServiceDto[] | undefined;
+
+    constructor(data?: ISubscriptionOutput) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.amount = _data["amount"];
+            this.currency = _data["currency"] ? CurrencyDto.fromJS(_data["currency"]) : <any>undefined;
+            this.frequency = _data["frequency"];
+            if (Array.isArray(_data["services"])) {
+                this.services = [] as any;
+                for (let item of _data["services"])
+                    this.services!.push(ServiceDto.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): SubscriptionOutput {
+        data = typeof data === 'object' ? data : {};
+        let result = new SubscriptionOutput();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["amount"] = this.amount;
+        data["currency"] = this.currency ? this.currency.toJSON() : <any>undefined;
+        data["frequency"] = this.frequency;
+        if (Array.isArray(this.services)) {
+            data["services"] = [];
+            for (let item of this.services)
+                data["services"].push(item ? item.toJSON() : <any>undefined);
+        }
+        return data;
+    }
+}
+
+export interface ISubscriptionOutput {
+    id?: string | undefined;
+    name?: string | undefined;
+    amount?: number;
+    currency?: CurrencyDto;
+    frequency?: SubscriptionFrequencyDto;
+    services?: ServiceDto[] | undefined;
+}
+
+export class Task implements ITask {
+    readonly id?: number;
+    exception?: AggregateException;
+    status?: TaskStatus;
+    readonly isCanceled?: boolean;
+    readonly isCompleted?: boolean;
+    readonly isCompletedSuccessfully?: boolean;
+    creationOptions?: TaskCreationOptions;
+    readonly asyncState?: any | undefined;
+    readonly isFaulted?: boolean;
+
+    constructor(data?: ITask) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            (<any>this).id = _data["id"];
+            this.exception = _data["exception"] ? AggregateException.fromJS(_data["exception"]) : <any>undefined;
+            this.status = _data["status"];
+            (<any>this).isCanceled = _data["isCanceled"];
+            (<any>this).isCompleted = _data["isCompleted"];
+            (<any>this).isCompletedSuccessfully = _data["isCompletedSuccessfully"];
+            this.creationOptions = _data["creationOptions"];
+            (<any>this).asyncState = _data["asyncState"];
+            (<any>this).isFaulted = _data["isFaulted"];
+        }
+    }
+
+    static fromJS(data: any): Task {
+        data = typeof data === 'object' ? data : {};
+        let result = new Task();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["exception"] = this.exception ? this.exception.toJSON() : <any>undefined;
+        data["status"] = this.status;
+        data["isCanceled"] = this.isCanceled;
+        data["isCompleted"] = this.isCompleted;
+        data["isCompletedSuccessfully"] = this.isCompletedSuccessfully;
+        data["creationOptions"] = this.creationOptions;
+        data["asyncState"] = this.asyncState;
+        data["isFaulted"] = this.isFaulted;
+        return data;
+    }
+}
+
+export interface ITask {
+    id?: number;
+    exception?: AggregateException;
+    status?: TaskStatus;
+    isCanceled?: boolean;
+    isCompleted?: boolean;
+    isCompletedSuccessfully?: boolean;
+    creationOptions?: TaskCreationOptions;
+    asyncState?: any | undefined;
+    isFaulted?: boolean;
+}
+
+export enum TaskCreationOptions {
+    _0 = 0,
+    _1 = 1,
+    _2 = 2,
+    _4 = 4,
+    _8 = 8,
+    _16 = 16,
+    _64 = 64,
+}
+
+export enum TaskStatus {
+    _0 = 0,
+    _1 = 1,
+    _2 = 2,
+    _3 = 3,
+    _4 = 4,
+    _5 = 5,
+    _6 = 6,
+    _7 = 7,
 }
 
 export class TokenResponseDto implements ITokenResponseDto {
@@ -678,9 +5519,972 @@ export interface ITokenResponseDto {
     refreshToken?: string | undefined;
 }
 
+export class Type implements IType {
+    readonly name?: string | undefined;
+    readonly customAttributes?: CustomAttributeData[] | undefined;
+    readonly isCollectible?: boolean;
+    readonly metadataToken?: number;
+    memberType?: MemberTypes;
+    readonly namespace?: string | undefined;
+    readonly assemblyQualifiedName?: string | undefined;
+    readonly fullName?: string | undefined;
+    assembly?: Assembly;
+    module?: Module;
+    readonly isInterface?: boolean;
+    readonly isNested?: boolean;
+    declaringType?: Type;
+    declaringMethod?: MethodBase;
+    reflectedType?: Type;
+    underlyingSystemType?: Type;
+    readonly isTypeDefinition?: boolean;
+    readonly isArray?: boolean;
+    readonly isByRef?: boolean;
+    readonly isPointer?: boolean;
+    readonly isConstructedGenericType?: boolean;
+    readonly isGenericParameter?: boolean;
+    readonly isGenericTypeParameter?: boolean;
+    readonly isGenericMethodParameter?: boolean;
+    readonly isGenericType?: boolean;
+    readonly isGenericTypeDefinition?: boolean;
+    readonly isSZArray?: boolean;
+    readonly isVariableBoundArray?: boolean;
+    readonly isByRefLike?: boolean;
+    readonly isFunctionPointer?: boolean;
+    readonly isUnmanagedFunctionPointer?: boolean;
+    readonly hasElementType?: boolean;
+    readonly genericTypeArguments?: Type[] | undefined;
+    readonly genericParameterPosition?: number;
+    genericParameterAttributes?: GenericParameterAttributes;
+    attributes?: TypeAttributes;
+    readonly isAbstract?: boolean;
+    readonly isImport?: boolean;
+    readonly isSealed?: boolean;
+    readonly isSpecialName?: boolean;
+    readonly isClass?: boolean;
+    readonly isNestedAssembly?: boolean;
+    readonly isNestedFamANDAssem?: boolean;
+    readonly isNestedFamily?: boolean;
+    readonly isNestedFamORAssem?: boolean;
+    readonly isNestedPrivate?: boolean;
+    readonly isNestedPublic?: boolean;
+    readonly isNotPublic?: boolean;
+    readonly isPublic?: boolean;
+    readonly isAutoLayout?: boolean;
+    readonly isExplicitLayout?: boolean;
+    readonly isLayoutSequential?: boolean;
+    readonly isAnsiClass?: boolean;
+    readonly isAutoClass?: boolean;
+    readonly isUnicodeClass?: boolean;
+    readonly isCOMObject?: boolean;
+    readonly isContextful?: boolean;
+    readonly isEnum?: boolean;
+    readonly isMarshalByRef?: boolean;
+    readonly isPrimitive?: boolean;
+    readonly isValueType?: boolean;
+    readonly isSignatureType?: boolean;
+    readonly isSecurityCritical?: boolean;
+    readonly isSecuritySafeCritical?: boolean;
+    readonly isSecurityTransparent?: boolean;
+    structLayoutAttribute?: StructLayoutAttribute;
+    typeInitializer?: ConstructorInfo;
+    typeHandle?: RuntimeTypeHandle;
+    readonly guid?: string;
+    baseType?: Type;
+    readonly isSerializable?: boolean;
+    readonly containsGenericParameters?: boolean;
+    readonly isVisible?: boolean;
+
+    constructor(data?: IType) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            (<any>this).name = _data["name"];
+            if (Array.isArray(_data["customAttributes"])) {
+                (<any>this).customAttributes = [] as any;
+                for (let item of _data["customAttributes"])
+                    (<any>this).customAttributes!.push(CustomAttributeData.fromJS(item));
+            }
+            (<any>this).isCollectible = _data["isCollectible"];
+            (<any>this).metadataToken = _data["metadataToken"];
+            this.memberType = _data["memberType"];
+            (<any>this).namespace = _data["namespace"];
+            (<any>this).assemblyQualifiedName = _data["assemblyQualifiedName"];
+            (<any>this).fullName = _data["fullName"];
+            this.assembly = _data["assembly"] ? Assembly.fromJS(_data["assembly"]) : <any>undefined;
+            this.module = _data["module"] ? Module.fromJS(_data["module"]) : <any>undefined;
+            (<any>this).isInterface = _data["isInterface"];
+            (<any>this).isNested = _data["isNested"];
+            this.declaringType = _data["declaringType"] ? Type.fromJS(_data["declaringType"]) : <any>undefined;
+            this.declaringMethod = _data["declaringMethod"] ? MethodBase.fromJS(_data["declaringMethod"]) : <any>undefined;
+            this.reflectedType = _data["reflectedType"] ? Type.fromJS(_data["reflectedType"]) : <any>undefined;
+            this.underlyingSystemType = _data["underlyingSystemType"] ? Type.fromJS(_data["underlyingSystemType"]) : <any>undefined;
+            (<any>this).isTypeDefinition = _data["isTypeDefinition"];
+            (<any>this).isArray = _data["isArray"];
+            (<any>this).isByRef = _data["isByRef"];
+            (<any>this).isPointer = _data["isPointer"];
+            (<any>this).isConstructedGenericType = _data["isConstructedGenericType"];
+            (<any>this).isGenericParameter = _data["isGenericParameter"];
+            (<any>this).isGenericTypeParameter = _data["isGenericTypeParameter"];
+            (<any>this).isGenericMethodParameter = _data["isGenericMethodParameter"];
+            (<any>this).isGenericType = _data["isGenericType"];
+            (<any>this).isGenericTypeDefinition = _data["isGenericTypeDefinition"];
+            (<any>this).isSZArray = _data["isSZArray"];
+            (<any>this).isVariableBoundArray = _data["isVariableBoundArray"];
+            (<any>this).isByRefLike = _data["isByRefLike"];
+            (<any>this).isFunctionPointer = _data["isFunctionPointer"];
+            (<any>this).isUnmanagedFunctionPointer = _data["isUnmanagedFunctionPointer"];
+            (<any>this).hasElementType = _data["hasElementType"];
+            if (Array.isArray(_data["genericTypeArguments"])) {
+                (<any>this).genericTypeArguments = [] as any;
+                for (let item of _data["genericTypeArguments"])
+                    (<any>this).genericTypeArguments!.push(Type.fromJS(item));
+            }
+            (<any>this).genericParameterPosition = _data["genericParameterPosition"];
+            this.genericParameterAttributes = _data["genericParameterAttributes"];
+            this.attributes = _data["attributes"];
+            (<any>this).isAbstract = _data["isAbstract"];
+            (<any>this).isImport = _data["isImport"];
+            (<any>this).isSealed = _data["isSealed"];
+            (<any>this).isSpecialName = _data["isSpecialName"];
+            (<any>this).isClass = _data["isClass"];
+            (<any>this).isNestedAssembly = _data["isNestedAssembly"];
+            (<any>this).isNestedFamANDAssem = _data["isNestedFamANDAssem"];
+            (<any>this).isNestedFamily = _data["isNestedFamily"];
+            (<any>this).isNestedFamORAssem = _data["isNestedFamORAssem"];
+            (<any>this).isNestedPrivate = _data["isNestedPrivate"];
+            (<any>this).isNestedPublic = _data["isNestedPublic"];
+            (<any>this).isNotPublic = _data["isNotPublic"];
+            (<any>this).isPublic = _data["isPublic"];
+            (<any>this).isAutoLayout = _data["isAutoLayout"];
+            (<any>this).isExplicitLayout = _data["isExplicitLayout"];
+            (<any>this).isLayoutSequential = _data["isLayoutSequential"];
+            (<any>this).isAnsiClass = _data["isAnsiClass"];
+            (<any>this).isAutoClass = _data["isAutoClass"];
+            (<any>this).isUnicodeClass = _data["isUnicodeClass"];
+            (<any>this).isCOMObject = _data["isCOMObject"];
+            (<any>this).isContextful = _data["isContextful"];
+            (<any>this).isEnum = _data["isEnum"];
+            (<any>this).isMarshalByRef = _data["isMarshalByRef"];
+            (<any>this).isPrimitive = _data["isPrimitive"];
+            (<any>this).isValueType = _data["isValueType"];
+            (<any>this).isSignatureType = _data["isSignatureType"];
+            (<any>this).isSecurityCritical = _data["isSecurityCritical"];
+            (<any>this).isSecuritySafeCritical = _data["isSecuritySafeCritical"];
+            (<any>this).isSecurityTransparent = _data["isSecurityTransparent"];
+            this.structLayoutAttribute = _data["structLayoutAttribute"] ? StructLayoutAttribute.fromJS(_data["structLayoutAttribute"]) : <any>undefined;
+            this.typeInitializer = _data["typeInitializer"] ? ConstructorInfo.fromJS(_data["typeInitializer"]) : <any>undefined;
+            this.typeHandle = _data["typeHandle"] ? RuntimeTypeHandle.fromJS(_data["typeHandle"]) : <any>undefined;
+            (<any>this).guid = _data["guid"];
+            this.baseType = _data["baseType"] ? Type.fromJS(_data["baseType"]) : <any>undefined;
+            (<any>this).isSerializable = _data["isSerializable"];
+            (<any>this).containsGenericParameters = _data["containsGenericParameters"];
+            (<any>this).isVisible = _data["isVisible"];
+        }
+    }
+
+    static fromJS(data: any): Type {
+        data = typeof data === 'object' ? data : {};
+        let result = new Type();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        if (Array.isArray(this.customAttributes)) {
+            data["customAttributes"] = [];
+            for (let item of this.customAttributes)
+                data["customAttributes"].push(item ? item.toJSON() : <any>undefined);
+        }
+        data["isCollectible"] = this.isCollectible;
+        data["metadataToken"] = this.metadataToken;
+        data["memberType"] = this.memberType;
+        data["namespace"] = this.namespace;
+        data["assemblyQualifiedName"] = this.assemblyQualifiedName;
+        data["fullName"] = this.fullName;
+        data["assembly"] = this.assembly ? this.assembly.toJSON() : <any>undefined;
+        data["module"] = this.module ? this.module.toJSON() : <any>undefined;
+        data["isInterface"] = this.isInterface;
+        data["isNested"] = this.isNested;
+        data["declaringType"] = this.declaringType ? this.declaringType.toJSON() : <any>undefined;
+        data["declaringMethod"] = this.declaringMethod ? this.declaringMethod.toJSON() : <any>undefined;
+        data["reflectedType"] = this.reflectedType ? this.reflectedType.toJSON() : <any>undefined;
+        data["underlyingSystemType"] = this.underlyingSystemType ? this.underlyingSystemType.toJSON() : <any>undefined;
+        data["isTypeDefinition"] = this.isTypeDefinition;
+        data["isArray"] = this.isArray;
+        data["isByRef"] = this.isByRef;
+        data["isPointer"] = this.isPointer;
+        data["isConstructedGenericType"] = this.isConstructedGenericType;
+        data["isGenericParameter"] = this.isGenericParameter;
+        data["isGenericTypeParameter"] = this.isGenericTypeParameter;
+        data["isGenericMethodParameter"] = this.isGenericMethodParameter;
+        data["isGenericType"] = this.isGenericType;
+        data["isGenericTypeDefinition"] = this.isGenericTypeDefinition;
+        data["isSZArray"] = this.isSZArray;
+        data["isVariableBoundArray"] = this.isVariableBoundArray;
+        data["isByRefLike"] = this.isByRefLike;
+        data["isFunctionPointer"] = this.isFunctionPointer;
+        data["isUnmanagedFunctionPointer"] = this.isUnmanagedFunctionPointer;
+        data["hasElementType"] = this.hasElementType;
+        if (Array.isArray(this.genericTypeArguments)) {
+            data["genericTypeArguments"] = [];
+            for (let item of this.genericTypeArguments)
+                data["genericTypeArguments"].push(item ? item.toJSON() : <any>undefined);
+        }
+        data["genericParameterPosition"] = this.genericParameterPosition;
+        data["genericParameterAttributes"] = this.genericParameterAttributes;
+        data["attributes"] = this.attributes;
+        data["isAbstract"] = this.isAbstract;
+        data["isImport"] = this.isImport;
+        data["isSealed"] = this.isSealed;
+        data["isSpecialName"] = this.isSpecialName;
+        data["isClass"] = this.isClass;
+        data["isNestedAssembly"] = this.isNestedAssembly;
+        data["isNestedFamANDAssem"] = this.isNestedFamANDAssem;
+        data["isNestedFamily"] = this.isNestedFamily;
+        data["isNestedFamORAssem"] = this.isNestedFamORAssem;
+        data["isNestedPrivate"] = this.isNestedPrivate;
+        data["isNestedPublic"] = this.isNestedPublic;
+        data["isNotPublic"] = this.isNotPublic;
+        data["isPublic"] = this.isPublic;
+        data["isAutoLayout"] = this.isAutoLayout;
+        data["isExplicitLayout"] = this.isExplicitLayout;
+        data["isLayoutSequential"] = this.isLayoutSequential;
+        data["isAnsiClass"] = this.isAnsiClass;
+        data["isAutoClass"] = this.isAutoClass;
+        data["isUnicodeClass"] = this.isUnicodeClass;
+        data["isCOMObject"] = this.isCOMObject;
+        data["isContextful"] = this.isContextful;
+        data["isEnum"] = this.isEnum;
+        data["isMarshalByRef"] = this.isMarshalByRef;
+        data["isPrimitive"] = this.isPrimitive;
+        data["isValueType"] = this.isValueType;
+        data["isSignatureType"] = this.isSignatureType;
+        data["isSecurityCritical"] = this.isSecurityCritical;
+        data["isSecuritySafeCritical"] = this.isSecuritySafeCritical;
+        data["isSecurityTransparent"] = this.isSecurityTransparent;
+        data["structLayoutAttribute"] = this.structLayoutAttribute ? this.structLayoutAttribute.toJSON() : <any>undefined;
+        data["typeInitializer"] = this.typeInitializer ? this.typeInitializer.toJSON() : <any>undefined;
+        data["typeHandle"] = this.typeHandle ? this.typeHandle.toJSON() : <any>undefined;
+        data["guid"] = this.guid;
+        data["baseType"] = this.baseType ? this.baseType.toJSON() : <any>undefined;
+        data["isSerializable"] = this.isSerializable;
+        data["containsGenericParameters"] = this.containsGenericParameters;
+        data["isVisible"] = this.isVisible;
+        return data;
+    }
+}
+
+export interface IType {
+    name?: string | undefined;
+    customAttributes?: CustomAttributeData[] | undefined;
+    isCollectible?: boolean;
+    metadataToken?: number;
+    memberType?: MemberTypes;
+    namespace?: string | undefined;
+    assemblyQualifiedName?: string | undefined;
+    fullName?: string | undefined;
+    assembly?: Assembly;
+    module?: Module;
+    isInterface?: boolean;
+    isNested?: boolean;
+    declaringType?: Type;
+    declaringMethod?: MethodBase;
+    reflectedType?: Type;
+    underlyingSystemType?: Type;
+    isTypeDefinition?: boolean;
+    isArray?: boolean;
+    isByRef?: boolean;
+    isPointer?: boolean;
+    isConstructedGenericType?: boolean;
+    isGenericParameter?: boolean;
+    isGenericTypeParameter?: boolean;
+    isGenericMethodParameter?: boolean;
+    isGenericType?: boolean;
+    isGenericTypeDefinition?: boolean;
+    isSZArray?: boolean;
+    isVariableBoundArray?: boolean;
+    isByRefLike?: boolean;
+    isFunctionPointer?: boolean;
+    isUnmanagedFunctionPointer?: boolean;
+    hasElementType?: boolean;
+    genericTypeArguments?: Type[] | undefined;
+    genericParameterPosition?: number;
+    genericParameterAttributes?: GenericParameterAttributes;
+    attributes?: TypeAttributes;
+    isAbstract?: boolean;
+    isImport?: boolean;
+    isSealed?: boolean;
+    isSpecialName?: boolean;
+    isClass?: boolean;
+    isNestedAssembly?: boolean;
+    isNestedFamANDAssem?: boolean;
+    isNestedFamily?: boolean;
+    isNestedFamORAssem?: boolean;
+    isNestedPrivate?: boolean;
+    isNestedPublic?: boolean;
+    isNotPublic?: boolean;
+    isPublic?: boolean;
+    isAutoLayout?: boolean;
+    isExplicitLayout?: boolean;
+    isLayoutSequential?: boolean;
+    isAnsiClass?: boolean;
+    isAutoClass?: boolean;
+    isUnicodeClass?: boolean;
+    isCOMObject?: boolean;
+    isContextful?: boolean;
+    isEnum?: boolean;
+    isMarshalByRef?: boolean;
+    isPrimitive?: boolean;
+    isValueType?: boolean;
+    isSignatureType?: boolean;
+    isSecurityCritical?: boolean;
+    isSecuritySafeCritical?: boolean;
+    isSecurityTransparent?: boolean;
+    structLayoutAttribute?: StructLayoutAttribute;
+    typeInitializer?: ConstructorInfo;
+    typeHandle?: RuntimeTypeHandle;
+    guid?: string;
+    baseType?: Type;
+    isSerializable?: boolean;
+    containsGenericParameters?: boolean;
+    isVisible?: boolean;
+}
+
+export enum TypeAttributes {
+    _0 = 0,
+    _1 = 1,
+    _2 = 2,
+    _3 = 3,
+    _4 = 4,
+    _5 = 5,
+    _6 = 6,
+    _7 = 7,
+    _8 = 8,
+    _16 = 16,
+    _24 = 24,
+    _32 = 32,
+    _128 = 128,
+    _256 = 256,
+    _1024 = 1024,
+    _2048 = 2048,
+    _4096 = 4096,
+    _8192 = 8192,
+    _16384 = 16384,
+    _65536 = 65536,
+    _131072 = 131072,
+    _196608 = 196608,
+    _262144 = 262144,
+    _264192 = 264192,
+    _1048576 = 1048576,
+    _12582912 = 12582912,
+}
+
+export class TypeInfo implements ITypeInfo {
+    readonly name?: string | undefined;
+    readonly customAttributes?: CustomAttributeData[] | undefined;
+    readonly isCollectible?: boolean;
+    readonly metadataToken?: number;
+    memberType?: MemberTypes;
+    readonly namespace?: string | undefined;
+    readonly assemblyQualifiedName?: string | undefined;
+    readonly fullName?: string | undefined;
+    assembly?: Assembly;
+    module?: Module;
+    readonly isInterface?: boolean;
+    readonly isNested?: boolean;
+    declaringType?: Type;
+    declaringMethod?: MethodBase;
+    reflectedType?: Type;
+    underlyingSystemType?: Type;
+    readonly isTypeDefinition?: boolean;
+    readonly isArray?: boolean;
+    readonly isByRef?: boolean;
+    readonly isPointer?: boolean;
+    readonly isConstructedGenericType?: boolean;
+    readonly isGenericParameter?: boolean;
+    readonly isGenericTypeParameter?: boolean;
+    readonly isGenericMethodParameter?: boolean;
+    readonly isGenericType?: boolean;
+    readonly isGenericTypeDefinition?: boolean;
+    readonly isSZArray?: boolean;
+    readonly isVariableBoundArray?: boolean;
+    readonly isByRefLike?: boolean;
+    readonly isFunctionPointer?: boolean;
+    readonly isUnmanagedFunctionPointer?: boolean;
+    readonly hasElementType?: boolean;
+    readonly genericTypeArguments?: Type[] | undefined;
+    readonly genericParameterPosition?: number;
+    genericParameterAttributes?: GenericParameterAttributes;
+    attributes?: TypeAttributes;
+    readonly isAbstract?: boolean;
+    readonly isImport?: boolean;
+    readonly isSealed?: boolean;
+    readonly isSpecialName?: boolean;
+    readonly isClass?: boolean;
+    readonly isNestedAssembly?: boolean;
+    readonly isNestedFamANDAssem?: boolean;
+    readonly isNestedFamily?: boolean;
+    readonly isNestedFamORAssem?: boolean;
+    readonly isNestedPrivate?: boolean;
+    readonly isNestedPublic?: boolean;
+    readonly isNotPublic?: boolean;
+    readonly isPublic?: boolean;
+    readonly isAutoLayout?: boolean;
+    readonly isExplicitLayout?: boolean;
+    readonly isLayoutSequential?: boolean;
+    readonly isAnsiClass?: boolean;
+    readonly isAutoClass?: boolean;
+    readonly isUnicodeClass?: boolean;
+    readonly isCOMObject?: boolean;
+    readonly isContextful?: boolean;
+    readonly isEnum?: boolean;
+    readonly isMarshalByRef?: boolean;
+    readonly isPrimitive?: boolean;
+    readonly isValueType?: boolean;
+    readonly isSignatureType?: boolean;
+    readonly isSecurityCritical?: boolean;
+    readonly isSecuritySafeCritical?: boolean;
+    readonly isSecurityTransparent?: boolean;
+    structLayoutAttribute?: StructLayoutAttribute;
+    typeInitializer?: ConstructorInfo;
+    typeHandle?: RuntimeTypeHandle;
+    readonly guid?: string;
+    baseType?: Type;
+    readonly isSerializable?: boolean;
+    readonly containsGenericParameters?: boolean;
+    readonly isVisible?: boolean;
+    readonly genericTypeParameters?: Type[] | undefined;
+    readonly declaredConstructors?: ConstructorInfo[] | undefined;
+    readonly declaredEvents?: EventInfo[] | undefined;
+    readonly declaredFields?: FieldInfo[] | undefined;
+    readonly declaredMembers?: MemberInfo[] | undefined;
+    readonly declaredMethods?: MethodInfo[] | undefined;
+    readonly declaredNestedTypes?: TypeInfo[] | undefined;
+    readonly declaredProperties?: PropertyInfo[] | undefined;
+    readonly implementedInterfaces?: Type[] | undefined;
+
+    constructor(data?: ITypeInfo) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            (<any>this).name = _data["name"];
+            if (Array.isArray(_data["customAttributes"])) {
+                (<any>this).customAttributes = [] as any;
+                for (let item of _data["customAttributes"])
+                    (<any>this).customAttributes!.push(CustomAttributeData.fromJS(item));
+            }
+            (<any>this).isCollectible = _data["isCollectible"];
+            (<any>this).metadataToken = _data["metadataToken"];
+            this.memberType = _data["memberType"];
+            (<any>this).namespace = _data["namespace"];
+            (<any>this).assemblyQualifiedName = _data["assemblyQualifiedName"];
+            (<any>this).fullName = _data["fullName"];
+            this.assembly = _data["assembly"] ? Assembly.fromJS(_data["assembly"]) : <any>undefined;
+            this.module = _data["module"] ? Module.fromJS(_data["module"]) : <any>undefined;
+            (<any>this).isInterface = _data["isInterface"];
+            (<any>this).isNested = _data["isNested"];
+            this.declaringType = _data["declaringType"] ? Type.fromJS(_data["declaringType"]) : <any>undefined;
+            this.declaringMethod = _data["declaringMethod"] ? MethodBase.fromJS(_data["declaringMethod"]) : <any>undefined;
+            this.reflectedType = _data["reflectedType"] ? Type.fromJS(_data["reflectedType"]) : <any>undefined;
+            this.underlyingSystemType = _data["underlyingSystemType"] ? Type.fromJS(_data["underlyingSystemType"]) : <any>undefined;
+            (<any>this).isTypeDefinition = _data["isTypeDefinition"];
+            (<any>this).isArray = _data["isArray"];
+            (<any>this).isByRef = _data["isByRef"];
+            (<any>this).isPointer = _data["isPointer"];
+            (<any>this).isConstructedGenericType = _data["isConstructedGenericType"];
+            (<any>this).isGenericParameter = _data["isGenericParameter"];
+            (<any>this).isGenericTypeParameter = _data["isGenericTypeParameter"];
+            (<any>this).isGenericMethodParameter = _data["isGenericMethodParameter"];
+            (<any>this).isGenericType = _data["isGenericType"];
+            (<any>this).isGenericTypeDefinition = _data["isGenericTypeDefinition"];
+            (<any>this).isSZArray = _data["isSZArray"];
+            (<any>this).isVariableBoundArray = _data["isVariableBoundArray"];
+            (<any>this).isByRefLike = _data["isByRefLike"];
+            (<any>this).isFunctionPointer = _data["isFunctionPointer"];
+            (<any>this).isUnmanagedFunctionPointer = _data["isUnmanagedFunctionPointer"];
+            (<any>this).hasElementType = _data["hasElementType"];
+            if (Array.isArray(_data["genericTypeArguments"])) {
+                (<any>this).genericTypeArguments = [] as any;
+                for (let item of _data["genericTypeArguments"])
+                    (<any>this).genericTypeArguments!.push(Type.fromJS(item));
+            }
+            (<any>this).genericParameterPosition = _data["genericParameterPosition"];
+            this.genericParameterAttributes = _data["genericParameterAttributes"];
+            this.attributes = _data["attributes"];
+            (<any>this).isAbstract = _data["isAbstract"];
+            (<any>this).isImport = _data["isImport"];
+            (<any>this).isSealed = _data["isSealed"];
+            (<any>this).isSpecialName = _data["isSpecialName"];
+            (<any>this).isClass = _data["isClass"];
+            (<any>this).isNestedAssembly = _data["isNestedAssembly"];
+            (<any>this).isNestedFamANDAssem = _data["isNestedFamANDAssem"];
+            (<any>this).isNestedFamily = _data["isNestedFamily"];
+            (<any>this).isNestedFamORAssem = _data["isNestedFamORAssem"];
+            (<any>this).isNestedPrivate = _data["isNestedPrivate"];
+            (<any>this).isNestedPublic = _data["isNestedPublic"];
+            (<any>this).isNotPublic = _data["isNotPublic"];
+            (<any>this).isPublic = _data["isPublic"];
+            (<any>this).isAutoLayout = _data["isAutoLayout"];
+            (<any>this).isExplicitLayout = _data["isExplicitLayout"];
+            (<any>this).isLayoutSequential = _data["isLayoutSequential"];
+            (<any>this).isAnsiClass = _data["isAnsiClass"];
+            (<any>this).isAutoClass = _data["isAutoClass"];
+            (<any>this).isUnicodeClass = _data["isUnicodeClass"];
+            (<any>this).isCOMObject = _data["isCOMObject"];
+            (<any>this).isContextful = _data["isContextful"];
+            (<any>this).isEnum = _data["isEnum"];
+            (<any>this).isMarshalByRef = _data["isMarshalByRef"];
+            (<any>this).isPrimitive = _data["isPrimitive"];
+            (<any>this).isValueType = _data["isValueType"];
+            (<any>this).isSignatureType = _data["isSignatureType"];
+            (<any>this).isSecurityCritical = _data["isSecurityCritical"];
+            (<any>this).isSecuritySafeCritical = _data["isSecuritySafeCritical"];
+            (<any>this).isSecurityTransparent = _data["isSecurityTransparent"];
+            this.structLayoutAttribute = _data["structLayoutAttribute"] ? StructLayoutAttribute.fromJS(_data["structLayoutAttribute"]) : <any>undefined;
+            this.typeInitializer = _data["typeInitializer"] ? ConstructorInfo.fromJS(_data["typeInitializer"]) : <any>undefined;
+            this.typeHandle = _data["typeHandle"] ? RuntimeTypeHandle.fromJS(_data["typeHandle"]) : <any>undefined;
+            (<any>this).guid = _data["guid"];
+            this.baseType = _data["baseType"] ? Type.fromJS(_data["baseType"]) : <any>undefined;
+            (<any>this).isSerializable = _data["isSerializable"];
+            (<any>this).containsGenericParameters = _data["containsGenericParameters"];
+            (<any>this).isVisible = _data["isVisible"];
+            if (Array.isArray(_data["genericTypeParameters"])) {
+                (<any>this).genericTypeParameters = [] as any;
+                for (let item of _data["genericTypeParameters"])
+                    (<any>this).genericTypeParameters!.push(Type.fromJS(item));
+            }
+            if (Array.isArray(_data["declaredConstructors"])) {
+                (<any>this).declaredConstructors = [] as any;
+                for (let item of _data["declaredConstructors"])
+                    (<any>this).declaredConstructors!.push(ConstructorInfo.fromJS(item));
+            }
+            if (Array.isArray(_data["declaredEvents"])) {
+                (<any>this).declaredEvents = [] as any;
+                for (let item of _data["declaredEvents"])
+                    (<any>this).declaredEvents!.push(EventInfo.fromJS(item));
+            }
+            if (Array.isArray(_data["declaredFields"])) {
+                (<any>this).declaredFields = [] as any;
+                for (let item of _data["declaredFields"])
+                    (<any>this).declaredFields!.push(FieldInfo.fromJS(item));
+            }
+            if (Array.isArray(_data["declaredMembers"])) {
+                (<any>this).declaredMembers = [] as any;
+                for (let item of _data["declaredMembers"])
+                    (<any>this).declaredMembers!.push(MemberInfo.fromJS(item));
+            }
+            if (Array.isArray(_data["declaredMethods"])) {
+                (<any>this).declaredMethods = [] as any;
+                for (let item of _data["declaredMethods"])
+                    (<any>this).declaredMethods!.push(MethodInfo.fromJS(item));
+            }
+            if (Array.isArray(_data["declaredNestedTypes"])) {
+                (<any>this).declaredNestedTypes = [] as any;
+                for (let item of _data["declaredNestedTypes"])
+                    (<any>this).declaredNestedTypes!.push(TypeInfo.fromJS(item));
+            }
+            if (Array.isArray(_data["declaredProperties"])) {
+                (<any>this).declaredProperties = [] as any;
+                for (let item of _data["declaredProperties"])
+                    (<any>this).declaredProperties!.push(PropertyInfo.fromJS(item));
+            }
+            if (Array.isArray(_data["implementedInterfaces"])) {
+                (<any>this).implementedInterfaces = [] as any;
+                for (let item of _data["implementedInterfaces"])
+                    (<any>this).implementedInterfaces!.push(Type.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): TypeInfo {
+        data = typeof data === 'object' ? data : {};
+        let result = new TypeInfo();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        if (Array.isArray(this.customAttributes)) {
+            data["customAttributes"] = [];
+            for (let item of this.customAttributes)
+                data["customAttributes"].push(item ? item.toJSON() : <any>undefined);
+        }
+        data["isCollectible"] = this.isCollectible;
+        data["metadataToken"] = this.metadataToken;
+        data["memberType"] = this.memberType;
+        data["namespace"] = this.namespace;
+        data["assemblyQualifiedName"] = this.assemblyQualifiedName;
+        data["fullName"] = this.fullName;
+        data["assembly"] = this.assembly ? this.assembly.toJSON() : <any>undefined;
+        data["module"] = this.module ? this.module.toJSON() : <any>undefined;
+        data["isInterface"] = this.isInterface;
+        data["isNested"] = this.isNested;
+        data["declaringType"] = this.declaringType ? this.declaringType.toJSON() : <any>undefined;
+        data["declaringMethod"] = this.declaringMethod ? this.declaringMethod.toJSON() : <any>undefined;
+        data["reflectedType"] = this.reflectedType ? this.reflectedType.toJSON() : <any>undefined;
+        data["underlyingSystemType"] = this.underlyingSystemType ? this.underlyingSystemType.toJSON() : <any>undefined;
+        data["isTypeDefinition"] = this.isTypeDefinition;
+        data["isArray"] = this.isArray;
+        data["isByRef"] = this.isByRef;
+        data["isPointer"] = this.isPointer;
+        data["isConstructedGenericType"] = this.isConstructedGenericType;
+        data["isGenericParameter"] = this.isGenericParameter;
+        data["isGenericTypeParameter"] = this.isGenericTypeParameter;
+        data["isGenericMethodParameter"] = this.isGenericMethodParameter;
+        data["isGenericType"] = this.isGenericType;
+        data["isGenericTypeDefinition"] = this.isGenericTypeDefinition;
+        data["isSZArray"] = this.isSZArray;
+        data["isVariableBoundArray"] = this.isVariableBoundArray;
+        data["isByRefLike"] = this.isByRefLike;
+        data["isFunctionPointer"] = this.isFunctionPointer;
+        data["isUnmanagedFunctionPointer"] = this.isUnmanagedFunctionPointer;
+        data["hasElementType"] = this.hasElementType;
+        if (Array.isArray(this.genericTypeArguments)) {
+            data["genericTypeArguments"] = [];
+            for (let item of this.genericTypeArguments)
+                data["genericTypeArguments"].push(item ? item.toJSON() : <any>undefined);
+        }
+        data["genericParameterPosition"] = this.genericParameterPosition;
+        data["genericParameterAttributes"] = this.genericParameterAttributes;
+        data["attributes"] = this.attributes;
+        data["isAbstract"] = this.isAbstract;
+        data["isImport"] = this.isImport;
+        data["isSealed"] = this.isSealed;
+        data["isSpecialName"] = this.isSpecialName;
+        data["isClass"] = this.isClass;
+        data["isNestedAssembly"] = this.isNestedAssembly;
+        data["isNestedFamANDAssem"] = this.isNestedFamANDAssem;
+        data["isNestedFamily"] = this.isNestedFamily;
+        data["isNestedFamORAssem"] = this.isNestedFamORAssem;
+        data["isNestedPrivate"] = this.isNestedPrivate;
+        data["isNestedPublic"] = this.isNestedPublic;
+        data["isNotPublic"] = this.isNotPublic;
+        data["isPublic"] = this.isPublic;
+        data["isAutoLayout"] = this.isAutoLayout;
+        data["isExplicitLayout"] = this.isExplicitLayout;
+        data["isLayoutSequential"] = this.isLayoutSequential;
+        data["isAnsiClass"] = this.isAnsiClass;
+        data["isAutoClass"] = this.isAutoClass;
+        data["isUnicodeClass"] = this.isUnicodeClass;
+        data["isCOMObject"] = this.isCOMObject;
+        data["isContextful"] = this.isContextful;
+        data["isEnum"] = this.isEnum;
+        data["isMarshalByRef"] = this.isMarshalByRef;
+        data["isPrimitive"] = this.isPrimitive;
+        data["isValueType"] = this.isValueType;
+        data["isSignatureType"] = this.isSignatureType;
+        data["isSecurityCritical"] = this.isSecurityCritical;
+        data["isSecuritySafeCritical"] = this.isSecuritySafeCritical;
+        data["isSecurityTransparent"] = this.isSecurityTransparent;
+        data["structLayoutAttribute"] = this.structLayoutAttribute ? this.structLayoutAttribute.toJSON() : <any>undefined;
+        data["typeInitializer"] = this.typeInitializer ? this.typeInitializer.toJSON() : <any>undefined;
+        data["typeHandle"] = this.typeHandle ? this.typeHandle.toJSON() : <any>undefined;
+        data["guid"] = this.guid;
+        data["baseType"] = this.baseType ? this.baseType.toJSON() : <any>undefined;
+        data["isSerializable"] = this.isSerializable;
+        data["containsGenericParameters"] = this.containsGenericParameters;
+        data["isVisible"] = this.isVisible;
+        if (Array.isArray(this.genericTypeParameters)) {
+            data["genericTypeParameters"] = [];
+            for (let item of this.genericTypeParameters)
+                data["genericTypeParameters"].push(item ? item.toJSON() : <any>undefined);
+        }
+        if (Array.isArray(this.declaredConstructors)) {
+            data["declaredConstructors"] = [];
+            for (let item of this.declaredConstructors)
+                data["declaredConstructors"].push(item ? item.toJSON() : <any>undefined);
+        }
+        if (Array.isArray(this.declaredEvents)) {
+            data["declaredEvents"] = [];
+            for (let item of this.declaredEvents)
+                data["declaredEvents"].push(item ? item.toJSON() : <any>undefined);
+        }
+        if (Array.isArray(this.declaredFields)) {
+            data["declaredFields"] = [];
+            for (let item of this.declaredFields)
+                data["declaredFields"].push(item ? item.toJSON() : <any>undefined);
+        }
+        if (Array.isArray(this.declaredMembers)) {
+            data["declaredMembers"] = [];
+            for (let item of this.declaredMembers)
+                data["declaredMembers"].push(item ? item.toJSON() : <any>undefined);
+        }
+        if (Array.isArray(this.declaredMethods)) {
+            data["declaredMethods"] = [];
+            for (let item of this.declaredMethods)
+                data["declaredMethods"].push(item ? item.toJSON() : <any>undefined);
+        }
+        if (Array.isArray(this.declaredNestedTypes)) {
+            data["declaredNestedTypes"] = [];
+            for (let item of this.declaredNestedTypes)
+                data["declaredNestedTypes"].push(item ? item.toJSON() : <any>undefined);
+        }
+        if (Array.isArray(this.declaredProperties)) {
+            data["declaredProperties"] = [];
+            for (let item of this.declaredProperties)
+                data["declaredProperties"].push(item ? item.toJSON() : <any>undefined);
+        }
+        if (Array.isArray(this.implementedInterfaces)) {
+            data["implementedInterfaces"] = [];
+            for (let item of this.implementedInterfaces)
+                data["implementedInterfaces"].push(item ? item.toJSON() : <any>undefined);
+        }
+        return data;
+    }
+}
+
+export interface ITypeInfo {
+    name?: string | undefined;
+    customAttributes?: CustomAttributeData[] | undefined;
+    isCollectible?: boolean;
+    metadataToken?: number;
+    memberType?: MemberTypes;
+    namespace?: string | undefined;
+    assemblyQualifiedName?: string | undefined;
+    fullName?: string | undefined;
+    assembly?: Assembly;
+    module?: Module;
+    isInterface?: boolean;
+    isNested?: boolean;
+    declaringType?: Type;
+    declaringMethod?: MethodBase;
+    reflectedType?: Type;
+    underlyingSystemType?: Type;
+    isTypeDefinition?: boolean;
+    isArray?: boolean;
+    isByRef?: boolean;
+    isPointer?: boolean;
+    isConstructedGenericType?: boolean;
+    isGenericParameter?: boolean;
+    isGenericTypeParameter?: boolean;
+    isGenericMethodParameter?: boolean;
+    isGenericType?: boolean;
+    isGenericTypeDefinition?: boolean;
+    isSZArray?: boolean;
+    isVariableBoundArray?: boolean;
+    isByRefLike?: boolean;
+    isFunctionPointer?: boolean;
+    isUnmanagedFunctionPointer?: boolean;
+    hasElementType?: boolean;
+    genericTypeArguments?: Type[] | undefined;
+    genericParameterPosition?: number;
+    genericParameterAttributes?: GenericParameterAttributes;
+    attributes?: TypeAttributes;
+    isAbstract?: boolean;
+    isImport?: boolean;
+    isSealed?: boolean;
+    isSpecialName?: boolean;
+    isClass?: boolean;
+    isNestedAssembly?: boolean;
+    isNestedFamANDAssem?: boolean;
+    isNestedFamily?: boolean;
+    isNestedFamORAssem?: boolean;
+    isNestedPrivate?: boolean;
+    isNestedPublic?: boolean;
+    isNotPublic?: boolean;
+    isPublic?: boolean;
+    isAutoLayout?: boolean;
+    isExplicitLayout?: boolean;
+    isLayoutSequential?: boolean;
+    isAnsiClass?: boolean;
+    isAutoClass?: boolean;
+    isUnicodeClass?: boolean;
+    isCOMObject?: boolean;
+    isContextful?: boolean;
+    isEnum?: boolean;
+    isMarshalByRef?: boolean;
+    isPrimitive?: boolean;
+    isValueType?: boolean;
+    isSignatureType?: boolean;
+    isSecurityCritical?: boolean;
+    isSecuritySafeCritical?: boolean;
+    isSecurityTransparent?: boolean;
+    structLayoutAttribute?: StructLayoutAttribute;
+    typeInitializer?: ConstructorInfo;
+    typeHandle?: RuntimeTypeHandle;
+    guid?: string;
+    baseType?: Type;
+    isSerializable?: boolean;
+    containsGenericParameters?: boolean;
+    isVisible?: boolean;
+    genericTypeParameters?: Type[] | undefined;
+    declaredConstructors?: ConstructorInfo[] | undefined;
+    declaredEvents?: EventInfo[] | undefined;
+    declaredFields?: FieldInfo[] | undefined;
+    declaredMembers?: MemberInfo[] | undefined;
+    declaredMethods?: MethodInfo[] | undefined;
+    declaredNestedTypes?: TypeInfo[] | undefined;
+    declaredProperties?: PropertyInfo[] | undefined;
+    implementedInterfaces?: Type[] | undefined;
+}
+
+export class UpdateListingInput implements IUpdateListingInput {
+    lastName?: string | undefined;
+    firstName?: string | undefined;
+    phone?: string | undefined;
+    email?: string | undefined;
+    departureDate?: Date | undefined;
+    arrivalDate?: Date | undefined;
+    maxTravelDate?: Date | undefined;
+    availableWeightInGrams?: number | undefined;
+    desiredWeightInGrams?: number | undefined;
+    departureCountryId?: string | undefined;
+    departureCity?: string | undefined;
+    arrivalCountryId?: string | undefined;
+    arrivalCity?: string | undefined;
+    pricePerKg?: number;
+    currencyId?: string | undefined;
+    paymentMethod?: string | undefined;
+
+    constructor(data?: IUpdateListingInput) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.lastName = _data["lastName"];
+            this.firstName = _data["firstName"];
+            this.phone = _data["phone"];
+            this.email = _data["email"];
+            this.departureDate = _data["departureDate"] ? new Date(_data["departureDate"].toString()) : <any>undefined;
+            this.arrivalDate = _data["arrivalDate"] ? new Date(_data["arrivalDate"].toString()) : <any>undefined;
+            this.maxTravelDate = _data["maxTravelDate"] ? new Date(_data["maxTravelDate"].toString()) : <any>undefined;
+            this.availableWeightInGrams = _data["availableWeightInGrams"];
+            this.desiredWeightInGrams = _data["desiredWeightInGrams"];
+            this.departureCountryId = _data["departureCountryId"];
+            this.departureCity = _data["departureCity"];
+            this.arrivalCountryId = _data["arrivalCountryId"];
+            this.arrivalCity = _data["arrivalCity"];
+            this.pricePerKg = _data["pricePerKg"];
+            this.currencyId = _data["currencyId"];
+            this.paymentMethod = _data["paymentMethod"];
+        }
+    }
+
+    static fromJS(data: any): UpdateListingInput {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateListingInput();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["lastName"] = this.lastName;
+        data["firstName"] = this.firstName;
+        data["phone"] = this.phone;
+        data["email"] = this.email;
+        data["departureDate"] = this.departureDate ? this.departureDate.toISOString() : <any>undefined;
+        data["arrivalDate"] = this.arrivalDate ? this.arrivalDate.toISOString() : <any>undefined;
+        data["maxTravelDate"] = this.maxTravelDate ? this.maxTravelDate.toISOString() : <any>undefined;
+        data["availableWeightInGrams"] = this.availableWeightInGrams;
+        data["desiredWeightInGrams"] = this.desiredWeightInGrams;
+        data["departureCountryId"] = this.departureCountryId;
+        data["departureCity"] = this.departureCity;
+        data["arrivalCountryId"] = this.arrivalCountryId;
+        data["arrivalCity"] = this.arrivalCity;
+        data["pricePerKg"] = this.pricePerKg;
+        data["currencyId"] = this.currencyId;
+        data["paymentMethod"] = this.paymentMethod;
+        return data;
+    }
+}
+
+export interface IUpdateListingInput {
+    lastName?: string | undefined;
+    firstName?: string | undefined;
+    phone?: string | undefined;
+    email?: string | undefined;
+    departureDate?: Date | undefined;
+    arrivalDate?: Date | undefined;
+    maxTravelDate?: Date | undefined;
+    availableWeightInGrams?: number | undefined;
+    desiredWeightInGrams?: number | undefined;
+    departureCountryId?: string | undefined;
+    departureCity?: string | undefined;
+    arrivalCountryId?: string | undefined;
+    arrivalCity?: string | undefined;
+    pricePerKg?: number;
+    currencyId?: string | undefined;
+    paymentMethod?: string | undefined;
+}
+
+export class UpdateSubscriptionInput implements IUpdateSubscriptionInput {
+    name?: string | undefined;
+    amount?: number;
+    currencyId?: string | undefined;
+    frequency?: SubscriptionFrequencyDto;
+
+    constructor(data?: IUpdateSubscriptionInput) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.name = _data["name"];
+            this.amount = _data["amount"];
+            this.currencyId = _data["currencyId"];
+            this.frequency = _data["frequency"];
+        }
+    }
+
+    static fromJS(data: any): UpdateSubscriptionInput {
+        data = typeof data === 'object' ? data : {};
+        let result = new UpdateSubscriptionInput();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["name"] = this.name;
+        data["amount"] = this.amount;
+        data["currencyId"] = this.currencyId;
+        data["frequency"] = this.frequency;
+        return data;
+    }
+}
+
+export interface IUpdateSubscriptionInput {
+    name?: string | undefined;
+    amount?: number;
+    currencyId?: string | undefined;
+    frequency?: SubscriptionFrequencyDto;
+}
+
 export class UpdateUserDto implements IUpdateUserDto {
     firstName?: string | undefined;
     lastName?: string | undefined;
+    phone?: string | undefined;
+    birthDay?: Date;
 
     constructor(data?: IUpdateUserDto) {
         if (data) {
@@ -695,6 +6499,8 @@ export class UpdateUserDto implements IUpdateUserDto {
         if (_data) {
             this.firstName = _data["firstName"];
             this.lastName = _data["lastName"];
+            this.phone = _data["phone"];
+            this.birthDay = _data["birthDay"] ? new Date(_data["birthDay"].toString()) : <any>undefined;
         }
     }
 
@@ -709,6 +6515,8 @@ export class UpdateUserDto implements IUpdateUserDto {
         data = typeof data === 'object' ? data : {};
         data["firstName"] = this.firstName;
         data["lastName"] = this.lastName;
+        data["phone"] = this.phone;
+        data["birthDay"] = this.birthDay ? this.birthDay.toISOString() : <any>undefined;
         return data;
     }
 }
@@ -716,6 +6524,48 @@ export class UpdateUserDto implements IUpdateUserDto {
 export interface IUpdateUserDto {
     firstName?: string | undefined;
     lastName?: string | undefined;
+    phone?: string | undefined;
+    birthDay?: Date;
+}
+
+export class VerifyEmailInput implements IVerifyEmailInput {
+    email?: string | undefined;
+    code?: string | undefined;
+
+    constructor(data?: IVerifyEmailInput) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.email = _data["email"];
+            this.code = _data["code"];
+        }
+    }
+
+    static fromJS(data: any): VerifyEmailInput {
+        data = typeof data === 'object' ? data : {};
+        let result = new VerifyEmailInput();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["email"] = this.email;
+        data["code"] = this.code;
+        return data;
+    }
+}
+
+export interface IVerifyEmailInput {
+    email?: string | undefined;
+    code?: string | undefined;
 }
 
 export class ApiException extends Error {

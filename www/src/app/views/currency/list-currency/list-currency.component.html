@@ -45,20 +45,6 @@
                       class="me-0.5"
                       ><i class="las la-pen text-secondary font-16"></i
                     ></a>
-                    @if (currency.isEnabled) {
-                      <a
-                        href="javascript:void(0);"
-                        (click)="deactivateCurrency(currency)"
-                        ><i class="las la-lock text-secondary font-16"></i
-                      ></a>
-                    }
-                    @if (!currency.isEnabled) {
-                      <a
-                        href="javascript:void(0);"
-                        (click)="activateCurrency(currency)"
-                        ><i class="las la-unlock text-secondary font-16"></i
-                      ></a>
-                    }
                     <a
                       href="javascript:void(0);"
                       (click)="deleteCurrency(currency)"

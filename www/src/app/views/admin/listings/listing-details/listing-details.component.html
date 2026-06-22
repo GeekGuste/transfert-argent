@@ -1,0 +1,248 @@
+<div class="row justify-content-center">
+  <div class="col-lg-10 col-md-12">
+
+    <!-- Loading -->
+    <div *ngIf="loading" class="d-flex justify-content-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Chargement...</span>
+      </div>
+    </div>
+
+    <!-- Error -->
+    <div *ngIf="error && !loading" class="alert alert-danger border-0">
+      <i class="las la-exclamation-circle me-2"></i>{{ error }}
+    </div>
+
+    <ng-container *ngIf="!loading && listing">
+
+      <!-- Back -->
+      <div class="mb-3">
+        <a routerLink="/views/listings/list" class="text-muted small">
+          <i class="las la-angle-left me-1"></i>Retour à la liste des annonces
+        </a>
+      </div>
+
+      <!-- Main Card -->
+      <div class="card">
+        <div class="card-header">
+          <div class="row align-items-center">
+            <div class="col">
+              <h4 class="card-title mb-0">Détail de l'annonce</h4>
+            </div>
+            <div class="col-auto d-flex gap-2 align-items-center">
+              <span class="badge" [class.bg-success]="listing.isActive" [class.bg-secondary]="!listing.isActive">
+                {{ listing.isActive ? 'Active' : 'Inactive' }}
+              </span>
+              <button class="btn btn-sm btn-outline-danger" (click)="deleteListing()" [disabled]="actionLoading">
+                <span *ngIf="actionLoading" class="spinner-border spinner-border-sm me-1" role="status"></span>
+                <i *ngIf="!actionLoading" class="las la-trash me-1"></i>
+                Supprimer
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-striped mb-0">
+              <tbody>
+                <tr>
+                  <th style="width: 35%" class="text-muted fw-normal">Type d'annonce</th>
+                  <td>
+                    <span class="badge rounded-pill px-3 py-1"
+                      [class.bg-primary]="listing.need?.key === NeedEnumDto.Traveler"
+                      [class.bg-success]="listing.need?.key === NeedEnumDto.Sender">
+                      <i class="las me-1"
+                        [class.la-plane]="listing.need?.key === NeedEnumDto.Traveler"
+                        [class.la-box]="listing.need?.key === NeedEnumDto.Sender"></i>
+                      {{ listing.need?.key === NeedEnumDto.Traveler ? 'Voyageur' : 'Expéditeur' }}
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="text-muted fw-normal">Annonceur</th>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <div class="avatar-sm me-2">
+                        {{ listing.firstName?.charAt(0) }}{{ listing.lastName?.charAt(0) }}
+                      </div>
+                      <div>
+                        <span class="fw-semibold d-block">{{ listing.firstName }} {{ listing.lastName }}</span>
+                        <small class="text-muted">{{ listing.email }}</small>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="text-muted fw-normal">Lieu de départ</th>
+                  <td><i class="las la-map-marker text-danger me-1"></i>{{ listing.departureCity || '—' }}{{ listing.departureCountry?.name ? ', ' + listing.departureCountry!.name : '' }}</td>
+                </tr>
+                <tr>
+                  <th class="text-muted fw-normal">Lieu d'arrivée</th>
+                  <td><i class="las la-map-pin text-success me-1"></i>{{ listing.arrivalCity || '—' }}{{ listing.arrivalCountry?.name ? ', ' + listing.arrivalCountry!.name : '' }}</td>
+                </tr>
+                <tr *ngIf="listing.departureDate">
+                  <th class="text-muted fw-normal">Date de départ</th>
+                  <td><i class="las la-calendar-alt me-1 text-muted"></i>{{ listing.departureDate | date:'longDate' }}</td>
+                </tr>
+                <tr *ngIf="listing.arrivalDate">
+                  <th class="text-muted fw-normal">Date d'arrivée</th>
+                  <td><i class="las la-calendar-alt me-1 text-muted"></i>{{ listing.arrivalDate | date:'longDate' }}</td>
+                </tr>
+                <tr *ngIf="listing.maxTravelDate">
+                  <th class="text-muted fw-normal">Date limite</th>
+                  <td><i class="las la-calendar-alt me-1 text-muted"></i>{{ listing.maxTravelDate | date:'longDate' }}</td>
+                </tr>
+                <tr>
+                  <th class="text-muted fw-normal">Prix par kg</th>
+                  <td>
+                    <span class="fw-bold text-primary">{{ pricePerKg | number:'1.0-2' }}</span>
+                    <span class="text-muted ms-1">/kg</span>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="text-muted fw-normal">Poids</th>
+                  <td><span class="fw-semibold">{{ weightKg | number:'1.0-1' }} kg</span></td>
+                </tr>
+                <tr *ngIf="listing.paymentMethod">
+                  <th class="text-muted fw-normal">Paiement</th>
+                  <td>{{ listing.paymentMethod }}</td>
+                </tr>
+                <tr>
+                  <th class="text-muted fw-normal">Statut</th>
+                  <td>
+                    <span class="badge" [class.bg-success]="listing.isActive" [class.bg-secondary]="!listing.isActive">
+                      {{ listing.isActive ? 'Active' : 'Inactive' }}
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="text-muted fw-normal">Créée le</th>
+                  <td class="text-muted small">{{ listing.dateCreation | date:'longDate' }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Applications Card -->
+      <div class="card mt-4">
+        <div class="card-header">
+          <h4 class="card-title mb-0">
+            Candidatures
+            <span class="badge bg-primary ms-2">{{ listing.applications?.length ?? 0 }}</span>
+          </h4>
+        </div>
+
+        <div class="card-body pt-0">
+          <div *ngIf="!listing.applications || listing.applications.length === 0" class="text-center py-4">
+            <i class="las la-inbox text-muted" style="font-size: 2.5rem"></i>
+            <p class="text-muted mt-2 mb-0">Aucune candidature pour cette annonce.</p>
+          </div>
+
+          <div class="table-responsive" *ngIf="listing.applications && listing.applications.length > 0">
+            <table class="table table-striped mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th>Candidat</th>
+                  <th>Email</th>
+                  <th>Téléphone</th>
+                  <th>Majeur</th>
+                  <th>Date</th>
+                  <th>Message</th>
+                  <th class="text-end">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let app of listing.applications">
+                  <td>
+                    <div class="d-flex align-items-center">
+                      <div class="avatar-sm me-2">{{ app.firstName?.charAt(0) }}{{ app.lastName?.charAt(0) }}</div>
+                      <span class="fw-semibold">{{ app.firstName }} {{ app.lastName }}</span>
+                    </div>
+                  </td>
+                  <td>{{ app.email }}</td>
+                  <td>{{ app.phone || '—' }}</td>
+                  <td>
+                    <span class="badge" [class.bg-success]="app.isAdult" [class.bg-secondary]="!app.isAdult">
+                      {{ app.isAdult ? 'Oui' : 'Non' }}
+                    </span>
+                  </td>
+                  <td class="text-muted small">{{ app.dateCreation | date:'mediumDate' }}</td>
+                  <td>
+                    <span *ngIf="app.description" class="text-truncate d-inline-block"
+                      style="max-width:220px" [title]="app.description">{{ app.description }}</span>
+                    <span *ngIf="!app.description" class="text-muted">—</span>
+                  </td>
+                  <td class="text-end">
+                    <a href="javascript:void(0);" (click)="openApplicationDetail(app)" title="Voir les détails">
+                      <i class="las la-eye text-secondary font-16"></i>
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </ng-container>
+  </div>
+</div>
+
+<!-- Modal Détail Candidature -->
+<div *ngIf="showApplicationModal && selectedApplication"
+  (click)="closeApplicationModal()"
+  style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1055;
+         display:flex;align-items:center;justify-content:center;padding:1rem;">
+  <div (click)="$event.stopPropagation()"
+    style="background:#fff;border-radius:0.75rem;width:100%;max-width:540px;
+           box-shadow:0 20px 60px rgba(0,0,0,0.2);overflow:hidden;">
+    <div class="d-flex justify-content-between align-items-center px-4 pt-4 pb-3 border-bottom">
+      <h5 class="mb-0 fw-bold"><i class="las la-user text-primary me-2"></i>Détail de la candidature</h5>
+      <button class="btn btn-sm btn-light rounded-circle" style="width:36px;height:36px"
+        (click)="closeApplicationModal()">
+        <i class="las la-times"></i>
+      </button>
+    </div>
+    <div class="p-4">
+      <table class="table table-striped mb-0">
+        <tbody>
+          <tr>
+            <th style="width:40%" class="text-muted fw-normal">Candidat</th>
+            <td>{{ selectedApplication.firstName }} {{ selectedApplication.lastName }}</td>
+          </tr>
+          <tr>
+            <th class="text-muted fw-normal">Email</th>
+            <td>{{ selectedApplication.email }}</td>
+          </tr>
+          <tr>
+            <th class="text-muted fw-normal">Téléphone</th>
+            <td>{{ selectedApplication.phone || '—' }}</td>
+          </tr>
+          <tr>
+            <th class="text-muted fw-normal">Majeur</th>
+            <td>
+              <span class="badge" [class.bg-success]="selectedApplication.isAdult"
+                [class.bg-secondary]="!selectedApplication.isAdult">
+                {{ selectedApplication.isAdult ? 'Oui' : 'Non' }}
+              </span>
+            </td>
+          </tr>
+          <tr>
+            <th class="text-muted fw-normal">Date</th>
+            <td>{{ selectedApplication.dateCreation | date:'longDate' }}</td>
+          </tr>
+          <tr *ngIf="selectedApplication.description">
+            <th class="text-muted fw-normal align-top">Message</th>
+            <td style="white-space:pre-wrap">{{ selectedApplication.description }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="px-4 pb-4 d-flex justify-content-end">
+      <button class="btn btn-secondary rounded-pill px-4" (click)="closeApplicationModal()">Fermer</button>
+    </div>
+  </div>
+</div>

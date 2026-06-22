@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 env:
-  NODE_VERSION: 20.x
+  NODE_VERSION: 22.x
 
 jobs:
   build:
@@ -23,7 +23,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: ./www
-        run: npm install
+        run: npm install --legacy-peer-deps
 
       - name: Build project
         working-directory: ./www

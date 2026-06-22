@@ -1,0 +1,200 @@
+<div class="ld-page">
+
+  <app-navbar></app-navbar>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="ld-loading-full">
+    <div class="ld-skeleton-header"></div>
+    <div class="ld-skeleton-body"></div>
+  </div>
+
+  <!-- Error -->
+  <div *ngIf="error && !loading" class="ld-error-page">
+    <i class="fas fa-exclamation-circle ld-error-page__icon"></i>
+    <h4>{{ error }}</h4>
+    <a routerLink="/forms/list" class="ld-btn ld-btn--outline mt-3">
+      <i class="fas fa-arrow-left me-2"></i>Retour aux annonces
+    </a>
+  </div>
+
+  <!-- Content -->
+  <ng-container *ngIf="!loading && listing">
+
+    <!-- Header banner -->
+    <div class="ld-banner">
+      <div class="ld-banner__inner">
+        <a routerLink="/forms/list" class="ld-back">
+          <i class="fas fa-arrow-left me-2"></i>Annonces
+        </a>
+
+        <div class="ld-banner__route">
+          <div class="ld-banner__loc">
+            <span class="ld-banner__dot ld-banner__dot--from"></span>
+            <div>
+              <small>Départ</small>
+              <strong>{{ listing.departureCity || '—' }}{{ listing.departureCountry?.name ? ', ' + listing.departureCountry!.name : '' }}</strong>
+            </div>
+          </div>
+          <i class="fas fa-long-arrow-alt-right ld-banner__arrow"></i>
+          <div class="ld-banner__loc">
+            <span class="ld-banner__dot ld-banner__dot--to"></span>
+            <div>
+              <small>Arrivée</small>
+              <strong>{{ listing.arrivalCity || '—' }}{{ listing.arrivalCountry?.name ? ', ' + listing.arrivalCountry!.name : '' }}</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="ld-banner__badge"
+          [class.ld-banner__badge--traveler]="listing.need?.key === NeedEnumDto.Traveler"
+          [class.ld-banner__badge--sender]="listing.need?.key === NeedEnumDto.Sender">
+          <i [class]="listing.need?.key === NeedEnumDto.Traveler ? 'fas fa-plane me-1' : 'fas fa-box me-1'"></i>
+          {{ listing.need?.key === NeedEnumDto.Traveler ? 'Voyageur' : 'Expéditeur' }}
+        </div>
+      </div>
+    </div>
+
+    <div class="ld-body">
+
+      <!-- Main card -->
+      <div class="ld-card">
+
+        <!-- Price & capacity -->
+        <div class="ld-highlight-row">
+          <div class="ld-highlight-box ld-highlight-box--price">
+            <span class="ld-highlight-box__label"><i class="fas fa-tag me-1"></i>Prix</span>
+            <span class="ld-highlight-box__value">{{ pricePerKg | number:'1.0-2' }}</span>
+            <span class="ld-highlight-box__unit">{{ listing.currency?.symbol || listing.currency?.code || '' }}/kg</span>
+          </div>
+          <div class="ld-highlight-box ld-highlight-box--weight">
+            <span class="ld-highlight-box__label">
+              <i class="fas fa-weight-hanging me-1"></i>
+              {{ listing.need?.key === NeedEnumDto.Traveler ? 'Disponible' : 'Souhaité' }}
+            </span>
+            <span class="ld-highlight-box__value">{{ weightKg | number:'1.0-1' }}</span>
+            <span class="ld-highlight-box__unit">kg</span>
+          </div>
+          <div class="ld-highlight-box" *ngIf="listing.applicationsNumber && listing.applicationsNumber > 0">
+            <span class="ld-highlight-box__label"><i class="fas fa-users me-1"></i>Candidatures</span>
+            <span class="ld-highlight-box__value">{{ listing.applicationsNumber }}</span>
+          </div>
+        </div>
+
+        <!-- Dates -->
+        <div class="ld-section" *ngIf="listing.departureDate || listing.arrivalDate || listing.maxTravelDate">
+          <h6 class="ld-section__title"><i class="fas fa-calendar-alt me-2"></i>Dates</h6>
+          <div class="ld-dates-row">
+            <div class="ld-date-item" *ngIf="listing.departureDate">
+              <span class="ld-date-item__label"><i class="fas fa-plane-departure me-1"></i>Départ</span>
+              <span class="ld-date-item__val">{{ listing.departureDate | date:'dd MMMM yyyy' }}</span>
+            </div>
+            <div class="ld-date-item" *ngIf="listing.arrivalDate">
+              <span class="ld-date-item__label"><i class="fas fa-plane-arrival me-1"></i>Arrivée</span>
+              <span class="ld-date-item__val">{{ listing.arrivalDate | date:'dd MMMM yyyy' }}</span>
+            </div>
+            <div class="ld-date-item" *ngIf="listing.maxTravelDate">
+              <span class="ld-date-item__label"><i class="fas fa-calendar-check me-1"></i>Date limite</span>
+              <span class="ld-date-item__val">{{ listing.maxTravelDate | date:'dd MMMM yyyy' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Payment -->
+        <div class="ld-section" *ngIf="listing.paymentMethod">
+          <h6 class="ld-section__title"><i class="fas fa-credit-card me-2"></i>Paiement accepté</h6>
+          <span class="ld-payment-badge">{{ listing.paymentMethod }}</span>
+        </div>
+
+        <div class="ld-divider"></div>
+
+        <!-- Author + CTA -->
+        <div class="ld-footer">
+          <div class="ld-author">
+            <div class="ld-author__avatar">{{ initials }}</div>
+            <div class="ld-author__info">
+              <strong>{{ listing.firstName }} {{ listing.lastName }}</strong>
+              <small>Annonceur</small>
+            </div>
+          </div>
+          <button class="ld-btn ld-btn--primary ld-cta" (click)="openModal()">
+            <i class="fas fa-paper-plane me-2"></i>Postuler
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </ng-container>
+</div>
+
+<!-- ===== Modal candidature ===== -->
+<div class="ld-modal-overlay" *ngIf="showModal" (click)="closeModal()">
+  <div class="ld-modal" (click)="$event.stopPropagation()">
+
+    <div class="ld-modal__header">
+      <h5><i class="fas fa-paper-plane me-2"></i>Postuler</h5>
+      <button class="ld-modal__close" (click)="closeModal()"><i class="fas fa-times"></i></button>
+    </div>
+
+    <!-- Success -->
+    <div *ngIf="applySuccess" class="ld-modal__success">
+      <i class="fas fa-check-circle ld-modal__success-icon"></i>
+      <h5>Candidature envoyée !</h5>
+      <p>Votre demande a bien été transmise à l'annonceur. Bonne chance !</p>
+      <button class="ld-btn ld-btn--primary mt-3" (click)="closeModal()">Fermer</button>
+    </div>
+
+    <!-- Form -->
+    <form *ngIf="!applySuccess" (ngSubmit)="submitApplication()" #applyForm="ngForm" class="ld-modal__body">
+      <div *ngIf="applyError" class="ld-alert ld-alert--error mb-3">
+        <i class="fas fa-exclamation-circle me-2"></i>{{ applyError }}
+      </div>
+
+      <div class="ld-modal__grid">
+        <div class="ld-field">
+          <label class="ld-field__label">Prénom <span class="text-danger">*</span></label>
+          <input type="text" class="ld-field__input" [(ngModel)]="applicationForm.firstName" name="firstName"
+            placeholder="Votre prénom" required />
+        </div>
+        <div class="ld-field">
+          <label class="ld-field__label">Nom <span class="text-danger">*</span></label>
+          <input type="text" class="ld-field__input" [(ngModel)]="applicationForm.lastName" name="lastName"
+            placeholder="Votre nom" required />
+        </div>
+        <div class="ld-field">
+          <label class="ld-field__label">Email <span class="text-danger">*</span></label>
+          <input type="email" class="ld-field__input" [(ngModel)]="applicationForm.email" name="email"
+            placeholder="vous@exemple.com" required />
+        </div>
+        <div class="ld-field">
+          <label class="ld-field__label">Téléphone <span class="text-danger">*</span></label>
+          <input type="tel" class="ld-field__input" [(ngModel)]="applicationForm.phone" name="phone"
+            placeholder="+33 6 00 00 00 00" required />
+        </div>
+        <div class="ld-field ld-field--full">
+          <label class="ld-field__label">Message (optionnel)</label>
+          <textarea class="ld-field__input ld-field__textarea" [(ngModel)]="applicationForm.description"
+            name="description" rows="3" placeholder="Présentez-vous ou ajoutez un message..."></textarea>
+        </div>
+        <div class="ld-field ld-field--full">
+          <label class="ld-checkbox-label">
+            <input type="checkbox" class="ld-checkbox" [(ngModel)]="applicationForm.isAdult" name="isAdult" required />
+            <span>Je certifie être majeur(e) <span class="text-danger">*</span></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="ld-modal__actions">
+        <button type="button" class="ld-btn ld-btn--outline" (click)="closeModal()" [disabled]="applyLoading">
+          Annuler
+        </button>
+        <button type="submit" class="ld-btn ld-btn--primary" [disabled]="applyLoading || applyForm.invalid">
+          <span *ngIf="applyLoading" class="spinner-border spinner-border-sm me-2" role="status"></span>
+          <i *ngIf="!applyLoading" class="fas fa-paper-plane me-2"></i>
+          {{ applyLoading ? 'Envoi...' : 'Envoyer ma candidature' }}
+        </button>
+      </div>
+    </form>
+
+  </div>
+</div>

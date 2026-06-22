@@ -1,0 +1,539 @@
+$violet: #482890;
+$violet-light: #6b46c1;
+$green: #4CBF88;
+$blue-light: #9FC5FF;
+$bg: #f5f5f5;
+$card-bg: #fff;
+$border: #e8e8e8;
+$text: #2d2d2d;
+$text-muted: #6b7280;
+$error: #e02020;
+$radius: 8px;
+$radius-lg: 12px;
+
+// ======= Page layout =======
+.al-page {
+  background: $bg;
+  min-height: 100vh;
+  font-family: 'Inter', -apple-system, sans-serif;
+  color: $text;
+}
+
+.al-page-header {
+  background: #fff;
+  border-bottom: 1px solid $border;
+  padding: .875rem 1.5rem;
+
+  &__inner {
+    max-width: 960px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  &__title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0;
+    color: $text;
+  }
+}
+
+.al-back-btn {
+  color: $violet;
+  text-decoration: none;
+  font-size: .875rem;
+  white-space: nowrap;
+  transition: color 0.2s;
+  display: inline-flex;
+  align-items: center;
+
+  &:hover { color: darken($violet, 10%); }
+}
+
+.al-body {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 1.5rem;
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.al-main { flex: 1; min-width: 0; }
+
+// ======= Stepper =======
+.al-stepper {
+  margin-bottom: 1.25rem;
+}
+
+.al-stepper__track {
+  display: flex;
+  align-items: center;
+}
+
+.al-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: 48px;
+
+  &__bubble {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 2px solid $border;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .8rem;
+    font-weight: 700;
+    color: $text-muted;
+    transition: all 0.25s;
+  }
+
+  &__label {
+    font-size: .7rem;
+    color: $text-muted;
+    white-space: nowrap;
+    font-weight: 500;
+  }
+
+  &--active {
+    .al-step__bubble {
+      border-color: $violet;
+      background: $violet;
+      color: #fff;
+      box-shadow: 0 0 0 4px rgba($violet, 0.15);
+    }
+    .al-step__label { color: $violet; font-weight: 700; }
+  }
+
+  &--done {
+    .al-step__bubble {
+      border-color: $green;
+      background: $green;
+      color: #fff;
+    }
+    .al-step__label { color: $green; }
+  }
+
+  &--error {
+    .al-step__bubble {
+      border-color: $error;
+      background: $error;
+      color: #fff;
+    }
+    .al-step__label { color: $error; }
+  }
+}
+
+.al-step__line {
+  flex: 1;
+  height: 2px;
+  background: $border;
+  margin-bottom: 22px;
+  transition: background 0.25s;
+
+  &--done { background: $green; }
+}
+
+// ======= Card =======
+.al-card {
+  background: $card-bg;
+  border: 1px solid $border;
+  border-radius: $radius-lg;
+  padding: 1.75rem;
+
+  &__section-title {
+    font-size: .95rem;
+    font-weight: 700;
+    color: $text;
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+  }
+}
+
+// ======= Form elements =======
+.al-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+
+  @media (max-width: 600px) { grid-template-columns: 1fr; }
+}
+
+.al-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.al-label {
+  font-size: .8rem;
+  font-weight: 600;
+  color: $text;
+}
+
+.al-input {
+  border: 1px solid $border;
+  border-radius: $radius;
+  padding: .5rem .75rem;
+  font-size: .9rem;
+  color: $text;
+  background: #fff;
+  transition: border 0.2s;
+  width: 100%;
+  outline: none;
+
+  &:focus { border-color: $violet; box-shadow: 0 0 0 3px rgba($violet, 0.1); }
+  &--error { border-color: $error !important; }
+  &--mono { font-family: monospace; font-size: .8rem; }
+}
+
+.al-select {
+  @extend .al-input;
+  cursor: pointer;
+}
+
+.al-input-addon {
+  display: flex;
+  align-items: stretch;
+
+  .al-input {
+    border-radius: $radius 0 0 $radius;
+    flex: 1;
+  }
+
+  &__select {
+    @extend .al-input;
+    border-radius: 0;
+    border-left: none;
+    cursor: pointer;
+    width: 72px;
+    flex: 0 0 72px;
+    padding-right: .25rem;
+  }
+
+  &__text {
+    background: #f3f3f3;
+    border: 1px solid $border;
+    border-left: none;
+    border-radius: 0 $radius $radius 0;
+    padding: .5rem .75rem;
+    font-size: .85rem;
+    color: $text-muted;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+  }
+}
+
+.al-error {
+  font-size: .75rem;
+  color: $error;
+}
+
+.al-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  cursor: pointer;
+  font-size: .875rem;
+}
+
+.al-checkbox {
+  width: 16px;
+  height: 16px;
+  accent-color: $violet;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.al-link { color: $violet; }
+
+// ======= Type selector =======
+.al-type-selector {
+  display: flex;
+  gap: 1rem;
+
+  @media (max-width: 600px) { flex-direction: column; }
+}
+
+.al-type-card {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  border: 2px solid $border;
+  border-radius: $radius-lg;
+  padding: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  position: relative;
+
+  &:hover { border-color: $violet; background: rgba($violet, .03); }
+
+  &--selected {
+    border-color: $violet;
+    background: rgba($violet, .06);
+  }
+
+  &__icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+
+    &--traveler { background: rgba($violet, .12); color: $violet; }
+    &--sender { background: rgba($green, .12); color: $green; }
+  }
+
+  &__body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    strong { font-size: .9rem; }
+    span { font-size: .78rem; color: $text-muted; }
+  }
+
+  &__check {
+    color: $violet;
+    font-size: 1.1rem;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  &--selected &__check { opacity: 1; }
+}
+
+// ======= Route row =======
+.al-route-row {
+  display: flex;
+  align-items: flex-end;
+  gap: .75rem;
+
+  @media (max-width: 600px) { flex-direction: column; .al-route-arrow { display: none; } }
+}
+
+.al-route-arrow {
+  font-size: 1.2rem;
+  color: $text-muted;
+  padding-bottom: .5rem;
+  flex-shrink: 0;
+}
+
+.al-price-row {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+
+  @media (max-width: 600px) { flex-direction: column; }
+}
+
+// ======= Payment grid =======
+.al-payment-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: .75rem;
+}
+
+.al-payment-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .5rem;
+  border: 2px solid $border;
+  border-radius: $radius-lg;
+  padding: .875rem .5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+  font-size: .8rem;
+  color: $text;
+
+  &:hover { border-color: $violet; background: rgba($violet, .03); }
+
+  &--selected {
+    border-color: $violet;
+    background: rgba($violet, .08);
+    color: $violet;
+    font-weight: 600;
+  }
+
+  &__icon {
+    font-size: 1.25rem;
+    color: $violet;
+  }
+}
+
+// ======= Actions =======
+.al-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid $border;
+
+  &--end { justify-content: flex-end; }
+}
+
+.al-btn {
+  display: inline-flex;
+  align-items: center;
+  border: none;
+  border-radius: $radius;
+  padding: .6rem 1.25rem;
+  font-size: .9rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s;
+
+  &--primary { background: $violet; color: #fff; &:hover { background: darken($violet, 8%); } }
+  &--success { background: $green; color: #fff; &:hover { background: darken($green, 8%); } }
+  &--outline { background: #fff; color: $violet; border: 1.5px solid $violet; &:hover { background: rgba($violet, .06); } }
+  &--icon {
+    background: $violet;
+    color: #fff;
+    padding: .55rem .75rem;
+    border-radius: 0 $radius $radius 0;
+    border: none;
+  }
+
+  &:disabled { opacity: .6; cursor: not-allowed; }
+}
+
+// ======= Alert =======
+.al-alert {
+  border-radius: $radius;
+  padding: .75rem 1rem;
+  font-size: .85rem;
+
+  &--error { background: #fef2f2; color: $error; border: 1px solid #fecaca; }
+}
+
+// ======= Success =======
+.al-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1rem 0;
+
+  &__icon {
+    font-size: 3.5rem;
+    color: $green;
+    margin-bottom: 1rem;
+  }
+
+  &__title { font-size: 1.5rem; font-weight: 800; color: $text; margin-bottom: .5rem; }
+  &__text { color: $text-muted; font-size: .9rem; max-width: 420px; }
+}
+
+.al-manage-link-box {
+  width: 100%;
+  max-width: 480px;
+  background: #f8f7ff;
+  border: 1.5px solid rgba($violet, .25);
+  border-radius: $radius-lg;
+  padding: 1rem;
+  margin-top: 1.5rem;
+  text-align: left;
+
+  &__label { font-size: .8rem; font-weight: 700; color: $violet; margin-bottom: .5rem; }
+  &__row { display: flex; align-items: stretch; .al-input { border-radius: $radius 0 0 $radius; } }
+  &__hint { font-size: .75rem; color: $text-muted; display: block; margin-top: .5rem; }
+}
+
+// ======= Sidebar =======
+.al-sidebar {
+  width: 240px;
+  flex-shrink: 0;
+
+  @media (max-width: 768px) { display: none; }
+}
+
+.al-recap {
+  background: $card-bg;
+  border: 1px solid $border;
+  border-radius: $radius-lg;
+  padding: 1.25rem;
+  position: sticky;
+  top: 1rem;
+
+  &__title {
+    font-size: .85rem;
+    font-weight: 700;
+    color: $text;
+    margin-bottom: 1rem;
+    padding-bottom: .75rem;
+    border-bottom: 1px solid $border;
+  }
+
+  &__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: .6rem;
+    gap: .5rem;
+  }
+
+  &__key { font-size: .75rem; color: $text-muted; flex-shrink: 0; }
+
+  &__val {
+    font-size: .8rem;
+    font-weight: 600;
+    color: $text;
+    text-align: right;
+
+    &--route { display: flex; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+    &--price { color: $violet; font-size: .9rem; }
+  }
+
+  &__divider {
+    height: 1px;
+    background: $border;
+    margin: .75rem 0;
+  }
+
+  &__progress {
+    height: 4px;
+    background: $border;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: .4rem;
+
+    &-bar {
+      height: 100%;
+      background: linear-gradient(90deg, $violet, $blue-light);
+      border-radius: 4px;
+      transition: width 0.4s ease;
+    }
+
+    &-label { font-size: .7rem; color: $text-muted; }
+  }
+}
+
+.al-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 20px;
+  padding: 2px 8px;
+  font-size: .75rem;
+  font-weight: 600;
+
+  &--traveler { background: rgba($violet, .1); color: $violet; }
+  &--sender { background: rgba($green, .12); color: darken($green, 15%); }
+}

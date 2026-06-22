@@ -48,7 +48,10 @@
         <i
           class="las la-birthday-cake me-2 text-secondary fs-22 align-middle"
         ></i>
-        <b> Birth Date </b> : {{ (user.birthday)?user.birthday:"Pas encore de date de naissance" }}
+        <b> Birth Date </b> :
+        {{
+          user.birthdate ? user.birthdate : "Pas encore de date de naissance"
+        }}
       </li>
       <!-- <li class="mt-2">
         <i class="las la-briefcase me-2 text-secondary fs-22 align-middle"></i>
@@ -60,7 +63,8 @@
       </li> -->
       <li class="mt-2">
         <i class="las la-language me-2 text-secondary fs-22 align-middle"></i>
-        <b> Language de préférence </b> : {{ (user.birthday)?user.birthday:"Aucun" }}
+        <b> Language de préférence </b> :
+        {{ user.birthday ? user.birthday : "Aucun" }}
       </li>
       <li class="mt-2">
         <i class="las la-phone me-2 text-secondary fs-22 align-middle"></i>

@@ -24,12 +24,12 @@ export class AuthService {
     this.currentUserSubject.next(currentUser);
   }
 
-  isAuthenticated(){
-    return (localStorage.getItem('access_token')===null || localStorage.getItem('access_token')===undefined || localStorage.getItem('access_token')==='undefined')?false:true;
+  isAuthenticated() {
+    return (localStorage.getItem('access_token') === null || localStorage.getItem('access_token') === undefined || localStorage.getItem('access_token') === 'undefined') ? false : true;
   }
   getUserByToken() {
     const body = {
-      access_token : JSON.parse(localStorage.getItem('access_token') || 'null')
+      access_token: JSON.parse(localStorage.getItem('access_token') || 'null')
     }
     return this.httpClient.get(this.endpoint + '/users/me');
   }
@@ -64,7 +64,7 @@ export class AuthService {
     );
   }
 
-  submitForgotPassword(resetForm: any){
+  submitForgotPassword(resetForm: any) {
     return this.httpClient.get(this.endpoint + '/users/me/reset-password', { params: { email: resetForm.email } });
   }
 
@@ -85,16 +85,16 @@ export class AuthService {
     return this.httpClient.post(this.endpoint + '/configuration/update', update);
   }
 
-  initConfig(){
+  initConfig() {
     return this.httpClient.get(this.endpoint + '/configuration');
 
   }
 
-  resetPassword(resetForm:any){
+  resetPassword(resetForm: any) {
     const body = {
-      code:resetForm.code,
-      newPassword:resetForm.password,
-      email:resetForm.email
+      code: resetForm.code,
+      newPassword: resetForm.password,
+      email: resetForm.email
     }
     return this.httpClient.post(this.endpoint + '/users/me/reset-password', body);
   }
@@ -103,7 +103,7 @@ export class AuthService {
     console.log('AuthService verifyEmail called with', request);
     return this.httpClient.post(this.endpoint + '/users/verify-email', request).pipe(
       map((loginResponse: any) => {
-            console.log('response', loginResponse);
+        console.log('response', loginResponse);
 
         localStorage.setItem(
           'access_token',
@@ -118,12 +118,12 @@ export class AuthService {
   }
 
   reSendCode(request: any) {
-  const email = request.email;  // 👉 récupération de l'email dans request
+    const email = request.email;  // 👉 récupération de l'email dans request
 
-  return this.httpClient.get(this.endpoint + '/users/resend-code', {
-    params: { email: email }
-  });
-}
+    return this.httpClient.get(this.endpoint + '/users/resend-code', {
+      params: { email: email }
+    });
+  }
 
 
 }

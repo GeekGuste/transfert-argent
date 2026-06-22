@@ -1,12 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { LanguageService } from '../../../core/service/language.service';
+import { ListingService } from '../../../core/service/ws/listing/listing.service';
+import { CountryService } from '../../../core/service/ws/country/country.service';
+import { CountryDto, ListingDto, NeedEnumDto } from '../../../api/webapiservice';
 
 interface Step {
   title: string;
   description: string;
-  iconPath: string;
+  icon: string;
 }
 
 interface Value {
@@ -46,16 +50,26 @@ interface Language {
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
 export class HomeComponent implements OnInit {
+  NeedEnumDto = NeedEnumDto;
   mobileMenuOpen = false;
   languageDropdownOpen = false;
   currentLanguage: string = 'fr';
 
-  // Langues disponibles pour un projet international
+  recentListings: ListingDto[] = [];
+  listingsLoading = true;
+  countries: CountryDto[] = [];
+
+  searchDepartureCountryId = '';
+  searchDepartureCity = '';
+  searchArrivalCountryId = '';
+  searchArrivalCity = '';
+  searchType: NeedEnumDto | '' = '';
+
   languages: Language[] = [
     { code: 'fr', name: 'Français', flag: '🇫🇷' },
     { code: 'en', name: 'English', flag: '🇬🇧' },
@@ -64,31 +78,21 @@ export class HomeComponent implements OnInit {
     { code: 'ar', name: 'العربية', flag: '🇸🇦' }
   ];
 
-  constructor(private languageService: LanguageService) {
-    // Récupérer la langue actuelle
-    this.currentLanguage = this.languageService.getCurrentLanguage();
-  }
-
   steps: Step[] = [
     {
-      title: 'Inscription rapide',
-      description: 'Créez votre compte en quelques minutes avec une vérification d\'identité sécurisée.',
-      iconPath: 'M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8z'
+      title: 'Publiez une annonce',
+      description: 'Créez une annonce en 2 minutes : voyageur avec de la place, ou expéditeur en recherche.',
+      icon: 'fas fa-plus-circle',
     },
     {
-      title: 'Publication d\'une demande',
-      description: 'Publiez votre demande de transfert d\'argent ou d\'envoi de colis avec tous les détails.',
-      iconPath: 'M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z'
+      title: 'Entrez en contact',
+      description: 'Parcourez les annonces et contactez directement la personne qui correspond à vos besoins.',
+      icon: 'fas fa-handshake',
     },
     {
-      title: 'Mise en relation',
-      description: 'Notre algorithme vous met en relation avec des utilisateurs vérifiés et de confiance.',
-      iconPath: 'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75M9 7a4 4 0 1 0 0 8 4 4 0 0 0 0-8z'
-    },
-    {
-      title: 'Paiement & livraison',
-      description: 'Effectuez le paiement sécurisé et suivez votre transfert ou colis en temps réel.',
-      iconPath: 'M22 11.08V12a10 10 0 1 1-5.93-9.14M22 4L12 14.01l-3-3'
+      title: 'Gérez facilement',
+      description: 'Validez les demandes reçues via votre lien personnel. Aucun compte requis.',
+      icon: 'fas fa-check-circle',
     }
   ];
 
@@ -98,12 +102,6 @@ export class HomeComponent implements OnInit {
       description: 'Frais clairs et affichés dès le départ. Aucun frais caché, jamais.',
       iconPath: 'M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8zM12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z',
       stat: '0% frais cachés'
-    },
-    {
-      title: 'Authenticité',
-      description: 'Vérification d\'identité obligatoire pour tous les utilisateurs de la plateforme.',
-      iconPath: 'M22 11.08V12a10 10 0 1 1-5.93-9.14M22 4L12 14.01l-3-3',
-      stat: '100% vérifiés'
     },
     {
       title: 'Sécurité',
@@ -127,25 +125,25 @@ export class HomeComponent implements OnInit {
 
   testimonials: Testimonial[] = [
     {
-      name: 'Aminata Diallo',
-      location: 'Paris → Dakar',
+      name: 'Sophie Martin',
+      location: 'Paris → Montréal',
       avatar: 'https://i.pravatar.cc/150?img=1',
-      text: 'J\'envoie de l\'argent à ma famille au Sénégal chaque mois. GlobRel est rapide, sûr et les frais sont vraiment compétitifs. Je recommande !',
-      type: 'Transfert d\'argent'
-    },
-    {
-      name: 'Jean-Marc Kouassi',
-      location: 'Abidjan → Lyon',
-      avatar: 'https://i.pravatar.cc/150?img=12',
-      text: 'J\'ai envoyé un colis important avec GlobRel. Le suivi en temps réel m\'a rassuré et tout s\'est parfaitement déroulé. Service excellent !',
+      text: 'J\'envoie régulièrement des colis à ma famille au Canada. GlobRel est rapide, les frais sont transparents et le service vraiment fiable. Je recommande !',
       type: 'Envoi de colis'
     },
     {
-      name: 'Fatou Ndiaye',
-      location: 'Bruxelles → Bamako',
+      name: 'Omar Al-Rashid',
+      location: 'Dubaï → Paris',
+      avatar: 'https://i.pravatar.cc/150?img=12',
+      text: 'J\'ai trouvé un voyageur en moins d\'une heure pour transporter un cadeau à ma sœur. Tout s\'est parfaitement déroulé, je suis bluffé par la simplicité.',
+      type: 'Voyageur'
+    },
+    {
+      name: 'Luisa Ferreira',
+      location: 'Lisbonne → São Paulo',
       avatar: 'https://i.pravatar.cc/150?img=5',
-      text: 'Interface simple et intuitive. J\'ai pu envoyer de l\'argent à ma mère en quelques clics. Le service client est très réactif.',
-      type: 'Transfert d\'argent'
+      text: 'Interface simple et intuitive. En quelques clics j\'ai trouvé quelqu\'un de confiance pour envoyer un colis à ma famille au Brésil. Service excellent.',
+      type: 'Expéditeur'
     }
   ];
 
@@ -159,56 +157,86 @@ export class HomeComponent implements OnInit {
   faqs: FAQ[] = [
     {
       question: 'Est-ce sécurisé ?',
-      answer: 'Oui, absolument. Nous utilisons un cryptage SSL 256-bit pour protéger toutes vos données. Tous les paiements sont sécurisés via des partenaires bancaires certifiés. De plus, tous les utilisateurs doivent vérifier leur identité avant d\'utiliser la plateforme.',
+      answer: 'Oui, absolument. Nous utilisons un cryptage SSL 256-bit pour protéger toutes vos données.',
       open: false
     },
     {
-      question: 'Comment sont protégés les paiements ?',
-      answer: 'Les paiements sont protégés par un système d\'entiercement (escrow). L\'argent est bloqué jusqu\'à ce que le destinataire confirme la réception. En cas de litige, notre équipe intervient pour résoudre le problème et protéger les deux parties.',
+      question: 'Faut-il créer un compte ?',
+      answer: 'Non ! Vous pouvez publier une annonce sans compte. Vous recevrez un lien unique par email pour gérer votre annonce et valider les candidatures.',
       open: false
     },
     {
-      question: 'Que se passe-t-il en cas de problème ?',
-      answer: 'Notre service client est disponible 24/7 pour vous aider. En cas de problème avec un transfert ou un colis, nous avons une procédure de résolution de litiges. Tous les envois de colis sont assurés et les transferts d\'argent sont garantis.',
-      open: false
-    },
-    {
-      question: 'Qui peut utiliser la plateforme ?',
-      answer: 'Toute personne majeure (18 ans et plus) peut s\'inscrire sur GlobRel. Vous devez fournir une pièce d\'identité valide pour la vérification. La plateforme est disponible dans tous les pays où nous opérons.',
+      question: 'Comment fonctionne la mise en relation ?',
+      answer: 'Voyageurs et expéditeurs publient des annonces. Chacun peut envoyer une demande. Le créateur valide les demandes via son lien de gestion personnel.',
       open: false
     },
     {
       question: 'Quels sont les frais ?',
-      answer: 'Nos frais sont transparents et affichés avant chaque transaction. Pour les transferts d\'argent, les frais varient entre 2% et 5% selon le montant et la destination. Pour les colis, les prix sont négociables directement avec le transporteur.',
+      answer: 'La plateforme est gratuite pour publier et consulter les annonces. Les conditions de prix sont fixées directement entre les utilisateurs.',
       open: false
     },
     {
-      question: 'Combien de temps prend un transfert ?',
-      answer: 'Les transferts d\'argent sont généralement instantanés ou prennent jusqu\'à 24h selon la méthode de paiement choisie. Pour les colis, le délai dépend de la disponibilité des transporteurs et de la destination, généralement entre 3 et 10 jours.',
+      question: 'Que se passe-t-il en cas de problème ?',
+      answer: 'Notre service client est disponible pour vous aider. Tous les envois de colis sont assurés.',
       open: false
     }
   ];
 
+  constructor(
+    private languageService: LanguageService,
+    private listingService: ListingService,
+    private countryService: CountryService,
+    private router: Router
+  ) {
+    this.currentLanguage = this.languageService.getCurrentLanguage();
+  }
+
   ngOnInit(): void {
-    // Animation au scroll (optionnel)
+    this.loadRecentListings();
+    this.loadCountries();
     this.setupScrollAnimations();
   }
 
-  toggleMobileMenu(): void {
-    this.mobileMenuOpen = !this.mobileMenuOpen;
+  loadCountries(): void {
+    this.countryService.getActiveCountries().subscribe({
+      next: (res) => { this.countries = res.countries ?? []; },
+    });
   }
 
-  closeMobileMenu(): void {
-    this.mobileMenuOpen = false;
+  loadRecentListings(): void {
+    this.listingsLoading = true;
+    this.listingService.getListings().subscribe({
+      next: (res) => {
+        const all = (res.listings ?? []).filter(l => l.isActive !== false);
+        this.recentListings = all.slice(0, 6);
+        this.listingsLoading = false;
+      },
+      error: () => { this.listingsLoading = false; }
+    });
   }
 
-  toggleLanguageDropdown(): void {
-    this.languageDropdownOpen = !this.languageDropdownOpen;
+  quickSearch(): void {
+    const params: Record<string, string> = {};
+    if (this.searchDepartureCountryId) params['departureCountryId'] = this.searchDepartureCountryId;
+    if (this.searchDepartureCity) params['departureCity'] = this.searchDepartureCity;
+    if (this.searchArrivalCountryId) params['arrivalCountryId'] = this.searchArrivalCountryId;
+    if (this.searchArrivalCity) params['arrivalCity'] = this.searchArrivalCity;
+    if (this.searchType) params['need'] = this.searchType;
+    this.router.navigate(['/forms/list'], { queryParams: params });
   }
 
-  closeLanguageDropdown(): void {
-    this.languageDropdownOpen = false;
+  pricePerKg(listing: ListingDto): number {
+    return listing.pricePerKg ?? 0;
   }
+
+  weightKg(grams: number | null | undefined): number {
+    return (grams ?? 0) / 1000;
+  }
+
+  toggleMobileMenu(): void { this.mobileMenuOpen = !this.mobileMenuOpen; }
+  closeMobileMenu(): void { this.mobileMenuOpen = false; }
+  toggleLanguageDropdown(): void { this.languageDropdownOpen = !this.languageDropdownOpen; }
+  closeLanguageDropdown(): void { this.languageDropdownOpen = false; }
 
   changeLanguage(languageCode: string): void {
     this.currentLanguage = languageCode;
@@ -217,13 +245,11 @@ export class HomeComponent implements OnInit {
   }
 
   getCurrentLanguageName(): string {
-    const lang = this.languages.find(l => l.code === this.currentLanguage);
-    return lang ? lang.name : 'Français';
+    return this.languages.find(l => l.code === this.currentLanguage)?.name ?? 'Français';
   }
 
   getCurrentLanguageFlag(): string {
-    const lang = this.languages.find(l => l.code === this.currentLanguage);
-    return lang ? lang.flag : '🇫🇷';
+    return this.languages.find(l => l.code === this.currentLanguage)?.flag ?? '🇫🇷';
   }
 
   toggleFaq(index: number): void {
@@ -231,26 +257,14 @@ export class HomeComponent implements OnInit {
   }
 
   private setupScrollAnimations(): void {
-    // Utilisation de IntersectionObserver pour les animations au scroll
     if (typeof window !== 'undefined' && 'IntersectionObserver' in window) {
       const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('animate-in');
-            }
-          });
-        },
-        {
-          threshold: 0.1,
-          rootMargin: '0px 0px -50px 0px'
-        }
+        (entries) => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('animate-in'); }),
+        { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
       );
-
-      // Observer les sections après un court délai pour s'assurer que le DOM est chargé
       setTimeout(() => {
-        const sections = document.querySelectorAll('.step-card, .service-card, .value-card, .testimonial-card');
-        sections.forEach((section) => observer.observe(section));
+        document.querySelectorAll('.step-card, .value-card, .testimonial-card, .listing-card')
+          .forEach(el => observer.observe(el));
       }, 100);
     }
   }

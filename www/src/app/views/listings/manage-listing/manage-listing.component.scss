@@ -1,0 +1,295 @@
+$violet: #482890;
+$green: #4CBF88;
+$red: #dc2626;
+$border: #e8e8e8;
+$bg: #f5f5f5;
+$text: #2d2d2d;
+$text-muted: #6b7280;
+$radius: 8px;
+$radius-lg: 12px;
+
+.mg-page {
+  background: $bg;
+  min-height: 100vh;
+  font-family: 'Inter', -apple-system, sans-serif;
+  color: $text;
+}
+
+// ======= Page sub-header =======
+.mg-page-header {
+  background: #fff;
+  border-bottom: 1px solid $border;
+  padding: .875rem 1.5rem;
+
+  &__inner {
+    max-width: 720px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  &__title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: $text;
+  }
+}
+
+.mg-back {
+  color: $violet;
+  text-decoration: none;
+  font-size: .875rem;
+  white-space: nowrap;
+  transition: color .2s;
+
+  &:hover { color: darken($violet, 10%); }
+}
+
+// ======= Body =======
+.mg-body {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+// ======= Card =======
+.mg-card {
+  background: #fff;
+  border: 1px solid $border;
+  border-radius: $radius-lg;
+  margin-bottom: 1.25rem;
+  overflow: hidden;
+
+  &--info { padding: 1.5rem; }
+
+  &__row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid $border;
+  }
+
+  &__header-title { font-size: .95rem; font-weight: 700; margin: 0; }
+}
+
+// ======= Status =======
+.mg-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: .78rem;
+  font-weight: 700;
+
+  &__dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+  }
+
+  &--active { background: rgba($green,.15); color: darken($green,15%); .mg-status-badge__dot { background: $green; } }
+  &--inactive { background: #f3f3f3; color: $text-muted; .mg-status-badge__dot { background: #d1d5db; } }
+}
+
+// ======= Info route =======
+.mg-info-route {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+
+  &__badge {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-size: .75rem;
+    font-weight: 600;
+
+    &--traveler { background: rgba($violet,.1); color: $violet; }
+    &--sender { background: rgba($green,.12); color: darken($green,15%); }
+  }
+
+  &__path {
+    font-size: .95rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+}
+
+// ======= Meta =======
+.mg-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .75rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid $border;
+}
+
+.mg-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  font-size: .8rem;
+  color: $text-muted;
+  background: $bg;
+  border-radius: 20px;
+  padding: 3px 10px;
+
+  i { font-size: .75rem; }
+}
+
+.mg-badge-count {
+  background: $violet;
+  color: #fff;
+  border-radius: 20px;
+  padding: 2px 8px;
+  font-size: .78rem;
+  font-weight: 700;
+}
+
+// ======= Actions =======
+.mg-actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .75rem;
+}
+
+// ======= Buttons =======
+.mg-btn {
+  display: inline-flex;
+  align-items: center;
+  border: none;
+  border-radius: $radius;
+  padding: .55rem 1.1rem;
+  font-size: .875rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all .2s;
+
+  &--primary { background: $violet; color: #fff; &:hover { background: darken($violet,8%); } }
+  &--success { background: $green; color: #fff; &:hover { background: darken($green,8%); } }
+  &--outline { background: #fff; color: $violet; border: 1.5px solid $violet; &:hover { background: rgba($violet,.06); } }
+  &--danger-outline { background: #fff; color: $red; border: 1.5px solid $red; &:hover { background: rgba($red,.05); } }
+
+  &:disabled { opacity: .5; cursor: not-allowed; }
+}
+
+// ======= Application item =======
+.mg-app-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid $border;
+  flex-wrap: wrap;
+
+  &--last { border-bottom: none; }
+
+  &__avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba($violet,.12);
+    color: $violet;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: .875rem;
+    flex-shrink: 0;
+    text-transform: uppercase;
+  }
+
+  &__body { flex: 1; min-width: 180px; }
+
+  &__name { font-size: .95rem; font-weight: 700; margin-bottom: .25rem; }
+
+  &__contact {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .75rem;
+    font-size: .78rem;
+    color: $text-muted;
+    margin-bottom: .25rem;
+  }
+
+  &__msg { font-size: .8rem; color: $text-muted; font-style: italic; margin-bottom: .25rem; }
+  &__date { font-size: .75rem; color: $text-muted; }
+
+  &__validate { flex-shrink: 0; align-self: center; }
+}
+
+// ======= Empty =======
+.mg-empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: $text-muted;
+
+  &__icon { font-size: 2.5rem; color: #d1d5db; display: block; margin-bottom: .75rem; }
+  p { font-size: .9rem; margin-bottom: .25rem; }
+  small { font-size: .8rem; }
+}
+
+// ======= Success banner =======
+.mg-success-banner {
+  background: rgba($green,.12);
+  color: darken($green,20%);
+  border: 1px solid rgba($green,.3);
+  border-radius: $radius;
+  padding: .75rem 1rem;
+  font-size: .875rem;
+  font-weight: 600;
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+}
+
+// ======= Info note =======
+.mg-info-note {
+  background: rgba($violet,.06);
+  border: 1px solid rgba($violet,.15);
+  border-radius: $radius;
+  padding: .75rem 1rem;
+  font-size: .8rem;
+  color: $violet;
+  display: flex;
+  align-items: center;
+}
+
+// ======= Error =======
+.mg-error {
+  text-align: center;
+  padding: 4rem 1rem;
+  color: $text-muted;
+
+  &__icon { font-size: 3rem; color: #fbbf24; display: block; margin-bottom: 1rem; }
+  h4 { color: $text; }
+}
+
+// ======= Loading =======
+.mg-loading { }
+
+.mg-skeleton {
+  border-radius: $radius-lg;
+  background: linear-gradient(90deg,#e8e8e8 25%,#f3f3f3 50%,#e8e8e8 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s infinite;
+}
+
+@keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
