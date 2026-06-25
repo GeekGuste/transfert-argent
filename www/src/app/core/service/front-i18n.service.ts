@@ -3,6 +3,19 @@ import { LanguageService } from './language.service';
 
 const DICT: Record<string, Record<string, string>> = {
   fr: {
+    // Feedback widget
+    'feedback.btn': 'Donner mon avis',
+    'feedback.title': 'Votre avis nous intéresse',
+    'feedback.sub': "Partagez vos retours pour nous aider à améliorer la plateforme.",
+    'feedback.message': 'Message',
+    'feedback.message.placeholder': 'Décrivez votre expérience, suggérez une amélioration...',
+    'feedback.email': 'Email',
+    'feedback.email.placeholder': 'votre@email.com',
+    'feedback.optional': 'facultatif',
+    'feedback.cancel': 'Annuler',
+    'feedback.send': 'Envoyer',
+    'feedback.success': 'Merci pour votre retour ! Nous en tiendrons compte.',
+
     // Navbar
     'nav.home': 'Accueil',
     'nav.listings': 'Annonces',
@@ -225,6 +238,19 @@ const DICT: Record<string, Record<string, string>> = {
   },
 
   en: {
+    // Feedback widget
+    'feedback.btn': 'Give feedback',
+    'feedback.title': 'Your opinion matters',
+    'feedback.sub': 'Share your feedback to help us improve the platform.',
+    'feedback.message': 'Message',
+    'feedback.message.placeholder': 'Describe your experience, suggest an improvement...',
+    'feedback.email': 'Email',
+    'feedback.email.placeholder': 'your@email.com',
+    'feedback.optional': 'optional',
+    'feedback.cancel': 'Cancel',
+    'feedback.send': 'Send',
+    'feedback.success': 'Thank you for your feedback! We will take it into account.',
+
     // Navbar
     'nav.home': 'Home',
     'nav.listings': 'Listings',

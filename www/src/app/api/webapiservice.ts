@@ -432,6 +432,161 @@ export class Client {
     /**
      * @return OK
      */
+    createFeedback(body: CreateFeedbackInput): Promise<void> {
+        let url_ = this.baseUrl + "/feedbacks";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(body);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processCreateFeedback(_response);
+        });
+    }
+
+    protected processCreateFeedback(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @param isRead (optional) 
+     * @return OK
+     */
+    getFeedbacks(isRead: boolean | undefined): Promise<GetFeedbacksOutput> {
+        let url_ = this.baseUrl + "/feedbacks?";
+        if (isRead === null)
+            throw new Error("The parameter 'isRead' cannot be null.");
+        else if (isRead !== undefined)
+            url_ += "isRead=" + encodeURIComponent("" + isRead) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetFeedbacks(_response);
+        });
+    }
+
+    protected processGetFeedbacks(response: Response): Promise<GetFeedbacksOutput> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = GetFeedbacksOutput.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<GetFeedbacksOutput>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    markFeedbackAsRead(id: string, isRead: boolean): Promise<void> {
+        let url_ = this.baseUrl + "/feedbacks/{id}/read?";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        if (isRead === undefined || isRead === null)
+            throw new Error("The parameter 'isRead' must be defined and cannot be null.");
+        else
+            url_ += "isRead=" + encodeURIComponent("" + isRead) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "PATCH",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processMarkFeedbackAsRead(_response);
+        });
+    }
+
+    protected processMarkFeedbackAsRead(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    deleteFeedback(id: string): Promise<void> {
+        let url_ = this.baseUrl + "/feedbacks/{id}";
+        if (id === undefined || id === null)
+            throw new Error("The parameter 'id' must be defined.");
+        url_ = url_.replace("{id}", encodeURIComponent("" + id));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "DELETE",
+            headers: {
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processDeleteFeedback(_response);
+        });
+    }
+
+    protected processDeleteFeedback(response: Response): Promise<void> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            return;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<void>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
     createListing(body: ListingInput): Promise<ListingDto> {
         let url_ = this.baseUrl + "/listings";
         url_ = url_.replace(/[?&]$/, "");
@@ -2869,6 +3024,46 @@ export interface ICountryDto {
     isEnabled?: boolean;
 }
 
+export class CreateFeedbackInput implements ICreateFeedbackInput {
+    email?: string | undefined;
+    message?: string | undefined;
+
+    constructor(data?: ICreateFeedbackInput) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.email = _data["email"];
+            this.message = _data["message"];
+        }
+    }
+
+    static fromJS(data: any): CreateFeedbackInput {
+        data = typeof data === 'object' ? data : {};
+        let result = new CreateFeedbackInput();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["email"] = this.email;
+        data["message"] = this.message;
+        return data;
+    }
+}
+
+export interface ICreateFeedbackInput {
+    email?: string | undefined;
+    message?: string | undefined;
+}
+
 export class CreateSubscriptionInput implements ICreateSubscriptionInput {
     name?: string | undefined;
     amount?: number;
@@ -3351,6 +3546,58 @@ export interface IException {
     stackTrace?: string | undefined;
 }
 
+export class FeedbackDto implements IFeedbackDto {
+    id?: string | undefined;
+    email?: string | undefined;
+    message?: string | undefined;
+    isRead?: boolean;
+    createdAt?: Date;
+
+    constructor(data?: IFeedbackDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.email = _data["email"];
+            this.message = _data["message"];
+            this.isRead = _data["isRead"];
+            this.createdAt = _data["createdAt"] ? new Date(_data["createdAt"].toString()) : <any>undefined;
+        }
+    }
+
+    static fromJS(data: any): FeedbackDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new FeedbackDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["email"] = this.email;
+        data["message"] = this.message;
+        data["isRead"] = this.isRead;
+        data["createdAt"] = this.createdAt ? this.createdAt.toISOString() : <any>undefined;
+        return data;
+    }
+}
+
+export interface IFeedbackDto {
+    id?: string | undefined;
+    email?: string | undefined;
+    message?: string | undefined;
+    isRead?: boolean;
+    createdAt?: Date;
+}
+
 export enum FieldAttributes {
     _0 = 0,
     _1 = 1,
@@ -3663,6 +3910,58 @@ export interface IGetCurrencyDto {
     label?: string | undefined;
     symbol?: string | undefined;
     id?: string | undefined;
+}
+
+export class GetFeedbacksOutput implements IGetFeedbacksOutput {
+    feedbacks?: FeedbackDto[] | undefined;
+    totalCount?: number;
+    unreadCount?: number;
+
+    constructor(data?: IGetFeedbacksOutput) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["feedbacks"])) {
+                this.feedbacks = [] as any;
+                for (let item of _data["feedbacks"])
+                    this.feedbacks!.push(FeedbackDto.fromJS(item));
+            }
+            this.totalCount = _data["totalCount"];
+            this.unreadCount = _data["unreadCount"];
+        }
+    }
+
+    static fromJS(data: any): GetFeedbacksOutput {
+        data = typeof data === 'object' ? data : {};
+        let result = new GetFeedbacksOutput();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.feedbacks)) {
+            data["feedbacks"] = [];
+            for (let item of this.feedbacks)
+                data["feedbacks"].push(item ? item.toJSON() : <any>undefined);
+        }
+        data["totalCount"] = this.totalCount;
+        data["unreadCount"] = this.unreadCount;
+        return data;
+    }
+}
+
+export interface IGetFeedbacksOutput {
+    feedbacks?: FeedbackDto[] | undefined;
+    totalCount?: number;
+    unreadCount?: number;
 }
 
 export class GetListingsOutput implements IGetListingsOutput {
