@@ -230,6 +230,172 @@ $text-muted: rgba(255, 255, 255, 0.65);
   margin: .5rem 0;
 }
 
+// ======= Feedback floating button =======
+.gr-feedback-btn {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 1100;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: $violet;
+  border: none;
+  color: #fff;
+  font-size: 1.25rem;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(72, 40, 144, .4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform .2s, box-shadow .2s;
+
+  &:hover { transform: scale(1.08); box-shadow: 0 6px 20px rgba(72, 40, 144, .5); }
+}
+
+// Overlay
+.gr-feedback-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.25);
+  z-index: 1099;
+}
+
+// Panel
+.gr-feedback-panel {
+  position: fixed;
+  bottom: 5rem;
+  right: 1.5rem;
+  z-index: 1110;
+  width: 340px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.18);
+  overflow: hidden;
+
+  @media (max-width: 400px) { width: calc(100vw - 2rem); right: 1rem; }
+
+  &__header {
+    background: $violet;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: .85rem 1rem;
+    font-size: .9rem;
+    font-weight: 600;
+  }
+
+  &__close {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,.8);
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0;
+    line-height: 1;
+    &:hover { color: #fff; }
+  }
+
+  &__body {
+    padding: 1rem;
+  }
+
+  &__sub {
+    font-size: .8rem;
+    color: #6b7280;
+    margin-bottom: .75rem;
+  }
+
+  &__actions {
+    display: flex;
+    gap: .5rem;
+    justify-content: flex-end;
+    margin-top: .75rem;
+  }
+
+  &__success {
+    padding: 2rem 1rem;
+    text-align: center;
+    color: #16a34a;
+
+    p { margin: .75rem 0 0; font-size: .9rem; font-weight: 500; color: #374151; }
+  }
+
+  &__success-icon {
+    font-size: 2.5rem;
+    color: #16a34a;
+  }
+}
+
+.gr-feedback-field { margin-bottom: .75rem; }
+
+.gr-feedback-label {
+  display: block;
+  font-size: .8rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: .3rem;
+}
+
+.gr-feedback-optional {
+  font-weight: 400;
+  color: #9ca3af;
+  font-size: .75rem;
+}
+
+.gr-feedback-textarea,
+.gr-feedback-input {
+  width: 100%;
+  border: 1.5px solid #d1d5db;
+  border-radius: 8px;
+  padding: .5rem .75rem;
+  font-size: .875rem;
+  color: #1f2937;
+  outline: none;
+  resize: vertical;
+  transition: border-color .2s;
+  background: #f9fafb;
+
+  &:focus { border-color: $violet; background: #fff; }
+}
+
+.gr-feedback-error {
+  font-size: .8rem;
+  color: #dc2626;
+  margin-top: .5rem;
+}
+
+.gr-feedback-cancel {
+  background: none;
+  border: 1.5px solid #d1d5db;
+  border-radius: 7px;
+  color: #6b7280;
+  padding: .4rem .9rem;
+  font-size: .8rem;
+  cursor: pointer;
+  transition: all .2s;
+  &:hover { border-color: #9ca3af; color: #374151; }
+  &:disabled { opacity: .5; cursor: not-allowed; }
+}
+
+.gr-feedback-submit {
+  background: $violet;
+  border: none;
+  border-radius: 7px;
+  color: #fff;
+  padding: .4rem .9rem;
+  font-size: .8rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background .2s;
+  &:hover { background: darken($violet, 8%); }
+  &:disabled { opacity: .5; cursor: not-allowed; }
+}
+
+// ======= Mobile drawer (keep existing) =======
 .gr-nav__mobile-btn {
   display: inline-flex;
   align-items: center;

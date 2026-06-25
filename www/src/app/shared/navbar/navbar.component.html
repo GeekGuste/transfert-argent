@@ -75,3 +75,54 @@
     </div>
   </div>
 </nav>
+
+<!-- Floating feedback button -->
+<button class="gr-feedback-btn" (click)="openFeedback()" [title]="'feedback.btn' | i18n" aria-label="Feedback">
+  <i class="fas fa-comment-dots"></i>
+</button>
+
+<!-- Feedback overlay -->
+<div class="gr-feedback-overlay" *ngIf="feedbackOpen" (click)="closeFeedback()"></div>
+<div class="gr-feedback-panel" *ngIf="feedbackOpen">
+  <div class="gr-feedback-panel__header">
+    <span><i class="fas fa-comment-dots me-2"></i>{{ 'feedback.title' | i18n }}</span>
+    <button class="gr-feedback-panel__close" (click)="closeFeedback()"><i class="fas fa-times"></i></button>
+  </div>
+
+  <div class="gr-feedback-panel__success" *ngIf="feedbackSuccess">
+    <i class="fas fa-check-circle gr-feedback-panel__success-icon"></i>
+    <p>{{ 'feedback.success' | i18n }}</p>
+  </div>
+
+  <div class="gr-feedback-panel__body" *ngIf="!feedbackSuccess">
+    <p class="gr-feedback-panel__sub">{{ 'feedback.sub' | i18n }}</p>
+
+    <div class="gr-feedback-field">
+      <label class="gr-feedback-label">{{ 'feedback.message' | i18n }} <span class="text-danger">*</span></label>
+      <textarea class="gr-feedback-textarea" [(ngModel)]="feedbackMessage" rows="4"
+        [placeholder]="'feedback.message.placeholder' | i18n"></textarea>
+    </div>
+
+    <div class="gr-feedback-field">
+      <label class="gr-feedback-label">{{ 'feedback.email' | i18n }} <span class="gr-feedback-optional">({{ 'feedback.optional' | i18n }})</span></label>
+      <input type="email" class="gr-feedback-input" [(ngModel)]="feedbackEmail"
+        [placeholder]="'feedback.email.placeholder' | i18n" />
+    </div>
+
+    <div class="gr-feedback-error" *ngIf="feedbackError">
+      <i class="fas fa-exclamation-circle me-1"></i>{{ feedbackError }}
+    </div>
+
+    <div class="gr-feedback-panel__actions">
+      <button class="gr-feedback-cancel" type="button" (click)="closeFeedback()" [disabled]="feedbackLoading">
+        {{ 'feedback.cancel' | i18n }}
+      </button>
+      <button class="gr-feedback-submit" type="button" (click)="submitFeedback()"
+        [disabled]="feedbackLoading || !feedbackMessage.trim()">
+        <span *ngIf="feedbackLoading" class="spinner-border spinner-border-sm me-2" role="status"></span>
+        <i *ngIf="!feedbackLoading" class="fas fa-paper-plane me-2"></i>
+        {{ 'feedback.send' | i18n }}
+      </button>
+    </div>
+  </div>
+</div>

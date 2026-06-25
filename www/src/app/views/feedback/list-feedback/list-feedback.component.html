@@ -1,0 +1,141 @@
+<div class="row justify-content-center">
+  <div class="col-lg-11 col-xl-10">
+
+    <!-- Header -->
+    <div class="d-flex align-items-center justify-content-between mb-3">
+      <div>
+        <h4 class="mb-0">{{ 'FEEDBACK.LIST.TITLE' | trl }}</h4>
+        <p class="text-muted small mb-0">{{ 'FEEDBACK.LIST.SUBTITLE' | trl }}</p>
+      </div>
+      <button class="btn btn-outline-secondary btn-sm" (click)="loadFeedbacks()" [disabled]="loading">
+        <i class="las la-sync me-1" [class.la-spin]="loading"></i>{{ 'FEEDBACK.LIST.REFRESH' | trl }}
+      </button>
+    </div>
+
+    <!-- Filter tabs -->
+    <ul class="nav nav-tabs mb-3">
+      <li class="nav-item">
+        <button class="nav-link" [class.active]="activeTab === 'all'" (click)="setTab('all')">
+          {{ 'FEEDBACK.LIST.TAB.ALL' | trl }}
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" [class.active]="activeTab === 'unread'" (click)="setTab('unread')">
+          {{ 'FEEDBACK.LIST.TAB.UNREAD' | trl }}
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" [class.active]="activeTab === 'read'" (click)="setTab('read')">
+          {{ 'FEEDBACK.LIST.TAB.READ' | trl }}
+        </button>
+      </li>
+    </ul>
+
+    <div class="card">
+      <div class="card-body p-0">
+
+        <!-- Loading -->
+        <div *ngIf="loading" class="p-4 text-center text-muted">
+          <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+          {{ 'FEEDBACK.LIST.LOADING' | trl }}
+        </div>
+
+        <!-- Empty -->
+        <div *ngIf="!loading && feedbacks.length === 0" class="p-5 text-center text-muted">
+          <i class="las la-inbox font-36 d-block mb-2"></i>
+          {{ 'FEEDBACK.LIST.EMPTY' | trl }}
+        </div>
+
+        <!-- Table -->
+        <div class="table-responsive" *ngIf="!loading && feedbacks.length > 0">
+          <table class="table table-hover mb-0 align-middle">
+            <thead class="table-light">
+              <tr>
+                <th style="width:160px">{{ 'FEEDBACK.LIST.TABLE.DATE' | trl }}</th>
+                <th style="width:200px">{{ 'FEEDBACK.LIST.TABLE.EMAIL' | trl }}</th>
+                <th>{{ 'FEEDBACK.LIST.TABLE.MESSAGE' | trl }}</th>
+                <th style="width:120px">{{ 'FEEDBACK.LIST.TABLE.STATUS' | trl }}</th>
+                <th class="text-end" style="width:120px">{{ 'FEEDBACK.LIST.TABLE.ACTIONS' | trl }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngFor="let fb of feedbacks">
+                <!-- Normal row -->
+                <tr *ngIf="deleteConfirmId !== fb.id" [class.fw-semibold]="!fb.isRead">
+                  <td class="text-nowrap text-muted small">
+                    {{ fb.createdAt | date:'dd/MM/yyyy HH:mm' }}
+                  </td>
+                  <td class="small text-truncate" style="max-width:180px">
+                    <span *ngIf="fb.email">
+                      <i class="las la-envelope me-1 text-muted"></i>{{ fb.email }}
+                    </span>
+                    <span *ngIf="!fb.email" class="text-muted fst-italic">{{ 'FEEDBACK.LIST.TABLE.NO_EMAIL' | trl }}</span>
+                  </td>
+                  <td class="small" style="max-width:360px">
+                    <span class="d-block text-truncate" style="max-width:360px" [title]="fb.message ?? ''">
+                      {{ fb.message }}
+                    </span>
+                  </td>
+                  <td>
+                    <span *ngIf="fb.isRead" class="badge bg-success-subtle text-success">
+                      <i class="las la-check-circle me-1"></i>{{ 'FEEDBACK.LIST.TABLE.READ' | trl }}
+                    </span>
+                    <span *ngIf="!fb.isRead" class="badge bg-warning-subtle text-warning">
+                      <i class="las la-dot-circle me-1"></i>{{ 'FEEDBACK.LIST.TABLE.UNREAD' | trl }}
+                    </span>
+                  </td>
+                  <td class="text-end text-nowrap">
+                    <button class="btn btn-sm btn-outline-secondary me-1" (click)="toggleRead(fb)"
+                      [disabled]="actionLoadingId === fb.id"
+                      [title]="fb.isRead ? ('FEEDBACK.LIST.ACTION.MARK_UNREAD' | trl) : ('FEEDBACK.LIST.ACTION.MARK_READ' | trl)">
+                      <span *ngIf="actionLoadingId === fb.id" class="spinner-border spinner-border-sm"></span>
+                      <i *ngIf="actionLoadingId !== fb.id"
+                        [class.la-envelope-open]="fb.isRead"
+                        [class.la-envelope]="!fb.isRead"
+                        class="las font-16"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" (click)="confirmDelete(fb.id!)"
+                      [disabled]="!!actionLoadingId" [title]="'FEEDBACK.LIST.ACTION.DELETE' | trl">
+                      <i class="las la-trash-alt font-16"></i>
+                    </button>
+                  </td>
+                </tr>
+
+                <!-- Delete confirm row -->
+                <tr *ngIf="deleteConfirmId === fb.id" class="table-danger">
+                  <td colspan="5">
+                    <div class="d-flex align-items-center justify-content-between px-2">
+                      <span class="small">
+                        <i class="las la-exclamation-triangle me-2"></i>{{ 'FEEDBACK.LIST.DELETE.CONFIRM' | trl }}
+                      </span>
+                      <div class="d-flex gap-2">
+                        <button class="btn btn-sm btn-secondary" (click)="cancelDelete()">
+                          {{ 'FEEDBACK.LIST.DELETE.CANCEL' | trl }}
+                        </button>
+                        <button class="btn btn-sm btn-danger" (click)="deleteFeedback(fb.id!)"
+                          [disabled]="actionLoadingId === fb.id">
+                          <span *ngIf="actionLoadingId === fb.id" class="spinner-border spinner-border-sm me-1"></span>
+                          {{ 'FEEDBACK.LIST.DELETE.CONFIRM_BTN' | trl }}
+                        </button>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+      <!-- Footer count -->
+      <div class="card-footer text-muted small" *ngIf="!loading && feedbacks.length > 0">
+        {{ feedbacks.length }} {{ 'FEEDBACK.LIST.FOOTER.TOTAL' | trl }}
+        <span *ngIf="unreadCount > 0" class="ms-2 badge bg-warning text-dark">
+          {{ unreadCount }} {{ 'FEEDBACK.LIST.FOOTER.UNREAD' | trl }}
+        </span>
+      </div>
+    </div>
+
+  </div>
+</div>
