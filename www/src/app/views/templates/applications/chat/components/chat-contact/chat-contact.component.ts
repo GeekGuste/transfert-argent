@@ -1,13 +1,13 @@
 import { Component, EventEmitter, Output, type OnInit } from '@angular/core'
 import { ContactList, type ContactType } from '../../data'
-import { CommonModule } from '@angular/common'
+
 import { NgbNavModule } from '@ng-bootstrap/ng-bootstrap'
 import { SimplebarAngularModule } from 'simplebar-angular'
 
 @Component({
   selector: 'chat-contact',
   standalone: true,
-  imports: [CommonModule, NgbNavModule, SimplebarAngularModule],
+  imports: [NgbNavModule, SimplebarAngularModule],
   templateUrl: './chat-contact.component.html',
   styles: ``,
 })

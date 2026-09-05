@@ -19,7 +19,9 @@
           <label class="hero-search-label"><i class="fas fa-map-marker-alt"></i> {{ 'search.departure' | i18n }}</label>
           <select class="hero-search-input hero-search-select" [(ngModel)]="searchDepartureCountryId">
             <option value="">{{ 'search.country' | i18n }}</option>
-            <option *ngFor="let c of countries" [value]="c.id">{{ c.name }}</option>
+            @for (c of countries; track c) {
+              <option [value]="c.id">{{ c.name }}</option>
+            }
           </select>
           <input type="text" class="hero-search-input hero-search-city" [placeholder]="'search.city' | i18n" [(ngModel)]="searchDepartureCity" />
         </div>
@@ -28,7 +30,9 @@
           <label class="hero-search-label"><i class="fas fa-flag-checkered"></i> {{ 'search.arrival' | i18n }}</label>
           <select class="hero-search-input hero-search-select" [(ngModel)]="searchArrivalCountryId">
             <option value="">{{ 'search.country' | i18n }}</option>
-            <option *ngFor="let c of countries" [value]="c.id">{{ c.name }}</option>
+            @for (c of countries; track c) {
+              <option [value]="c.id">{{ c.name }}</option>
+            }
           </select>
           <input type="text" class="hero-search-input hero-search-city" [placeholder]="'search.city' | i18n" [(ngModel)]="searchArrivalCity" />
         </div>
@@ -45,20 +49,6 @@
         </button>
       </div>
 
-      <div class="hero-stats">
-        <div class="stat-item">
-          <div class="stat-number">10K+</div>
-          <div class="stat-label">{{ 'stat.members' | i18n }}</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-number">15K+</div>
-          <div class="stat-label">{{ 'stat.parcels' | i18n }}</div>
-        </div>
-        <div class="stat-item">
-          <div class="stat-number">98%</div>
-          <div class="stat-label">{{ 'stat.satisfaction' | i18n }}</div>
-        </div>
-      </div>
     </div>
 
     <div class="hero-right">
@@ -100,46 +90,64 @@
     <p class="section-subtitle section-subtitle--dark">{{ 'home.recent.sub' | i18n }}</p>
   </div>
 
-  <div class="listings-grid" *ngIf="!listingsLoading">
-    <a *ngFor="let listing of recentListings" [routerLink]="['/forms', listing.id, 'details']" class="listing-card">
-      <div class="listing-card__badge"
-        [class.listing-card__badge--traveler]="listing.need?.key === NeedEnumDto.Traveler"
-        [class.listing-card__badge--sender]="listing.need?.key === NeedEnumDto.Sender">
-        <i [class]="listing.need?.key === NeedEnumDto.Traveler ? 'fas fa-plane me-1' : 'fas fa-box me-1'"></i>
-        {{ listing.need?.key === NeedEnumDto.Traveler ? ('need.traveler' | i18n) : ('need.sender' | i18n) }}
-      </div>
-      <div class="listing-card__route">
-        <span class="listing-card__loc">{{ listing.departureCity || '—' }}{{ listing.departureCountry?.name ? ', ' + listing.departureCountry!.name : '' }}</span>
-        <i class="fas fa-arrow-right listing-card__arrow"></i>
-        <span class="listing-card__loc">{{ listing.arrivalCity || '—' }}{{ listing.arrivalCountry?.name ? ', ' + listing.arrivalCountry!.name : '' }}</span>
-      </div>
-      <div class="listing-card__meta">
-        <span class="listing-card__weight" *ngIf="listing.need?.key === NeedEnumDto.Traveler && listing.availableWeightInGrams">
-          <i class="fas fa-weight-hanging me-1"></i>{{ weightKg(listing.availableWeightInGrams) }} {{ 'listing.kg.avail' | i18n }}
-        </span>
-        <span class="listing-card__weight" *ngIf="listing.need?.key === NeedEnumDto.Sender && listing.desiredWeightInGrams">
-          <i class="fas fa-weight-hanging me-1"></i>{{ weightKg(listing.desiredWeightInGrams) }} {{ 'listing.kg.wanted' | i18n }}
-        </span>
-        <span class="listing-card__price" *ngIf="listing.pricePerKg">
-          {{ pricePerKg(listing) | number:'1.0-2' }} {{ listing.currency?.symbol || listing.currency?.code || '' }}/kg
-        </span>
-      </div>
-    </a>
-    <div *ngIf="recentListings.length === 0" class="listings-empty">
-      <i class="fas fa-search listings-empty__icon"></i>
-      <p>{{ 'home.recent.empty' | i18n }} <a routerLink="/forms" class="listings-empty__link">{{ 'home.recent.first' | i18n }}</a></p>
+  @if (!listingsLoading) {
+    <div class="listings-grid">
+      @for (listing of recentListings; track listing) {
+        <a [routerLink]="['/forms', listing.id, 'details']" class="listing-card">
+          <div class="listing-card__badge"
+            [class.listing-card__badge--traveler]="listing.need?.key === NeedEnumDto.Traveler"
+            [class.listing-card__badge--sender]="listing.need?.key === NeedEnumDto.Sender">
+            <i [class]="listing.need?.key === NeedEnumDto.Traveler ? 'fas fa-plane me-1' : 'fas fa-box me-1'"></i>
+            {{ listing.need?.key === NeedEnumDto.Traveler ? ('need.traveler' | i18n) : ('need.sender' | i18n) }}
+          </div>
+          <div class="listing-card__route">
+            <span class="listing-card__loc">{{ listing.departureCity || '—' }}{{ listing.departureCountry?.name ? ', ' + listing.departureCountry!.name : '' }}</span>
+            <i class="fas fa-arrow-right listing-card__arrow"></i>
+            <span class="listing-card__loc">{{ listing.arrivalCity || '—' }}{{ listing.arrivalCountry?.name ? ', ' + listing.arrivalCountry!.name : '' }}</span>
+          </div>
+          <div class="listing-card__meta">
+            @if (listing.need?.key === NeedEnumDto.Traveler && listing.availableWeightInGrams) {
+              <span class="listing-card__weight">
+                <i class="fas fa-weight-hanging me-1"></i>{{ weightKg(listing.availableWeightInGrams) }} {{ 'listing.kg.avail' | i18n }}
+              </span>
+            }
+            @if (listing.need?.key === NeedEnumDto.Sender && listing.desiredWeightInGrams) {
+              <span class="listing-card__weight">
+                <i class="fas fa-weight-hanging me-1"></i>{{ weightKg(listing.desiredWeightInGrams) }} {{ 'listing.kg.wanted' | i18n }}
+              </span>
+            }
+            @if (listing.pricePerKg) {
+              <span class="listing-card__price">
+                {{ pricePerKg(listing) | number:'1.0-2' }} {{ listing.currency?.symbol || listing.currency?.code || '' }}/kg
+              </span>
+            }
+          </div>
+        </a>
+      }
+      @if (recentListings.length === 0) {
+        <div class="listings-empty">
+          <i class="fas fa-search listings-empty__icon"></i>
+          <p>{{ 'home.recent.empty' | i18n }} <a routerLink="/forms" class="listings-empty__link">{{ 'home.recent.first' | i18n }}</a></p>
+        </div>
+      }
     </div>
-  </div>
+  }
 
-  <div class="listings-loading" *ngIf="listingsLoading">
-    <div class="listing-skeleton" *ngFor="let i of [1,2,3]"></div>
-  </div>
+  @if (listingsLoading) {
+    <div class="listings-loading">
+      @for (i of [1,2,3]; track i) {
+        <div class="listing-skeleton"></div>
+      }
+    </div>
+  }
 
-  <div class="listings-footer" *ngIf="recentListings.length > 0">
-    <a routerLink="/forms/list" class="btn-see-all">
-      {{ 'home.recent.seeall' | i18n }} <i class="fas fa-arrow-right ms-2"></i>
-    </a>
-  </div>
+  @if (recentListings.length > 0) {
+    <div class="listings-footer">
+      <a routerLink="/forms/list" class="btn-see-all">
+        {{ 'home.recent.seeall' | i18n }} <i class="fas fa-arrow-right ms-2"></i>
+      </a>
+    </div>
+  }
 </section>
 
 <!-- SECTION 2: COMMENT ÇA MARCHE -->
@@ -150,14 +158,16 @@
   </div>
 
   <div class="steps-grid">
-    <div class="step-card" *ngFor="let step of steps; let i = index">
-      <div class="step-number">{{ i + 1 }}</div>
-      <div class="step-icon">
-        <i [class]="step.icon" style="font-size:2rem;color:currentColor"></i>
+    @for (step of steps; track step; let i = $index) {
+      <div class="step-card">
+        <div class="step-number">{{ i + 1 }}</div>
+        <div class="step-icon">
+          <i [class]="step.icon" style="font-size:2rem;color:currentColor"></i>
+        </div>
+        <h3 class="step-title">{{ step.titleKey | i18n }}</h3>
+        <p class="step-description">{{ step.descKey | i18n }}</p>
       </div>
-      <h3 class="step-title">{{ step.titleKey | i18n }}</h3>
-      <p class="step-description">{{ step.descKey | i18n }}</p>
-    </div>
+    }
   </div>
 </section>
 
@@ -168,30 +178,7 @@
     <p class="section-subtitle">{{ 'home.services.sub' | i18n }}</p>
   </div>
 
-  <div class="services-grid">
-    <!-- Transfert d'argent -->
-    <div class="service-card">
-      <div class="service-icon-wrapper">
-        <img src="/assets/images/home/transfer-money-icon.png" alt="Transfer" class="service-icon">
-      </div>
-      <h3 class="service-title">{{ 'home.services.transfer.title' | i18n }}</h3>
-      <p class="service-description">{{ 'home.services.transfer.desc' | i18n }}</p>
-      <ul class="service-features">
-        <li *ngFor="let fk of ['home.services.transfer.f1','home.services.transfer.f2','home.services.transfer.f3','home.services.transfer.f4']">
-          <svg class="check-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="20 6 9 17 4 12"></polyline>
-          </svg>
-          <span>{{ fk | i18n }}</span>
-        </li>
-      </ul>
-      <a routerLink="/create-transfer" class="service-cta">
-        {{ 'home.services.transfer.cta' | i18n }}
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline>
-        </svg>
-      </a>
-    </div>
-
+  <div class="services-grid services-grid--single">
     <!-- Envoi de colis -->
     <div class="service-card">
       <div class="service-icon-wrapper">
@@ -200,14 +187,16 @@
       <h3 class="service-title">{{ 'home.services.parcel.title' | i18n }}</h3>
       <p class="service-description">{{ 'home.services.parcel.desc' | i18n }}</p>
       <ul class="service-features">
-        <li *ngFor="let fk of ['home.services.parcel.f1','home.services.parcel.f2','home.services.parcel.f3','home.services.parcel.f4']">
-          <svg class="check-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="20 6 9 17 4 12"></polyline>
-          </svg>
-          <span>{{ fk | i18n }}</span>
-        </li>
+        @for (fk of ['home.services.parcel.f1','home.services.parcel.f2','home.services.parcel.f3','home.services.parcel.f4']; track fk) {
+          <li>
+            <svg class="check-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            <span>{{ fk | i18n }}</span>
+          </li>
+        }
       </ul>
-      <a routerLink="/create-parcel" class="service-cta">
+      <a routerLink="/forms" class="service-cta">
         {{ 'home.services.parcel.cta' | i18n }}
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline>
@@ -225,64 +214,20 @@
   </div>
 
   <div class="values-grid">
-    <div class="value-card" *ngFor="let value of values">
-      <div class="value-icon">
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path [attr.d]="value.iconPath"></path>
-        </svg>
-      </div>
-      <h3 class="value-title">{{ value.titleKey | i18n }}</h3>
-      <p class="value-description">{{ value.descKey | i18n }}</p>
-      <div class="value-stat">
-        <span class="value-stat-number">{{ value.statKey | i18n }}</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- SECTION 5: PREUVES DE CONFIANCE -->
-<section class="trust-section">
-  <div class="section-header">
-    <h2 class="section-title">{{ 'home.trust.title' | i18n }}</h2>
-    <p class="section-subtitle">{{ 'home.trust.sub' | i18n }}</p>
-  </div>
-
-  <div class="testimonials-grid">
-    <div class="testimonial-card" *ngFor="let testimonial of testimonials">
-      <div class="testimonial-header">
-        <img [src]="testimonial.avatar" [alt]="testimonial.name" class="testimonial-avatar">
-        <div class="testimonial-info">
-          <div class="testimonial-name">{{ testimonial.name }}</div>
-          <div class="testimonial-location">{{ testimonial.location }}</div>
-        </div>
-        <div class="testimonial-rating">
-          <svg *ngFor="let star of [1,2,3,4,5]" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+    @for (value of values; track value) {
+      <div class="value-card">
+        <div class="value-icon">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path [attr.d]="value.iconPath"></path>
           </svg>
         </div>
+        <h3 class="value-title">{{ value.titleKey | i18n }}</h3>
+        <p class="value-description">{{ value.descKey | i18n }}</p>
+        <div class="value-stat">
+          <span class="value-stat-number">{{ value.statKey | i18n }}</span>
+        </div>
       </div>
-      <p class="testimonial-text">{{ testimonial.text }}</p>
-      <div class="testimonial-type">{{ testimonial.type }}</div>
-    </div>
-  </div>
-
-  <div class="stats-banner">
-    <div class="stat-banner-item">
-      <div class="stat-banner-number">{{ stats.users }}</div>
-      <div class="stat-banner-label">{{ 'home.stats.users' | i18n }}</div>
-    </div>
-    <div class="stat-banner-item">
-      <div class="stat-banner-number">{{ stats.transferred }}</div>
-      <div class="stat-banner-label">{{ 'home.stats.transferred' | i18n }}</div>
-    </div>
-    <div class="stat-banner-item">
-      <div class="stat-banner-number">{{ stats.parcels }}</div>
-      <div class="stat-banner-label">{{ 'home.stats.parcels' | i18n }}</div>
-    </div>
-    <div class="stat-banner-item">
-      <div class="stat-banner-number">{{ stats.satisfaction }}</div>
-      <div class="stat-banner-label">{{ 'home.stats.satisfaction' | i18n }}</div>
-    </div>
+    }
   </div>
 </section>
 
@@ -294,16 +239,18 @@
   </div>
 
   <div class="faq-container">
-    <div class="faq-item" *ngFor="let faq of faqs; let i = index" [class.active]="faq.open">
-      <button class="faq-question" (click)="toggleFaq(i)">
-        <span>{{ faq.questionKey | i18n }}</span>
-        <svg class="faq-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <polyline points="6 9 12 15 18 9"></polyline>
-        </svg>
-      </button>
-      <div class="faq-answer" [class.show]="faq.open">
-        <p>{{ faq.answerKey | i18n }}</p>
+    @for (faq of faqs; track faq; let i = $index) {
+      <div class="faq-item" [class.active]="faq.open">
+        <button class="faq-question" (click)="toggleFaq(i)">
+          <span>{{ faq.questionKey | i18n }}</span>
+          <svg class="faq-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </button>
+        <div class="faq-answer" [class.show]="faq.open">
+          <p>{{ faq.answerKey | i18n }}</p>
+        </div>
       </div>
-    </div>
+    }
   </div>
 </section>

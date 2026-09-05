@@ -23,9 +23,17 @@ const DICT: Record<string, Record<string, string>> = {
     'nav.publish.full': 'Publier une annonce',
     'nav.login': 'Connexion',
     'nav.register': "S'inscrire",
+    'nav.my_listings': 'Mes annonces',
+    'nav.logout': 'Déconnexion',
+
+    // My listings (front-office space for logged-in users)
+    'my-listings.title': 'Mes annonces',
+    'my-listings.subtitle': 'Retrouvez et gérez toutes les annonces liées à votre compte.',
+    'my-listings.empty': "Vous n'avez pas encore publié d'annonce.",
+    'my-listings.manage': 'Gérer',
 
     // Home — hero
-    'home.badge': 'Plateforme sécurisée et certifiée',
+    'home.badge': 'Plateforme sécurisée',
     'home.hero.title': 'Envoyez vos colis de ville en ville, partout dans le monde, en toute',
     'home.hero.accent': 'confiance',
     'home.hero.sub': 'Voyageurs et expéditeurs en relation directe, sans intermédiaire. Simple, transparent, sans frais cachés.',
@@ -48,11 +56,6 @@ const DICT: Record<string, Record<string, string>> = {
     'need.traveler': 'Voyageur',
     'need.sender': 'Expéditeur',
 
-    // Stats hero
-    'stat.members': 'Membres actifs',
-    'stat.parcels': 'Colis livrés',
-    'stat.satisfaction': 'Satisfaction',
-
     // Recent listings
     'home.recent.title': 'Annonces récentes',
     'home.recent.sub': 'Voyageurs et expéditeurs disponibles dès maintenant',
@@ -73,15 +76,8 @@ const DICT: Record<string, Record<string, string>> = {
     'home.step3.desc': 'Validez les demandes reçues via votre lien personnel. Aucun compte requis.',
 
     // Services
-    'home.services.title': 'Nos services',
-    'home.services.sub': 'Des solutions adaptées à vos besoins',
-    'home.services.transfer.title': "Transfert d'argent entre particuliers",
-    'home.services.transfer.desc': "Envoyez de l'argent rapidement et en toute sécurité vers des comptes bancaires ou mobile money partout dans le monde.",
-    'home.services.transfer.f1': 'Transferts instantanés ou en 24h',
-    'home.services.transfer.f2': 'Frais transparents et compétitifs',
-    'home.services.transfer.f3': 'Paiements 100% sécurisés',
-    'home.services.transfer.f4': 'Suivi en temps réel',
-    'home.services.transfer.cta': 'Commencer un transfert',
+    'home.services.title': 'Notre service',
+    'home.services.sub': 'La mise en relation pour l\'envoi de vos colis',
     'home.services.parcel.title': 'Envoi de colis sécurisé',
     'home.services.parcel.desc': "Connectez-vous avec des voyageurs de confiance pour envoyer vos colis d'une ville à l'autre, où que vous soyez dans le monde.",
     'home.services.parcel.f1': 'Réseau de transporteurs vérifiés',
@@ -101,18 +97,10 @@ const DICT: Record<string, Record<string, string>> = {
     'home.val2.stat': 'SSL 256-bit',
     'home.val3.title': 'Communauté',
     'home.val3.desc': 'Un réseau de confiance basé sur les avis et évaluations des utilisateurs.',
-    'home.val3.stat': '10K+ membres',
+    'home.val3.stat': 'Communauté grandissante',
     'home.val4.title': 'Traçabilité',
-    'home.val4.desc': 'Suivi en temps réel de vos transferts et colis à chaque étape du processus.',
+    'home.val4.desc': 'Suivi en temps réel de vos colis à chaque étape du processus.',
     'home.val4.stat': 'Temps réel',
-
-    // Trust
-    'home.trust.title': 'Ils nous font confiance',
-    'home.trust.sub': 'Découvrez les témoignages de notre communauté',
-    'home.stats.users': 'Utilisateurs actifs',
-    'home.stats.transferred': 'Montant transféré',
-    'home.stats.parcels': 'Colis livrés',
-    'home.stats.satisfaction': 'Taux de satisfaction',
 
     // FAQ
     'home.faq.title': 'Questions fréquentes',
@@ -258,9 +246,17 @@ const DICT: Record<string, Record<string, string>> = {
     'nav.publish.full': 'Post a listing',
     'nav.login': 'Sign in',
     'nav.register': 'Sign up',
+    'nav.my_listings': 'My listings',
+    'nav.logout': 'Log out',
+
+    // My listings (front-office space for logged-in users)
+    'my-listings.title': 'My listings',
+    'my-listings.subtitle': 'Find and manage all the listings linked to your account.',
+    'my-listings.empty': "You haven't published any listing yet.",
+    'my-listings.manage': 'Manage',
 
     // Home — hero
-    'home.badge': 'Secure and certified platform',
+    'home.badge': 'Secure platform',
     'home.hero.title': 'Send your parcels from city to city, anywhere in the world, with',
     'home.hero.accent': 'confidence',
     'home.hero.sub': 'Travelers and senders in direct contact, with no middleman. Simple, transparent, no hidden fees.',
@@ -283,11 +279,6 @@ const DICT: Record<string, Record<string, string>> = {
     'need.traveler': 'Traveler',
     'need.sender': 'Sender',
 
-    // Stats hero
-    'stat.members': 'Active members',
-    'stat.parcels': 'Parcels delivered',
-    'stat.satisfaction': 'Satisfaction',
-
     // Recent listings
     'home.recent.title': 'Recent listings',
     'home.recent.sub': 'Available travelers and senders right now',
@@ -308,15 +299,8 @@ const DICT: Record<string, Record<string, string>> = {
     'home.step3.desc': 'Validate requests received via your personal link. No account required.',
 
     // Services
-    'home.services.title': 'Our services',
-    'home.services.sub': 'Solutions tailored to your needs',
-    'home.services.transfer.title': 'Money transfer between individuals',
-    'home.services.transfer.desc': 'Send money quickly and securely to bank accounts or mobile money worldwide.',
-    'home.services.transfer.f1': 'Instant or 24h transfers',
-    'home.services.transfer.f2': 'Transparent and competitive fees',
-    'home.services.transfer.f3': '100% secure payments',
-    'home.services.transfer.f4': 'Real-time tracking',
-    'home.services.transfer.cta': 'Start a transfer',
+    'home.services.title': 'Our service',
+    'home.services.sub': 'Connecting people for parcel deliveries',
     'home.services.parcel.title': 'Secure parcel delivery',
     'home.services.parcel.desc': 'Connect with trusted travelers to send your parcels from city to city, wherever you are in the world.',
     'home.services.parcel.f1': 'Network of verified carriers',
@@ -336,18 +320,10 @@ const DICT: Record<string, Record<string, string>> = {
     'home.val2.stat': 'SSL 256-bit',
     'home.val3.title': 'Community',
     'home.val3.desc': 'A trusted network based on user reviews and ratings.',
-    'home.val3.stat': '10K+ members',
+    'home.val3.stat': 'Growing community',
     'home.val4.title': 'Traceability',
-    'home.val4.desc': 'Real-time tracking of your transfers and parcels at every step.',
+    'home.val4.desc': 'Real-time tracking of your parcels at every step.',
     'home.val4.stat': 'Real-time',
-
-    // Trust
-    'home.trust.title': 'They trust us',
-    'home.trust.sub': "Discover our community's testimonials",
-    'home.stats.users': 'Active users',
-    'home.stats.transferred': 'Amount transferred',
-    'home.stats.parcels': 'Parcels delivered',
-    'home.stats.satisfaction': 'Satisfaction rate',
 
     // FAQ
     'home.faq.title': 'Frequently asked questions',

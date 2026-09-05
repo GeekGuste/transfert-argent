@@ -31,6 +31,10 @@ export class ListingService {
     return from(this.api.client.getListingById(id));
   }
 
+  getMyListings(): Observable<GetListingsOutput> {
+    return from(this.api.client.getMyListings());
+  }
+
   getListingByToken(token: string): Observable<ListingDto> {
     return from(this.api.client.getListingByToken(token));
   }

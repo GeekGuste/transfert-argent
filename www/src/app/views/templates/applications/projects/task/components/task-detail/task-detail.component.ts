@@ -4,13 +4,13 @@ import {
   NgbAccordionModule,
   NgbProgressbarModule,
 } from '@ng-bootstrap/ng-bootstrap'
-import { CommonModule } from '@angular/common'
+
 import { UtilsService } from '@/app/core/service/utils.service'
 
 @Component({
   selector: 'task-detail',
   standalone: true,
-  imports: [NgbAccordionModule, CommonModule, NgbProgressbarModule],
+  imports: [NgbAccordionModule, NgbProgressbarModule],
   templateUrl: './task-detail.component.html',
   styles: ``,
 })

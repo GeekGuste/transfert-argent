@@ -1,11 +1,11 @@
-import { CommonModule } from '@angular/common'
+
 import { Component, Input } from '@angular/core'
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap'
 
 @Component({
   selector: 'card-title',
   standalone: true,
-  imports: [CommonModule, NgbDropdownModule],
+  imports: [NgbDropdownModule],
   template: `
     <div class="card-header">
       <div class="row align-items-center">

@@ -147,25 +147,6 @@ $transition: all 0.25s ease;
   flex-wrap: wrap;
 }
 
-.hero-stats {
-  display: flex;
-  gap: 2rem;
-  padding-top: 0.5rem;
-}
-
-.stat-item { display: flex; flex-direction: column; gap: 0.2rem; }
-
-.stat-number {
-  font-size: 1.6rem;
-  font-weight: 700;
-  color: #fff;
-}
-
-.stat-label {
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.6);
-}
-
 .hero-right { position: relative; }
 
 // ============================================
@@ -327,7 +308,6 @@ $transition: all 0.25s ease;
 .how-it-works-section,
 .services-section,
 .values-section,
-.trust-section,
 .faq-section {
   padding: 4rem 2rem;
 
@@ -340,8 +320,7 @@ $transition: all 0.25s ease;
   background: $bg;
 }
 
-.services-section,
-.trust-section {
+.services-section {
   background: $card-bg;
   border-top: 1px solid $border;
   border-bottom: 1px solid $border;
@@ -458,6 +437,11 @@ $transition: all 0.25s ease;
   gap: 1.5rem;
   max-width: 1200px;
   margin: 0 auto;
+
+  &--single {
+    grid-template-columns: minmax(0, 480px);
+    justify-content: center;
+  }
 }
 
 .service-card {
@@ -595,103 +579,6 @@ $transition: all 0.25s ease;
   font-size: 0.8rem;
   font-weight: 600;
   color: darken($green, 15%);
-}
-
-// ============================================
-// TRUST / TESTIMONIALS
-// ============================================
-
-.testimonials-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.25rem;
-  margin-bottom: 2.5rem;
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.testimonial-card {
-  background: $bg;
-  border: 1px solid $border;
-  border-radius: $radius-lg;
-  padding: 1.5rem;
-  transition: $transition;
-
-  &:hover {
-    border-color: $violet;
-    box-shadow: 0 4px 16px rgba($violet, 0.08);
-    transform: translateY(-2px);
-  }
-}
-
-.testimonial-header {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 0.75rem;
-}
-
-.testimonial-avatar {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  object-fit: cover;
-  background: $violet-light;
-}
-
-.testimonial-info { flex: 1; }
-.testimonial-name { font-weight: 600; font-size: 0.9rem; color: $text; }
-.testimonial-location { font-size: 0.8rem; color: $text-muted; }
-
-.testimonial-rating {
-  display: flex;
-  gap: 0.15rem;
-  color: #f59e0b;
-}
-
-.testimonial-text {
-  color: $text-muted;
-  line-height: 1.6;
-  margin: 0 0 0.75rem 0;
-  font-style: italic;
-  font-size: 0.9rem;
-}
-
-.testimonial-type {
-  display: inline-block;
-  background: $violet-light;
-  border: 1px solid rgba($violet, 0.2);
-  padding: 0.25rem 0.65rem;
-  border-radius: 999px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: $violet;
-}
-
-.stats-banner {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 1.5rem;
-  background: $violet;
-  border-radius: $radius-lg;
-  padding: 2.5rem 2rem;
-  text-align: center;
-  max-width: 1200px;
-  margin: 2rem auto 0;
-}
-
-.stat-banner-item { display: flex; flex-direction: column; gap: 0.4rem; }
-
-.stat-banner-number {
-  font-size: 2.25rem;
-  font-weight: 800;
-  color: #fff;
-}
-
-.stat-banner-label {
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 0.875rem;
 }
 
 // ============================================
@@ -943,27 +830,17 @@ $transition: all 0.25s ease;
   .hero-section { padding: 3rem 1rem; }
   .hero-title { font-size: 2rem; }
   .hero-subtitle { font-size: 1rem; }
-  .hero-stats { flex-wrap: wrap; gap: 1rem; }
 
   .listings-section,
   .how-it-works-section,
   .services-section,
   .values-section,
-  .trust-section,
   .faq-section { padding: 3rem 1rem; }
 
   .section-title { font-size: 1.6rem; }
 
   .steps-grid,
-  .values-grid,
-  .testimonials-grid { grid-template-columns: 1fr; }
-
-  .stats-banner {
-    grid-template-columns: 1fr 1fr;
-    padding: 2rem 1rem;
-  }
-
-  .stat-banner-number { font-size: 1.75rem; }
+  .values-grid { grid-template-columns: 1fr; }
 
   .final-cta-title { font-size: 1.75rem; }
   .final-cta-buttons { flex-direction: column; align-items: center; }
@@ -971,7 +848,6 @@ $transition: all 0.25s ease;
 
 @media (max-width: 640px) {
   .hero-cta { flex-direction: column; }
-  .stats-banner { grid-template-columns: 1fr; }
   .hero-search-bar { flex-direction: column; }
   .hero-search-field--sm { flex: 1; }
   .hero-search-btn { width: 100%; }

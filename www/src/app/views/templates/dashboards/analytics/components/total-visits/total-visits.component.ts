@@ -1,11 +1,11 @@
 import { Component } from '@angular/core'
 import { VisitsList } from '../../data'
-import { CommonModule } from '@angular/common'
+
 
 @Component({
   selector: 'analytics-total-visits',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './total-visits.component.html',
   styles: ``,
 })

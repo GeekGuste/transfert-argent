@@ -20,7 +20,7 @@
       <!-- Stepper -->
       <div class="al-stepper">
         <div class="al-stepper__track">
-          <ng-container *ngFor="let step of activeSteps(); let i = index; let last = last">
+          @for (step of activeSteps(); track step; let i = $index; let last = $last) {
             <div class="al-step"
               [class.al-step--done]="currentStep() > step.id"
               [class.al-step--active]="currentStep() === step.id"
@@ -28,14 +28,22 @@
               (click)="goToStep(step.id)"
               [style.cursor]="step.id < currentStep() ? 'pointer' : 'default'">
               <div class="al-step__bubble">
-                <i *ngIf="currentStep() > step.id && !hasStepError(step.id)" class="fas fa-check"></i>
-                <i *ngIf="hasStepError(step.id)" class="fas fa-exclamation"></i>
-                <span *ngIf="currentStep() <= step.id && !hasStepError(step.id)">{{ step.id }}</span>
+                @if (currentStep() > step.id && !hasStepError(step.id)) {
+                  <i class="fas fa-check"></i>
+                }
+                @if (hasStepError(step.id)) {
+                  <i class="fas fa-exclamation"></i>
+                }
+                @if (currentStep() <= step.id && !hasStepError(step.id)) {
+                  <span>{{ step.id }}</span>
+                }
               </div>
               <span class="al-step__label">{{ step.labelKey | trl }}</span>
             </div>
-            <div *ngIf="!last" class="al-step__line" [class.al-step__line--done]="currentStep() > step.id"></div>
-          </ng-container>
+            @if (!last) {
+              <div class="al-step__line" [class.al-step__line--done]="currentStep() > step.id"></div>
+            }
+          }
         </div>
       </div>
 
@@ -43,434 +51,492 @@
       <div class="al-card">
 
         <!-- ===== STEP 1 : Profil ===== -->
-        <div *ngIf="currentStep() === 1">
-          <div class="al-card__section-title">
-            <i class="fas fa-user-circle me-2 text-primary"></i>{{ 'ADD-LISTING.PROFILE.TITLE' | trl }}
-          </div>
-
-          <!-- Type d'annonce -->
-          <div class="al-field-group mb-4">
-            <label class="al-label">{{ 'ADD-LISTING.TYPE.LABEL' | trl }} <span class="text-danger">*</span></label>
-            <div class="al-type-selector">
-              <label class="al-type-card" [class.al-type-card--selected]="userType === NeedEnumDto.Traveler">
-                <input type="radio" formControlName="need" [value]="NeedEnumDto.Traveler" class="d-none" />
-                <div class="al-type-card__icon al-type-card__icon--traveler">
-                  <i class="fas fa-plane"></i>
-                </div>
-                <div class="al-type-card__body">
-                  <strong>{{ 'ADD-LISTING.TRAVELER.TITLE' | trl }}</strong>
-                  <span>{{ 'ADD-LISTING.TRAVELER.SUB' | trl }}</span>
-                </div>
-                <i class="fas fa-check-circle al-type-card__check"></i>
-              </label>
-
-              <label class="al-type-card" [class.al-type-card--selected]="userType === NeedEnumDto.Sender">
-                <input type="radio" formControlName="need" [value]="NeedEnumDto.Sender" class="d-none" />
-                <div class="al-type-card__icon al-type-card__icon--sender">
-                  <i class="fas fa-box"></i>
-                </div>
-                <div class="al-type-card__body">
-                  <strong>{{ 'ADD-LISTING.SENDER.TITLE' | trl }}</strong>
-                  <span>{{ 'ADD-LISTING.SENDER.SUB' | trl }}</span>
-                </div>
-                <i class="fas fa-check-circle al-type-card__check"></i>
-              </label>
+        @if (currentStep() === 1) {
+          <div>
+            <div class="al-card__section-title">
+              <i class="fas fa-user-circle me-2 text-primary"></i>{{ 'ADD-LISTING.PROFILE.TITLE' | trl }}
             </div>
-          </div>
-
-          <!-- Identité -->
-          <div class="al-card__section-title mt-4">
-            <i class="fas fa-id-card me-2 text-secondary"></i>Vos coordonnées
-          </div>
-          <div formGroupName="identity" class="al-grid-2">
-            <div class="al-field-group">
-              <label class="al-label">{{ 'ADD-LISTING.FIELD.FIRSTNAME' | trl }} <span class="text-danger">*</span></label>
-              <input type="text" class="al-input" formControlName="firstName" [placeholder]="'ADD-LISTING.FIELD.FIRSTNAME' | trl"
-                [class.al-input--error]="getControlError(identityGroup, 'firstName')" />
-              <span class="al-error" *ngIf="getControlError(identityGroup, 'firstName')">
-                {{ getControlError(identityGroup, 'firstName') }}
-              </span>
-            </div>
-            <div class="al-field-group">
-              <label class="al-label">{{ 'ADD-LISTING.FIELD.LASTNAME' | trl }} <span class="text-danger">*</span></label>
-              <input type="text" class="al-input" formControlName="lastName" [placeholder]="'ADD-LISTING.FIELD.LASTNAME' | trl"
-                [class.al-input--error]="getControlError(identityGroup, 'lastName')" />
-              <span class="al-error" *ngIf="getControlError(identityGroup, 'lastName')">
-                {{ getControlError(identityGroup, 'lastName') }}
-              </span>
-            </div>
-            <div class="al-field-group">
-              <label class="al-label">{{ 'ADD-LISTING.FIELD.PHONE' | trl }} <span class="text-danger">*</span></label>
-              <input type="tel" class="al-input" formControlName="phone" placeholder="+33 6 00 00 00 00"
-                [class.al-input--error]="getControlError(identityGroup, 'phone')" />
-              <span class="al-error" *ngIf="getControlError(identityGroup, 'phone')">
-                {{ getControlError(identityGroup, 'phone') }}
-              </span>
-            </div>
-            <div class="al-field-group">
-              <label class="al-label">{{ 'ADD-LISTING.FIELD.EMAIL' | trl }} <span class="text-danger">*</span></label>
-              <input type="email" class="al-input" formControlName="email" placeholder="vous@exemple.com"
-                [class.al-input--error]="getControlError(identityGroup, 'email')" />
-              <span class="al-error" *ngIf="getControlError(identityGroup, 'email')">
-                {{ getControlError(identityGroup, 'email') }}
-              </span>
-            </div>
-          </div>
-
-          <div class="al-field-group mt-3" formGroupName="identity">
-            <label class="al-checkbox-label">
-              <input type="checkbox" class="al-checkbox" formControlName="isAdult" />
-              <span>{{ 'ADD-LISTING.FIELD.ADULT' | trl }} <span class="text-danger">*</span></span>
-            </label>
-            <span class="al-error" *ngIf="getControlError(identityGroup, 'isAdult')">
-              Vous devez confirmer être majeur(e).
-            </span>
-          </div>
-
-          <div class="al-actions al-actions--end">
-            <button class="al-btn al-btn--primary" type="button" (click)="nextStep()">
-              {{ 'ADD-LISTING.BTN.NEXT' | trl }} <i class="fas fa-arrow-right ms-2"></i>
-            </button>
-          </div>
-        </div>
-
-        <!-- ===== STEP 2 : Voyageur ===== -->
-        <div *ngIf="currentStep() === 2 && userType === NeedEnumDto.Traveler" formGroupName="voyageur">
-          <div class="al-card__section-title">
-            <i class="fas fa-plane me-2" style="color:#482890"></i>{{ 'ADD-LISTING.TRAVEL.TITLE' | trl }}
-          </div>
-
-          <div class="al-grid-2">
-            <div class="al-field-group">
-              <label class="al-label">{{ 'ADD-LISTING.FIELD.DEPARTURE_DATE' | trl }} <span class="text-danger">*</span></label>
-              <input type="date" class="al-input" formControlName="departureDate" [min]="todayStr"
-                [class.al-input--error]="getControlError(voyageurGroup, 'departureDate')" />
-              <span class="al-error" *ngIf="getControlError(voyageurGroup, 'departureDate')">
-                {{ getControlError(voyageurGroup, 'departureDate') }}
-              </span>
-            </div>
-            <div class="al-field-group">
-              <label class="al-label">{{ 'ADD-LISTING.FIELD.ARRIVAL_DATE' | trl }} <span class="text-danger">*</span></label>
-              <input type="date" class="al-input" formControlName="arrivalDate" [min]="todayStr"
-                [class.al-input--error]="getControlError(voyageurGroup, 'arrivalDate')" />
-              <span class="al-error" *ngIf="getControlError(voyageurGroup, 'arrivalDate')">
-                {{ getControlError(voyageurGroup, 'arrivalDate') }}
-              </span>
-            </div>
-          </div>
-
-          <span class="al-error" *ngIf="getGroupError(voyageurGroup)">
-            {{ getGroupError(voyageurGroup) }}
-          </span>
-
-          <div class="al-field-group mt-3">
-            <label class="al-label">{{ 'ADD-LISTING.FIELD.WEIGHT_AVAIL' | trl }} <span class="text-danger">*</span></label>
-            <div class="al-input-addon">
-              <input type="number" class="al-input" formControlName="availableWeightKg" min="0.1" step="0.1" placeholder="ex: 5"
-                [class.al-input--error]="getControlError(voyageurGroup, 'availableWeightKg')" />
-              <span class="al-input-addon__text">kg</span>
-            </div>
-            <span class="al-error" *ngIf="getControlError(voyageurGroup, 'availableWeightKg')">
-              {{ getControlError(voyageurGroup, 'availableWeightKg') }}
-            </span>
-          </div>
-
-          <div class="al-actions">
-            <button class="al-btn al-btn--outline" type="button" (click)="prevStep()">
-              <i class="fas fa-arrow-left me-2"></i>{{ 'ADD-LISTING.BTN.PREV' | trl }}
-            </button>
-            <button class="al-btn al-btn--primary" type="button" (click)="nextStep()">
-              {{ 'ADD-LISTING.BTN.NEXT' | trl }} <i class="fas fa-arrow-right ms-2"></i>
-            </button>
-          </div>
-        </div>
-
-        <!-- ===== STEP 2 : Expéditeur ===== -->
-        <div *ngIf="currentStep() === 2 && userType === NeedEnumDto.Sender" formGroupName="chercheur">
-          <div class="al-card__section-title">
-            <i class="fas fa-box me-2" style="color:#4CBF88"></i>{{ 'ADD-LISTING.PARCEL.TITLE' | trl }}
-          </div>
-
-          <div class="al-field-group">
-            <label class="al-label">{{ 'ADD-LISTING.FIELD.MAX_DATE' | trl }} <span class="text-danger">*</span></label>
-            <input type="date" class="al-input" formControlName="maxTravelDate" [min]="todayStr"
-              [class.al-input--error]="getControlError(chercheurGroup, 'maxTravelDate')" />
-            <span class="al-error" *ngIf="getControlError(chercheurGroup, 'maxTravelDate')">
-              {{ getControlError(chercheurGroup, 'maxTravelDate') }}
-            </span>
-          </div>
-
-          <div class="al-field-group mt-3">
-            <label class="al-label">{{ 'ADD-LISTING.FIELD.WEIGHT_DESIRED' | trl }} <span class="text-danger">*</span></label>
-            <div class="al-input-addon">
-              <input type="number" class="al-input" formControlName="desiredWeightKg" min="0.1" step="0.5" placeholder="ex: 3"
-                [class.al-input--error]="getControlError(chercheurGroup, 'desiredWeightKg')" />
-              <span class="al-input-addon__text">kg</span>
-            </div>
-            <span class="al-error" *ngIf="getControlError(chercheurGroup, 'desiredWeightKg')">
-              {{ getControlError(chercheurGroup, 'desiredWeightKg') }}
-            </span>
-          </div>
-
-          <div class="al-actions">
-            <button class="al-btn al-btn--outline" type="button" (click)="prevStep()">
-              <i class="fas fa-arrow-left me-2"></i>{{ 'ADD-LISTING.BTN.PREV' | trl }}
-            </button>
-            <button class="al-btn al-btn--primary" type="button" (click)="nextStep()">
-              {{ 'ADD-LISTING.BTN.NEXT' | trl }} <i class="fas fa-arrow-right ms-2"></i>
-            </button>
-          </div>
-        </div>
-
-        <!-- ===== STEP 3 : Trajet & tarif ===== -->
-        <div *ngIf="currentStep() === 3" formGroupName="common">
-          <div class="al-card__section-title">
-            <i class="fas fa-route me-2" style="color:#482890"></i>{{ 'ADD-LISTING.ROUTE.TITLE' | trl }}
-          </div>
-
-          <div class="al-route-row">
-            <div class="al-field-group flex-fill">
-              <label class="al-label"><i class="fas fa-map-marker-alt text-danger me-1"></i>{{ 'ADD-LISTING.FIELD.COUNTRY_FROM' | trl }} <span class="text-danger">*</span></label>
-              <select class="al-select" formControlName="departureCountryId"
-                [class.al-input--error]="getControlError(commonGroup, 'departureCountryId')">
-                <option value="">{{ 'ADD-LISTING.FIELD.COUNTRY_SELECT' | trl }}</option>
-                <option *ngFor="let c of countries" [value]="c.id">{{ c.name }}</option>
-              </select>
-              <span class="al-error" *ngIf="getControlError(commonGroup, 'departureCountryId')">
-                {{ getControlError(commonGroup, 'departureCountryId') }}
-              </span>
-              <input type="text" class="al-input mt-2" formControlName="departureCity" placeholder="ex: Paris"
-                [class.al-input--error]="getControlError(commonGroup, 'departureCity')" />
-              <span class="al-error" *ngIf="getControlError(commonGroup, 'departureCity')">
-                {{ getControlError(commonGroup, 'departureCity') }}
-              </span>
-            </div>
-            <div class="al-route-arrow"><i class="fas fa-long-arrow-alt-right"></i></div>
-            <div class="al-field-group flex-fill">
-              <label class="al-label"><i class="fas fa-map-marker-alt text-success me-1"></i>{{ 'ADD-LISTING.FIELD.COUNTRY_TO' | trl }} <span class="text-danger">*</span></label>
-              <select class="al-select" formControlName="arrivalCountryId"
-                [class.al-input--error]="getControlError(commonGroup, 'arrivalCountryId')">
-                <option value="">{{ 'ADD-LISTING.FIELD.COUNTRY_SELECT' | trl }}</option>
-                <option *ngFor="let c of countries" [value]="c.id">{{ c.name }}</option>
-              </select>
-              <span class="al-error" *ngIf="getControlError(commonGroup, 'arrivalCountryId')">
-                {{ getControlError(commonGroup, 'arrivalCountryId') }}
-              </span>
-              <input type="text" class="al-input mt-2" formControlName="arrivalCity" placeholder="ex: Dakar"
-                [class.al-input--error]="getControlError(commonGroup, 'arrivalCity')" />
-              <span class="al-error" *ngIf="getControlError(commonGroup, 'arrivalCity')">
-                {{ getControlError(commonGroup, 'arrivalCity') }}
-              </span>
-            </div>
-          </div>
-
-          <div class="al-price-row mt-4">
-            <div class="al-field-group flex-fill">
-              <label class="al-label">{{ 'ADD-LISTING.FIELD.PRICE' | trl }} <span class="text-danger">*</span></label>
-              <div class="al-input-addon">
-                <input type="number" class="al-input" formControlName="pricePerKg" min="0" step="0.5" placeholder="ex: 10"
-                  [class.al-input--error]="getControlError(commonGroup, 'pricePerKg')" />
-                <select class="al-input-addon__select" formControlName="currencyId"
-                  [class.al-input--error]="getControlError(commonGroup, 'currencyId')">
-                  <option value="">{{ 'ADD-LISTING.FIELD.CURRENCY' | trl }}</option>
-                  <option *ngFor="let c of currencies" [value]="c.id">{{ c.symbol || c.code }}</option>
-                </select>
-                <span class="al-input-addon__text">/kg</span>
+            <!-- Type d'annonce -->
+            <div class="al-field-group mb-4">
+              <label class="al-label">{{ 'ADD-LISTING.TYPE.LABEL' | trl }} <span class="text-danger">*</span></label>
+              <div class="al-type-selector">
+                <label class="al-type-card" [class.al-type-card--selected]="userType === NeedEnumDto.Traveler">
+                  <input type="radio" formControlName="need" [value]="NeedEnumDto.Traveler" class="d-none" />
+                  <div class="al-type-card__icon al-type-card__icon--traveler">
+                    <i class="fas fa-plane"></i>
+                  </div>
+                  <div class="al-type-card__body">
+                    <strong>{{ 'ADD-LISTING.TRAVELER.TITLE' | trl }}</strong>
+                    <span>{{ 'ADD-LISTING.TRAVELER.SUB' | trl }}</span>
+                  </div>
+                  <i class="fas fa-check-circle al-type-card__check"></i>
+                </label>
+                <label class="al-type-card" [class.al-type-card--selected]="userType === NeedEnumDto.Sender">
+                  <input type="radio" formControlName="need" [value]="NeedEnumDto.Sender" class="d-none" />
+                  <div class="al-type-card__icon al-type-card__icon--sender">
+                    <i class="fas fa-box"></i>
+                  </div>
+                  <div class="al-type-card__body">
+                    <strong>{{ 'ADD-LISTING.SENDER.TITLE' | trl }}</strong>
+                    <span>{{ 'ADD-LISTING.SENDER.SUB' | trl }}</span>
+                  </div>
+                  <i class="fas fa-check-circle al-type-card__check"></i>
+                </label>
               </div>
-              <span class="al-error" *ngIf="getControlError(commonGroup, 'pricePerKg')">
-                {{ getControlError(commonGroup, 'pricePerKg') }}
-              </span>
-              <span class="al-error" *ngIf="getControlError(commonGroup, 'currencyId')">
-                {{ getControlError(commonGroup, 'currencyId') }}
-              </span>
             </div>
-          </div>
-
-          <div class="al-actions">
-            <button class="al-btn al-btn--outline" type="button" (click)="prevStep()">
-              <i class="fas fa-arrow-left me-2"></i>{{ 'ADD-LISTING.BTN.PREV' | trl }}
-            </button>
-            <button class="al-btn al-btn--primary" type="button" (click)="nextStep()">
-              {{ 'ADD-LISTING.BTN.NEXT' | trl }} <i class="fas fa-arrow-right ms-2"></i>
-            </button>
-          </div>
-        </div>
-
-        <!-- ===== STEP 4 : Conditions ===== -->
-        <div *ngIf="currentStep() === 4" formGroupName="legal">
-          <div class="al-card__section-title">
-            <i class="fas fa-file-contract me-2" style="color:#482890"></i>{{ 'ADD-LISTING.LEGAL.TITLE' | trl }}
-          </div>
-
-          <div class="al-field-group mb-4">
-            <label class="al-label">{{ 'ADD-LISTING.FIELD.PAYMENT' | trl }} <span class="text-danger">*</span></label>
-            <div class="al-payment-grid">
-              <label *ngFor="let m of paymentMethods" class="al-payment-option"
-                [class.al-payment-option--selected]="legalGroup.get('paymentMethod')?.value === m.key">
-                <input type="radio" formControlName="paymentMethod" [value]="m.key" class="d-none" />
-                <i class="al-payment-option__icon"
-                  [class.fas]="true"
-                  [class.fa-money-bill-wave]="m.key === PaymentMethodEnumDto.Cash"
-                  [class.fa-credit-card]="m.key === PaymentMethodEnumDto.CreditCard"
-                  [class.fa-paypal]="m.key === PaymentMethodEnumDto.PayPal"
-                  [class.fa-university]="m.key === PaymentMethodEnumDto.BankTransfer"
-                  [class.fa-mobile-alt]="m.key === PaymentMethodEnumDto.MobilePayment"
-                  [class.fa-check-double]="m.key === PaymentMethodEnumDto.All"
-                  [class.fa-ellipsis-h]="m.key === PaymentMethodEnumDto.Other"
-                ></i>
-                <span>{{ m.label }}</span>
-              </label>
+            <!-- Identité -->
+            <div class="al-card__section-title mt-4">
+              <i class="fas fa-id-card me-2 text-secondary"></i>Vos coordonnées
             </div>
-            <span class="al-error" *ngIf="getControlError(legalGroup, 'paymentMethod')">
-              {{ getControlError(legalGroup, 'paymentMethod') }}
-            </span>
-          </div>
+            <div formGroupName="identity" class="al-grid-2">
+              <div class="al-field-group">
+                <label class="al-label">{{ 'ADD-LISTING.FIELD.FIRSTNAME' | trl }} <span class="text-danger">*</span></label>
+                <input type="text" class="al-input" formControlName="firstName" [placeholder]="'ADD-LISTING.FIELD.FIRSTNAME' | trl"
+                  [class.al-input--error]="getControlError(identityGroup, 'firstName')" />
+                  @if (getControlError(identityGroup, 'firstName')) {
+                    <span class="al-error">
+                      {{ getControlError(identityGroup, 'firstName') }}
+                    </span>
+                  }
+                </div>
+                <div class="al-field-group">
+                  <label class="al-label">{{ 'ADD-LISTING.FIELD.LASTNAME' | trl }} <span class="text-danger">*</span></label>
+                  <input type="text" class="al-input" formControlName="lastName" [placeholder]="'ADD-LISTING.FIELD.LASTNAME' | trl"
+                    [class.al-input--error]="getControlError(identityGroup, 'lastName')" />
+                    @if (getControlError(identityGroup, 'lastName')) {
+                      <span class="al-error">
+                        {{ getControlError(identityGroup, 'lastName') }}
+                      </span>
+                    }
+                  </div>
+                  <div class="al-field-group">
+                    <label class="al-label">{{ 'ADD-LISTING.FIELD.PHONE' | trl }} <span class="text-danger">*</span></label>
+                    <input type="tel" class="al-input" formControlName="phone" placeholder="+33 6 00 00 00 00"
+                      [class.al-input--error]="getControlError(identityGroup, 'phone')" />
+                      @if (getControlError(identityGroup, 'phone')) {
+                        <span class="al-error">
+                          {{ getControlError(identityGroup, 'phone') }}
+                        </span>
+                      }
+                    </div>
+                    <div class="al-field-group">
+                      <label class="al-label">{{ 'ADD-LISTING.FIELD.EMAIL' | trl }} <span class="text-danger">*</span></label>
+                      <input type="email" class="al-input" formControlName="email" placeholder="vous@exemple.com"
+                        [class.al-input--error]="getControlError(identityGroup, 'email')" />
+                        @if (getControlError(identityGroup, 'email')) {
+                          <span class="al-error">
+                            {{ getControlError(identityGroup, 'email') }}
+                          </span>
+                        }
+                      </div>
+                    </div>
+                    <div class="al-field-group mt-3" formGroupName="identity">
+                      <label class="al-checkbox-label">
+                        <input type="checkbox" class="al-checkbox" formControlName="isAdult" />
+                        <span>{{ 'ADD-LISTING.FIELD.ADULT' | trl }} <span class="text-danger">*</span></span>
+                      </label>
+                      @if (getControlError(identityGroup, 'isAdult')) {
+                        <span class="al-error">
+                          Vous devez confirmer être majeur(e).
+                        </span>
+                      }
+                    </div>
+                    <div class="al-actions al-actions--end">
+                      <button class="al-btn al-btn--primary" type="button" (click)="nextStep()">
+                        {{ 'ADD-LISTING.BTN.NEXT' | trl }} <i class="fas fa-arrow-right ms-2"></i>
+                      </button>
+                    </div>
+                  </div>
+                }
 
-          <div class="al-field-group">
-            <label class="al-checkbox-label">
-              <input type="checkbox" class="al-checkbox" formControlName="acceptTerms" />
-              <span>{{ 'ADD-LISTING.FIELD.TERMS' | trl }} <a href="#" target="_blank" class="al-link">{{ 'ADD-LISTING.FIELD.TERMS.LINK' | trl }}</a>
-                <span class="text-danger"> *</span></span>
-            </label>
-            <span class="al-error" *ngIf="getControlError(legalGroup, 'acceptTerms')">
-              Vous devez accepter les conditions d'utilisation.
-            </span>
-          </div>
+                <!-- ===== STEP 2 : Voyageur ===== -->
+                @if (currentStep() === 2 && userType === NeedEnumDto.Traveler) {
+                  <div formGroupName="voyageur">
+                    <div class="al-card__section-title">
+                      <i class="fas fa-plane me-2" style="color:#482890"></i>{{ 'ADD-LISTING.TRAVEL.TITLE' | trl }}
+                    </div>
+                    <div class="al-grid-2">
+                      <div class="al-field-group">
+                        <label class="al-label">{{ 'ADD-LISTING.FIELD.DEPARTURE_DATE' | trl }} <span class="text-danger">*</span></label>
+                        <input type="date" class="al-input" formControlName="departureDate" [min]="todayStr"
+                          [class.al-input--error]="getControlError(voyageurGroup, 'departureDate')" />
+                          @if (getControlError(voyageurGroup, 'departureDate')) {
+                            <span class="al-error">
+                              {{ getControlError(voyageurGroup, 'departureDate') }}
+                            </span>
+                          }
+                        </div>
+                        <div class="al-field-group">
+                          <label class="al-label">{{ 'ADD-LISTING.FIELD.ARRIVAL_DATE' | trl }} <span class="text-danger">*</span></label>
+                          <input type="date" class="al-input" formControlName="arrivalDate" [min]="todayStr"
+                            [class.al-input--error]="getControlError(voyageurGroup, 'arrivalDate')" />
+                            @if (getControlError(voyageurGroup, 'arrivalDate')) {
+                              <span class="al-error">
+                                {{ getControlError(voyageurGroup, 'arrivalDate') }}
+                              </span>
+                            }
+                          </div>
+                        </div>
+                        @if (getGroupError(voyageurGroup)) {
+                          <span class="al-error">
+                            {{ getGroupError(voyageurGroup) }}
+                          </span>
+                        }
+                        <div class="al-field-group mt-3">
+                          <label class="al-label">{{ 'ADD-LISTING.FIELD.WEIGHT_AVAIL' | trl }} <span class="text-danger">*</span></label>
+                          <div class="al-input-addon">
+                            <input type="number" class="al-input" formControlName="availableWeightKg" min="0.1" step="0.1" placeholder="ex: 5"
+                              [class.al-input--error]="getControlError(voyageurGroup, 'availableWeightKg')" />
+                              <span class="al-input-addon__text">kg</span>
+                            </div>
+                            @if (getControlError(voyageurGroup, 'availableWeightKg')) {
+                              <span class="al-error">
+                                {{ getControlError(voyageurGroup, 'availableWeightKg') }}
+                              </span>
+                            }
+                          </div>
+                          <div class="al-actions">
+                            <button class="al-btn al-btn--outline" type="button" (click)="prevStep()">
+                              <i class="fas fa-arrow-left me-2"></i>{{ 'ADD-LISTING.BTN.PREV' | trl }}
+                            </button>
+                            <button class="al-btn al-btn--primary" type="button" (click)="nextStep()">
+                              {{ 'ADD-LISTING.BTN.NEXT' | trl }} <i class="fas fa-arrow-right ms-2"></i>
+                            </button>
+                          </div>
+                        </div>
+                      }
 
-          <div *ngIf="submitError" class="al-alert al-alert--error mt-3">
-            <i class="fas fa-exclamation-circle me-2"></i>{{ submitError }}
-          </div>
+                      <!-- ===== STEP 2 : Expéditeur ===== -->
+                      @if (currentStep() === 2 && userType === NeedEnumDto.Sender) {
+                        <div formGroupName="chercheur">
+                          <div class="al-card__section-title">
+                            <i class="fas fa-box me-2" style="color:#4CBF88"></i>{{ 'ADD-LISTING.PARCEL.TITLE' | trl }}
+                          </div>
+                          <div class="al-field-group">
+                            <label class="al-label">{{ 'ADD-LISTING.FIELD.MAX_DATE' | trl }} <span class="text-danger">*</span></label>
+                            <input type="date" class="al-input" formControlName="maxTravelDate" [min]="todayStr"
+                              [class.al-input--error]="getControlError(chercheurGroup, 'maxTravelDate')" />
+                              @if (getControlError(chercheurGroup, 'maxTravelDate')) {
+                                <span class="al-error">
+                                  {{ getControlError(chercheurGroup, 'maxTravelDate') }}
+                                </span>
+                              }
+                            </div>
+                            <div class="al-field-group mt-3">
+                              <label class="al-label">{{ 'ADD-LISTING.FIELD.WEIGHT_DESIRED' | trl }} <span class="text-danger">*</span></label>
+                              <div class="al-input-addon">
+                                <input type="number" class="al-input" formControlName="desiredWeightKg" min="0.1" step="0.5" placeholder="ex: 3"
+                                  [class.al-input--error]="getControlError(chercheurGroup, 'desiredWeightKg')" />
+                                  <span class="al-input-addon__text">kg</span>
+                                </div>
+                                @if (getControlError(chercheurGroup, 'desiredWeightKg')) {
+                                  <span class="al-error">
+                                    {{ getControlError(chercheurGroup, 'desiredWeightKg') }}
+                                  </span>
+                                }
+                              </div>
+                              <div class="al-actions">
+                                <button class="al-btn al-btn--outline" type="button" (click)="prevStep()">
+                                  <i class="fas fa-arrow-left me-2"></i>{{ 'ADD-LISTING.BTN.PREV' | trl }}
+                                </button>
+                                <button class="al-btn al-btn--primary" type="button" (click)="nextStep()">
+                                  {{ 'ADD-LISTING.BTN.NEXT' | trl }} <i class="fas fa-arrow-right ms-2"></i>
+                                </button>
+                              </div>
+                            </div>
+                          }
 
-          <div class="al-actions">
-            <button class="al-btn al-btn--outline" type="button" (click)="prevStep()" [disabled]="submitLoading">
-              <i class="fas fa-arrow-left me-2"></i>{{ 'ADD-LISTING.BTN.PREV' | trl }}
-            </button>
-            <button class="al-btn al-btn--success" type="button" (click)="submit()"
-              [disabled]="submitLoading">
-              <span *ngIf="submitLoading" class="spinner-border spinner-border-sm me-2" role="status"></span>
-              <i *ngIf="!submitLoading" class="fas fa-paper-plane me-2"></i>
-              {{ submitLoading ? 'Publication...' : ('ADD-LISTING.BTN.SUBMIT' | trl) }}
-            </button>
-          </div>
-        </div>
+                          <!-- ===== STEP 3 : Trajet & tarif ===== -->
+                          @if (currentStep() === 3) {
+                            <div formGroupName="common">
+                              <div class="al-card__section-title">
+                                <i class="fas fa-route me-2" style="color:#482890"></i>{{ 'ADD-LISTING.ROUTE.TITLE' | trl }}
+                              </div>
+                              <div class="al-route-row">
+                                <div class="al-field-group flex-fill">
+                                  <label class="al-label"><i class="fas fa-map-marker-alt text-danger me-1"></i>{{ 'ADD-LISTING.FIELD.COUNTRY_FROM' | trl }} <span class="text-danger">*</span></label>
+                                  <select class="al-select" formControlName="departureCountryId"
+                                    [class.al-input--error]="getControlError(commonGroup, 'departureCountryId')">
+                                    <option value="">{{ 'ADD-LISTING.FIELD.COUNTRY_SELECT' | trl }}</option>
+                                    @for (c of countries; track c) {
+                                      <option [value]="c.id">{{ c.name }}</option>
+                                    }
+                                  </select>
+                                  @if (getControlError(commonGroup, 'departureCountryId')) {
+                                    <span class="al-error">
+                                      {{ getControlError(commonGroup, 'departureCountryId') }}
+                                    </span>
+                                  }
+                                  <input type="text" class="al-input mt-2" formControlName="departureCity" placeholder="ex: Paris"
+                                    [class.al-input--error]="getControlError(commonGroup, 'departureCity')" />
+                                    @if (getControlError(commonGroup, 'departureCity')) {
+                                      <span class="al-error">
+                                        {{ getControlError(commonGroup, 'departureCity') }}
+                                      </span>
+                                    }
+                                  </div>
+                                  <div class="al-route-arrow"><i class="fas fa-long-arrow-alt-right"></i></div>
+                                  <div class="al-field-group flex-fill">
+                                    <label class="al-label"><i class="fas fa-map-marker-alt text-success me-1"></i>{{ 'ADD-LISTING.FIELD.COUNTRY_TO' | trl }} <span class="text-danger">*</span></label>
+                                    <select class="al-select" formControlName="arrivalCountryId"
+                                      [class.al-input--error]="getControlError(commonGroup, 'arrivalCountryId')">
+                                      <option value="">{{ 'ADD-LISTING.FIELD.COUNTRY_SELECT' | trl }}</option>
+                                      @for (c of countries; track c) {
+                                        <option [value]="c.id">{{ c.name }}</option>
+                                      }
+                                    </select>
+                                    @if (getControlError(commonGroup, 'arrivalCountryId')) {
+                                      <span class="al-error">
+                                        {{ getControlError(commonGroup, 'arrivalCountryId') }}
+                                      </span>
+                                    }
+                                    <input type="text" class="al-input mt-2" formControlName="arrivalCity" placeholder="ex: Dakar"
+                                      [class.al-input--error]="getControlError(commonGroup, 'arrivalCity')" />
+                                      @if (getControlError(commonGroup, 'arrivalCity')) {
+                                        <span class="al-error">
+                                          {{ getControlError(commonGroup, 'arrivalCity') }}
+                                        </span>
+                                      }
+                                    </div>
+                                  </div>
+                                  <div class="al-price-row mt-4">
+                                    <div class="al-field-group flex-fill">
+                                      <label class="al-label">{{ 'ADD-LISTING.FIELD.PRICE' | trl }} <span class="text-danger">*</span></label>
+                                      <div class="al-input-addon">
+                                        <input type="number" class="al-input" formControlName="pricePerKg" min="0" step="0.5" placeholder="ex: 10"
+                                          [class.al-input--error]="getControlError(commonGroup, 'pricePerKg')" />
+                                          <select class="al-input-addon__select" formControlName="currencyId"
+                                            [class.al-input--error]="getControlError(commonGroup, 'currencyId')">
+                                            <option value="">{{ 'ADD-LISTING.FIELD.CURRENCY' | trl }}</option>
+                                            @for (c of currencies; track c) {
+                                              <option [value]="c.id">{{ c.symbol || c.code }}</option>
+                                            }
+                                          </select>
+                                          <span class="al-input-addon__text">/kg</span>
+                                        </div>
+                                        @if (getControlError(commonGroup, 'pricePerKg')) {
+                                          <span class="al-error">
+                                            {{ getControlError(commonGroup, 'pricePerKg') }}
+                                          </span>
+                                        }
+                                        @if (getControlError(commonGroup, 'currencyId')) {
+                                          <span class="al-error">
+                                            {{ getControlError(commonGroup, 'currencyId') }}
+                                          </span>
+                                        }
+                                      </div>
+                                    </div>
+                                    <div class="al-actions">
+                                      <button class="al-btn al-btn--outline" type="button" (click)="prevStep()">
+                                        <i class="fas fa-arrow-left me-2"></i>{{ 'ADD-LISTING.BTN.PREV' | trl }}
+                                      </button>
+                                      <button class="al-btn al-btn--primary" type="button" (click)="nextStep()">
+                                        {{ 'ADD-LISTING.BTN.NEXT' | trl }} <i class="fas fa-arrow-right ms-2"></i>
+                                      </button>
+                                    </div>
+                                  </div>
+                                }
 
-        <!-- ===== STEP 5 : Confirmation ===== -->
-        <div *ngIf="currentStep() === 5" class="al-success">
-          <div class="al-success__icon">
-            <i class="fas fa-check-circle"></i>
-          </div>
-          <h3 class="al-success__title">{{ 'ADD-LISTING.SUCCESS.TITLE' | trl }}</h3>
-          <p class="al-success__text">{{ 'ADD-LISTING.SUCCESS.SUB' | trl }}</p>
+                                <!-- ===== STEP 4 : Conditions ===== -->
+                                @if (currentStep() === 4) {
+                                  <div formGroupName="legal">
+                                    <div class="al-card__section-title">
+                                      <i class="fas fa-file-contract me-2" style="color:#482890"></i>{{ 'ADD-LISTING.LEGAL.TITLE' | trl }}
+                                    </div>
+                                    <div class="al-field-group mb-4">
+                                      <label class="al-label">{{ 'ADD-LISTING.FIELD.PAYMENT' | trl }} <span class="text-danger">*</span></label>
+                                      <div class="al-payment-grid">
+                                        @for (m of paymentMethods; track m) {
+                                          <label class="al-payment-option"
+                                            [class.al-payment-option--selected]="legalGroup.get('paymentMethod')?.value === m.key">
+                                            <input type="radio" formControlName="paymentMethod" [value]="m.key" class="d-none" />
+                                            <i class="al-payment-option__icon"
+                                              [class.fas]="true"
+                                              [class.fa-money-bill-wave]="m.key === PaymentMethodEnumDto.Cash"
+                                              [class.fa-credit-card]="m.key === PaymentMethodEnumDto.CreditCard"
+                                              [class.fa-paypal]="m.key === PaymentMethodEnumDto.PayPal"
+                                              [class.fa-university]="m.key === PaymentMethodEnumDto.BankTransfer"
+                                              [class.fa-mobile-alt]="m.key === PaymentMethodEnumDto.MobilePayment"
+                                              [class.fa-check-double]="m.key === PaymentMethodEnumDto.All"
+                                              [class.fa-ellipsis-h]="m.key === PaymentMethodEnumDto.Other"
+                                            ></i>
+                                            <span>{{ m.label }}</span>
+                                          </label>
+                                        }
+                                      </div>
+                                      @if (getControlError(legalGroup, 'paymentMethod')) {
+                                        <span class="al-error">
+                                          {{ getControlError(legalGroup, 'paymentMethod') }}
+                                        </span>
+                                      }
+                                    </div>
+                                    <div class="al-field-group">
+                                      <label class="al-checkbox-label">
+                                        <input type="checkbox" class="al-checkbox" formControlName="acceptTerms" />
+                                        <span>{{ 'ADD-LISTING.FIELD.TERMS' | trl }} <a href="#" target="_blank" class="al-link">{{ 'ADD-LISTING.FIELD.TERMS.LINK' | trl }}</a>
+                                        <span class="text-danger"> *</span></span>
+                                      </label>
+                                      @if (getControlError(legalGroup, 'acceptTerms')) {
+                                        <span class="al-error">
+                                          Vous devez accepter les conditions d'utilisation.
+                                        </span>
+                                      }
+                                    </div>
+                                    @if (submitError) {
+                                      <div class="al-alert al-alert--error mt-3">
+                                        <i class="fas fa-exclamation-circle me-2"></i>{{ submitError }}
+                                      </div>
+                                    }
+                                    <div class="al-actions">
+                                      <button class="al-btn al-btn--outline" type="button" (click)="prevStep()" [disabled]="submitLoading">
+                                        <i class="fas fa-arrow-left me-2"></i>{{ 'ADD-LISTING.BTN.PREV' | trl }}
+                                      </button>
+                                      <button class="al-btn al-btn--success" type="button" (click)="submit()"
+                                        [disabled]="submitLoading">
+                                        @if (submitLoading) {
+                                          <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                                        }
+                                        @if (!submitLoading) {
+                                          <i class="fas fa-paper-plane me-2"></i>
+                                        }
+                                        {{ submitLoading ? 'Publication...' : ('ADD-LISTING.BTN.SUBMIT' | trl) }}
+                                      </button>
+                                    </div>
+                                  </div>
+                                }
 
-          <div *ngIf="manageUrl()" class="al-manage-link-box">
-            <div class="al-manage-link-box__label">
-              <i class="fas fa-key me-2"></i>{{ 'ADD-LISTING.SUCCESS.MANAGE_LABEL' | trl }}
-            </div>
-            <div class="al-manage-link-box__row">
-              <input type="text" class="al-input al-input--mono" [value]="manageUrl()" readonly />
-              <button class="al-btn al-btn--icon" type="button" (click)="copyLink()" [title]="'ADD-LISTING.SUCCESS.COPY' | trl">
-                <i class="fas fa-copy"></i>
-              </button>
-            </div>
-            <small class="al-manage-link-box__hint">
-              <i class="fas fa-shield-alt me-1"></i>
-              Ce lien vous a été envoyé par email. Ne le partagez pas.
-            </small>
-          </div>
+                                <!-- ===== STEP 5 : Confirmation ===== -->
+                                @if (currentStep() === 5) {
+                                  <div class="al-success">
+                                    <div class="al-success__icon">
+                                      <i class="fas fa-check-circle"></i>
+                                    </div>
+                                    <h3 class="al-success__title">{{ 'ADD-LISTING.SUCCESS.TITLE' | trl }}</h3>
+                                    <p class="al-success__text">{{ 'ADD-LISTING.SUCCESS.SUB' | trl }}</p>
+                                    @if (manageUrl()) {
+                                      <div class="al-manage-link-box">
+                                        <div class="al-manage-link-box__label">
+                                          <i class="fas fa-key me-2"></i>{{ 'ADD-LISTING.SUCCESS.MANAGE_LABEL' | trl }}
+                                        </div>
+                                        <div class="al-manage-link-box__row">
+                                          <input type="text" class="al-input al-input--mono" [value]="manageUrl()" readonly />
+                                          <button class="al-btn al-btn--icon" type="button" (click)="copyLink()" [title]="'ADD-LISTING.SUCCESS.COPY' | trl">
+                                            <i class="fas fa-copy"></i>
+                                          </button>
+                                        </div>
+                                        <small class="al-manage-link-box__hint">
+                                          <i class="fas fa-shield-alt me-1"></i>
+                                          Ce lien vous a été envoyé par email. Ne le partagez pas.
+                                        </small>
+                                      </div>
+                                    }
+                                    <a routerLink="/forms/list" class="al-btn al-btn--primary mt-4">
+                                      <i class="fas fa-list me-2"></i>{{ 'ADD-LISTING.SUCCESS.VIEW' | trl }}
+                                    </a>
+                                  </div>
+                                }
 
-          <a routerLink="/forms/list" class="al-btn al-btn--primary mt-4">
-            <i class="fas fa-list me-2"></i>{{ 'ADD-LISTING.SUCCESS.VIEW' | trl }}
-          </a>
-        </div>
+                              </div>
+                            </div>
 
-      </div>
-    </div>
-
-    <!-- Sidebar récap -->
-    <aside class="al-sidebar" *ngIf="currentStep() < 5">
-      <div class="al-recap">
-        <div class="al-recap__title">
-          <i class="fas fa-eye me-2"></i>{{ 'ADD-LISTING.RECAP.TITLE' | trl }}
-        </div>
-
-        <div class="al-recap__row" *ngIf="userType">
-          <span class="al-recap__key">{{ 'ADD-LISTING.RECAP.TYPE' | trl }}</span>
-          <span class="al-recap__val al-badge" [class.al-badge--traveler]="userType === NeedEnumDto.Traveler"
-            [class.al-badge--sender]="userType === NeedEnumDto.Sender">
-            <i [class]="userType === NeedEnumDto.Traveler ? 'fas fa-plane me-1' : 'fas fa-box me-1'"></i>
-            {{ userType === NeedEnumDto.Traveler ? ('ADD-LISTING.TRAVELER.TITLE' | trl) : ('ADD-LISTING.SENDER.TITLE' | trl) }}
-          </span>
-        </div>
-
-        <ng-container *ngIf="identityGroup.get('firstName')?.value || identityGroup.get('lastName')?.value">
-          <div class="al-recap__row">
-            <span class="al-recap__key">{{ 'ADD-LISTING.RECAP.NAME' | trl }}</span>
-            <span class="al-recap__val">
-              {{ identityGroup.get('firstName')?.value }} {{ identityGroup.get('lastName')?.value }}
-            </span>
-          </div>
-        </ng-container>
-
-        <ng-container *ngIf="userType === NeedEnumDto.Traveler && currentStep() > 2">
-          <div class="al-recap__row" *ngIf="voyageurGroup.get('departureDate')?.value">
-            <span class="al-recap__key">{{ 'DETAILS.DEPARTURE' | trl }}</span>
-            <span class="al-recap__val">{{ voyageurGroup.get('departureDate')?.value | date:'dd/MM/yyyy' }}</span>
-          </div>
-          <div class="al-recap__row" *ngIf="voyageurGroup.get('arrivalDate')?.value">
-            <span class="al-recap__key">{{ 'DETAILS.ARRIVAL' | trl }}</span>
-            <span class="al-recap__val">{{ voyageurGroup.get('arrivalDate')?.value | date:'dd/MM/yyyy' }}</span>
-          </div>
-          <div class="al-recap__row" *ngIf="voyageurGroup.get('availableWeightKg')?.value">
-            <span class="al-recap__key">{{ 'ADD-LISTING.RECAP.WEIGHT' | trl }}</span>
-            <span class="al-recap__val">{{ voyageurGroup.get('availableWeightKg')?.value }} kg</span>
-          </div>
-        </ng-container>
-
-        <ng-container *ngIf="userType === NeedEnumDto.Sender && currentStep() > 2">
-          <div class="al-recap__row" *ngIf="chercheurGroup.get('maxTravelDate')?.value">
-            <span class="al-recap__key">{{ 'ADD-LISTING.RECAP.MAXDATE' | trl }}</span>
-            <span class="al-recap__val">{{ chercheurGroup.get('maxTravelDate')?.value | date:'dd/MM/yyyy' }}</span>
-          </div>
-          <div class="al-recap__row" *ngIf="chercheurGroup.get('desiredWeightKg')?.value">
-            <span class="al-recap__key">{{ 'ADD-LISTING.RECAP.WEIGHT' | trl }}</span>
-            <span class="al-recap__val">{{ chercheurGroup.get('desiredWeightKg')?.value }} kg</span>
-          </div>
-        </ng-container>
-
-        <ng-container *ngIf="currentStep() > 3">
-          <div class="al-recap__divider"></div>
-          <div class="al-recap__row" *ngIf="commonGroup.get('departureCity')?.value">
-            <span class="al-recap__key">{{ 'ADD-LISTING.RECAP.ROUTE' | trl }}</span>
-            <span class="al-recap__val al-recap__val--route">
-              <span>{{ commonGroup.get('departureCity')?.value }}{{ selectedDepartureCountryName ? ', ' + selectedDepartureCountryName : '' }}</span>
-              <i class="fas fa-arrow-right mx-1 text-muted"></i>
-              <span>{{ commonGroup.get('arrivalCity')?.value }}{{ selectedArrivalCountryName ? ', ' + selectedArrivalCountryName : '' }}</span>
-            </span>
-          </div>
-          <div class="al-recap__row" *ngIf="commonGroup.get('pricePerKg')?.value">
-            <span class="al-recap__key">{{ 'ADD-LISTING.RECAP.PRICE' | trl }}</span>
-            <span class="al-recap__val al-recap__val--price">
-              {{ commonGroup.get('pricePerKg')?.value }} {{ selectedCurrencySymbol || '' }}/kg
-            </span>
-          </div>
-        </ng-container>
-
-        <ng-container *ngIf="currentStep() > 4">
-          <div class="al-recap__divider"></div>
-          <div class="al-recap__row" *ngIf="legalGroup.get('paymentMethod')?.value">
-            <span class="al-recap__key">{{ 'ADD-LISTING.FIELD.PAYMENT' | trl }}</span>
-            <span class="al-recap__val">{{ paymentMethodLabel(legalGroup.get('paymentMethod')?.value) }}</span>
-          </div>
-        </ng-container>
-
-        <div class="al-recap__progress mt-3">
-          <div class="al-recap__progress-bar"
-            [style.width.%]="(currentStep() / (activeSteps().length - 1)) * 100"></div>
-        </div>
-        <small class="al-recap__progress-label">
-          {{ 'ADD-LISTING.STEP.LABEL' | trl }} {{ currentStep() }} / {{ activeSteps().length - 1 }}
-        </small>
-      </div>
-    </aside>
-  </div>
-</div>
+                            <!-- Sidebar récap -->
+                            @if (currentStep() < 5) {
+                              <aside class="al-sidebar">
+                                <div class="al-recap">
+                                  <div class="al-recap__title">
+                                    <i class="fas fa-eye me-2"></i>{{ 'ADD-LISTING.RECAP.TITLE' | trl }}
+                                  </div>
+                                  @if (userType) {
+                                    <div class="al-recap__row">
+                                      <span class="al-recap__key">{{ 'ADD-LISTING.RECAP.TYPE' | trl }}</span>
+                                      <span class="al-recap__val al-badge" [class.al-badge--traveler]="userType === NeedEnumDto.Traveler"
+                                        [class.al-badge--sender]="userType === NeedEnumDto.Sender">
+                                        <i [class]="userType === NeedEnumDto.Traveler ? 'fas fa-plane me-1' : 'fas fa-box me-1'"></i>
+                                        {{ userType === NeedEnumDto.Traveler ? ('ADD-LISTING.TRAVELER.TITLE' | trl) : ('ADD-LISTING.SENDER.TITLE' | trl) }}
+                                      </span>
+                                    </div>
+                                  }
+                                  @if (identityGroup.get('firstName')?.value || identityGroup.get('lastName')?.value) {
+                                    <div class="al-recap__row">
+                                      <span class="al-recap__key">{{ 'ADD-LISTING.RECAP.NAME' | trl }}</span>
+                                      <span class="al-recap__val">
+                                        {{ identityGroup.get('firstName')?.value }} {{ identityGroup.get('lastName')?.value }}
+                                      </span>
+                                    </div>
+                                  }
+                                  @if (userType === NeedEnumDto.Traveler && currentStep() > 2) {
+                                    @if (voyageurGroup.get('departureDate')?.value) {
+                                      <div class="al-recap__row">
+                                        <span class="al-recap__key">{{ 'DETAILS.DEPARTURE' | trl }}</span>
+                                        <span class="al-recap__val">{{ voyageurGroup.get('departureDate')?.value | date:'dd/MM/yyyy' }}</span>
+                                      </div>
+                                    }
+                                    @if (voyageurGroup.get('arrivalDate')?.value) {
+                                      <div class="al-recap__row">
+                                        <span class="al-recap__key">{{ 'DETAILS.ARRIVAL' | trl }}</span>
+                                        <span class="al-recap__val">{{ voyageurGroup.get('arrivalDate')?.value | date:'dd/MM/yyyy' }}</span>
+                                      </div>
+                                    }
+                                    @if (voyageurGroup.get('availableWeightKg')?.value) {
+                                      <div class="al-recap__row">
+                                        <span class="al-recap__key">{{ 'ADD-LISTING.RECAP.WEIGHT' | trl }}</span>
+                                        <span class="al-recap__val">{{ voyageurGroup.get('availableWeightKg')?.value }} kg</span>
+                                      </div>
+                                    }
+                                  }
+                                  @if (userType === NeedEnumDto.Sender && currentStep() > 2) {
+                                    @if (chercheurGroup.get('maxTravelDate')?.value) {
+                                      <div class="al-recap__row">
+                                        <span class="al-recap__key">{{ 'ADD-LISTING.RECAP.MAXDATE' | trl }}</span>
+                                        <span class="al-recap__val">{{ chercheurGroup.get('maxTravelDate')?.value | date:'dd/MM/yyyy' }}</span>
+                                      </div>
+                                    }
+                                    @if (chercheurGroup.get('desiredWeightKg')?.value) {
+                                      <div class="al-recap__row">
+                                        <span class="al-recap__key">{{ 'ADD-LISTING.RECAP.WEIGHT' | trl }}</span>
+                                        <span class="al-recap__val">{{ chercheurGroup.get('desiredWeightKg')?.value }} kg</span>
+                                      </div>
+                                    }
+                                  }
+                                  @if (currentStep() > 3) {
+                                    <div class="al-recap__divider"></div>
+                                    @if (commonGroup.get('departureCity')?.value) {
+                                      <div class="al-recap__row">
+                                        <span class="al-recap__key">{{ 'ADD-LISTING.RECAP.ROUTE' | trl }}</span>
+                                        <span class="al-recap__val al-recap__val--route">
+                                          <span>{{ commonGroup.get('departureCity')?.value }}{{ selectedDepartureCountryName ? ', ' + selectedDepartureCountryName : '' }}</span>
+                                          <i class="fas fa-arrow-right mx-1 text-muted"></i>
+                                          <span>{{ commonGroup.get('arrivalCity')?.value }}{{ selectedArrivalCountryName ? ', ' + selectedArrivalCountryName : '' }}</span>
+                                        </span>
+                                      </div>
+                                    }
+                                    @if (commonGroup.get('pricePerKg')?.value) {
+                                      <div class="al-recap__row">
+                                        <span class="al-recap__key">{{ 'ADD-LISTING.RECAP.PRICE' | trl }}</span>
+                                        <span class="al-recap__val al-recap__val--price">
+                                          {{ commonGroup.get('pricePerKg')?.value }} {{ selectedCurrencySymbol || '' }}/kg
+                                        </span>
+                                      </div>
+                                    }
+                                  }
+                                  @if (currentStep() > 4) {
+                                    <div class="al-recap__divider"></div>
+                                    @if (legalGroup.get('paymentMethod')?.value) {
+                                      <div class="al-recap__row">
+                                        <span class="al-recap__key">{{ 'ADD-LISTING.FIELD.PAYMENT' | trl }}</span>
+                                        <span class="al-recap__val">{{ paymentMethodLabel(legalGroup.get('paymentMethod')?.value) }}</span>
+                                      </div>
+                                    }
+                                  }
+                                  <div class="al-recap__progress mt-3">
+                                    <div class="al-recap__progress-bar"
+                                    [style.width.%]="(currentStep() / (activeSteps().length - 1)) * 100"></div>
+                                  </div>
+                                  <small class="al-recap__progress-label">
+                                    {{ 'ADD-LISTING.STEP.LABEL' | trl }} {{ currentStep() }} / {{ activeSteps().length - 1 }}
+                                  </small>
+                                </div>
+                              </aside>
+                            }
+                          </div>
+                        </div>

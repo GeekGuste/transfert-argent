@@ -1,4 +1,6 @@
 import { Route } from '@angular/router'
+import { authGuard } from '../../core/guard/auth/auth.guard'
+import { MyListingsComponent } from './my-listings/my-listings.component'
 import { ProfileComponent } from './profile/profile.component'
 import { NotificationsComponent } from './notifications/notifications.component'
 import { TimelineComponent } from './timeline/timeline.component'
@@ -14,7 +16,7 @@ export const PAGES_ROUTES: Route[] = [
   {
     path: '',
     component: HomeComponent,
-    data: { title: 'home' },
+    data: { title: 'Envoi de colis entre particuliers' },
   },
   {
     path: 'auth',
@@ -25,6 +27,12 @@ export const PAGES_ROUTES: Route[] = [
     path: 'profile',
     component: ProfileComponent,
     data: { title: 'Profile' },
+  },
+  {
+    path: 'my-listings',
+    component: MyListingsComponent,
+    canActivate: [authGuard],
+    data: { title: 'Mes annonces' },
   },
   {
     path: 'notifications',
