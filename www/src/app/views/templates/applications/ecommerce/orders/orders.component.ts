@@ -1,5 +1,5 @@
 import { TableService } from '@/app/core/service/table.service'
-import { AsyncPipe, CommonModule } from '@angular/common'
+import { AsyncPipe } from '@angular/common';
 import { Component } from '@angular/core'
 import type { Observable } from 'rxjs'
 import { OrderData, type OrderType } from './data'
@@ -9,7 +9,7 @@ import { RouterLink } from '@angular/router'
 @Component({
   selector: 'app-orders',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [RouterLink],
   templateUrl: './orders.component.html',
   styles: ``,
 })

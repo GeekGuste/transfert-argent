@@ -27,32 +27,34 @@
               </tr>
             </thead>
             <tbody>
-              <ng-container *ngIf="currencies !== []">
-                <tr *ngFor="let currency of currencies">
-                  <td>
-                    {{ currency.label }}
-                  </td>
-                  <td>
-                    {{ currency.code }}
-                  </td>
-                  <td>
-                    {{ currency.symbol }}
-                  </td>
-                  <td class="text-end">
-                    <a
-                      href="javascript:void(0);"
-                      (click)="openEditModal(currency)"
-                      class="me-0.5"
-                      ><i class="las la-pen text-secondary font-16"></i
-                    ></a>
-                    <a
-                      href="javascript:void(0);"
-                      (click)="deleteCurrency(currency)"
-                      ><i class="las la-trash-alt text-secondary font-16"></i
-                    ></a>
-                  </td>
-                </tr>
-              </ng-container>
+              @if (currencies !== []) {
+                @for (currency of currencies; track currency) {
+                  <tr>
+                    <td>
+                      {{ currency.label }}
+                    </td>
+                    <td>
+                      {{ currency.code }}
+                    </td>
+                    <td>
+                      {{ currency.symbol }}
+                    </td>
+                    <td class="text-end">
+                      <a
+                        href="javascript:void(0);"
+                        (click)="openEditModal(currency)"
+                        class="me-0.5"
+                        ><i class="las la-pen text-secondary font-16"></i
+                      ></a>
+                      <a
+                        href="javascript:void(0);"
+                        (click)="deleteCurrency(currency)"
+                        ><i class="las la-trash-alt text-secondary font-16"></i
+                      ></a>
+                    </td>
+                  </tr>
+                }
+              }
             </tbody>
           </table>
           <!--end /table-->
@@ -74,7 +76,7 @@
   tabindex="-1"
   aria-labelledby="editCurrencyModalLabel"
   aria-hidden="true"
->
+  >
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -111,14 +113,14 @@
             type="button"
             class="btn btn-secondary"
             data-bs-dismiss="modal"
-          >
+            >
             {{ "CURRENCY.LIST.MODAL.CANCEL_BUTTON" | trl }}
           </button>
           <button
             type="button"
             class="btn btn-primary"
             (click)="updateCurrency()"
-          >
+            >
             {{ "CURRENCY.LIST.MODAL.UPDATE_BUTTON" | trl }}
           </button>
         </div>

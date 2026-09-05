@@ -10,7 +10,6 @@ const PUBLIC_RULES: { urlFragment: string; method: string }[] = [
   { urlFragment: '/users/me/reset-password', method: 'GET' },
   { urlFragment: '/users/me/reset-password', method: 'POST' },
   { urlFragment: '/listings', method: 'GET' },
-  { urlFragment: '/listings', method: 'POST' },
   { urlFragment: '/listings/access/', method: 'GET' },
   { urlFragment: '/listings/access/', method: 'PUT' },
   { urlFragment: '/listings/access/', method: 'DELETE' },
@@ -19,11 +18,21 @@ const PUBLIC_RULES: { urlFragment: string; method: string }[] = [
   { urlFragment: '/applications', method: 'POST' },
 ];
 
+// Narrower routes that must stay authenticated even though a broader PUBLIC_RULES
+// fragment (e.g. "/listings" GET) would otherwise match them by substring.
+const PRIVATE_OVERRIDES: { urlFragment: string; method: string }[] = [
+  { urlFragment: '/listings/mine', method: 'GET' },
+];
+
 function isPublicRequest(url: string, method: string): boolean {
+  const m = method.toUpperCase();
+  if (PRIVATE_OVERRIDES.some((rule) => url.includes(rule.urlFragment) && m === rule.method)) {
+    return false;
+  }
   return PUBLIC_RULES.some(
     (rule) =>
       url.includes(rule.urlFragment) &&
-      method.toUpperCase() === rule.method
+      m === rule.method
   );
 }
 

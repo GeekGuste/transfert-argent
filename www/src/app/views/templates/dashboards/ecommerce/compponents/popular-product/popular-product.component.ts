@@ -1,13 +1,13 @@
 import { Component } from '@angular/core'
 import { ProductList } from '../../data'
-import { CommonModule } from '@angular/common'
+
 import { CardTitleComponent } from '@/app/components/card-title.component'
 import { currency } from '@/app/common/constants'
 
 @Component({
   selector: 'ecommerce-popular-product',
   standalone: true,
-  imports: [CommonModule, CardTitleComponent],
+  imports: [CardTitleComponent],
   templateUrl: './popular-product.component.html',
   styles: ``,
 })

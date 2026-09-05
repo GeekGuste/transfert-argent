@@ -8,7 +8,7 @@ import {
 import { TableService } from '@/app/core/service/table.service'
 import { TableHeaderComponent } from '@/app/components/table/table-header/table-header.component'
 import { TableFooterComponent } from '@/app/components/table/table-footer/table-footer.component'
-import { AsyncPipe, CommonModule } from '@angular/common'
+import { AsyncPipe, CommonModule } from '@angular/common';
 
 @Component({
   selector: 'contact-table',

@@ -25,51 +25,56 @@
               </tr>
             </thead>
             <tbody>
-              <ng-container *ngIf="services !== []">
-                <tr *ngFor="let service of services">
-                  <td>
-                    {{ service.name }}
-                  </td>
-                  <td>
-                    {{ service.description }}
-                  </td>
-                  <td>
-                    <span *ngIf="service.isEnabled" class="badge bg-success">{{ 'SERVICE.LIST.TABLE.STATUS_ACTIVE' | trl
-                      }}</span>
-                    <span *ngIf="!service.isEnabled" class="badge bg-secondary">{{ 'SERVICE.LIST.TABLE.STATUS_INACTIVE'
-                      | trl }}</span>
-                  </td>
-
-                  <td class="text-end">
-                    <a href="javascript:void(0);" (click)="openEditModal(service)" class="me-0.5"><i
-                        class="las la-pen text-secondary font-16"></i></a>
-                    @if (service.isEnabled) {
-                    <a href="javascript:void(0);" (click)="deactivateService(service)"><i
+              @if (services !== []) {
+                @for (service of services; track service) {
+                  <tr>
+                    <td>
+                      {{ service.name }}
+                    </td>
+                    <td>
+                      {{ service.description }}
+                    </td>
+                    <td>
+                      @if (service.isEnabled) {
+                        <span class="badge bg-success">{{ 'SERVICE.LIST.TABLE.STATUS_ACTIVE' | trl
+                        }}</span>
+                      }
+                      @if (!service.isEnabled) {
+                        <span class="badge bg-secondary">{{ 'SERVICE.LIST.TABLE.STATUS_INACTIVE'
+                        | trl }}</span>
+                      }
+                    </td>
+                    <td class="text-end">
+                      <a href="javascript:void(0);" (click)="openEditModal(service)" class="me-0.5"><i
+                      class="las la-pen text-secondary font-16"></i></a>
+                      @if (service.isEnabled) {
+                        <a href="javascript:void(0);" (click)="deactivateService(service)"><i
                         class="las la-lock text-secondary font-16"></i></a>
-                    }
-                    @if (!service.isEnabled) {
-                    <a href="javascript:void(0);" (click)="activateService(service)"><i
+                      }
+                      @if (!service.isEnabled) {
+                        <a href="javascript:void(0);" (click)="activateService(service)"><i
                         class="las la-unlock text-secondary font-16"></i></a>
-                    }
-                    <a href="javascript:void(0);" (click)="deleteService(service)"><i
-                        class="las la-trash-alt text-secondary font-16"></i></a>
-                    <!-- <ng-container *ngIf="(loading && currentService!==null && currentService.name === service.serviceName)">
+                      }
+                      <a href="javascript:void(0);" (click)="deleteService(service)"><i
+                      class="las la-trash-alt text-secondary font-16"></i></a>
+                      <!-- <ng-container *ngIf="(loading && currentService!==null && currentService.name === service.serviceName)">
                       <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
                     </ng-container> -->
                   </td>
                 </tr>
-              </ng-container>
-            </tbody>
-          </table>
-          <!--end /table-->
-        </div>
-        <!--end /tableresponsive-->
+              }
+            }
+          </tbody>
+        </table>
+        <!--end /table-->
       </div>
-      <!--end card-body-->
+      <!--end /tableresponsive-->
     </div>
-    <!--end card-->
+    <!--end card-body-->
   </div>
-  <!--end col-->
+  <!--end card-->
+</div>
+<!--end col-->
 </div>
 <!--end row-->
 

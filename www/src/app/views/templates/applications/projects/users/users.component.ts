@@ -5,7 +5,7 @@ import {
   type SortEvent,
 } from '@/app/core/directive/sortable.directive'
 import { TableService } from '@/app/core/service/table.service'
-import { AsyncPipe, CommonModule } from '@angular/common'
+import { AsyncPipe, CommonModule } from '@angular/common';
 import { Component, ViewChildren, type QueryList } from '@angular/core'
 import type { Observable } from 'rxjs'
 import { UserData, type UserType } from './data'

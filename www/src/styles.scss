@@ -22,4 +22,12 @@
 
 @import "../public/assets/scss/app.scss";
 
+// Reserve space for the fixed mobile bottom navigation bar (app-navbar)
+// so it never overlaps the end of a page's content.
+@media (max-width: 768px) {
+  body {
+    padding-bottom: calc(60px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
 

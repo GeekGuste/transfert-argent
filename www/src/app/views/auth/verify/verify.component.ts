@@ -1,5 +1,5 @@
 import { AuthService } from '@/app/core/service/ws/auth/auth.service';
-import { CommonModule } from '@angular/common';
+
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -15,7 +15,7 @@ import { Store } from '@ngrx/store';
 @Component({
   selector: 'app-verify',
   standalone: true,
-  imports: [RouterLink, FormsModule, ReactiveFormsModule, CommonModule],
+  imports: [RouterLink, FormsModule, ReactiveFormsModule],
   templateUrl: './verify.component.html',
   styleUrl: './verify.component.scss',
 })

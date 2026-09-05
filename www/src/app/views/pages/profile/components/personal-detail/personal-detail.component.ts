@@ -1,11 +1,12 @@
 import { Component, inject, OnInit, ViewEncapsulation } from '@angular/core';
+import { NgClass } from '@angular/common';
 import {
   NgbDropdownModule,
   NgbNavModule,
   NgbTooltipModule,
 } from '@ng-bootstrap/ng-bootstrap';
 import { comments, lightbox } from '../../data';
-import { CommonModule } from '@angular/common';
+
 import { TobiiDirective } from '@/app/core/directive/tobii.directive';
 import { credits, currentYear } from '@/app/common/constants';
 import {
@@ -24,15 +25,14 @@ import { finalize, switchMap } from 'rxjs';
   selector: 'app-personal-detail',
   standalone: true,
   imports: [
+    NgClass,
     NgbDropdownModule,
     NgbTooltipModule,
     NgbNavModule,
-    CommonModule,
     TobiiDirective,
-    CommonModule,
     FormsModule,
-    ReactiveFormsModule,
-  ],
+    ReactiveFormsModule
+],
   templateUrl: './personal-detail.component.html',
   styles: ``,
   encapsulation: ViewEncapsulation.None,

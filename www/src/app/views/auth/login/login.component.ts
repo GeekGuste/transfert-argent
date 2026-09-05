@@ -10,14 +10,14 @@ import { Router, RouterLink } from '@angular/router'
 import { AuthService } from '@/app/core/service/ws/auth/auth.service'
 import { Store } from '@ngrx/store'
 import { login } from '@/app/store/authentication/authentication.actions'
-import { CommonModule } from '@angular/common'
+
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [RouterLink, FormsModule, ReactiveFormsModule,CommonModule],
+  imports: [RouterLink, FormsModule, ReactiveFormsModule],
   templateUrl: './login.component.html',
-  styles: ``,
+  styleUrl: './login.component.scss',
 })
 export class LoginComponent implements OnInit {
   signInForm!: UntypedFormGroup

@@ -12,7 +12,7 @@ import {
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
 
-import { CommonModule } from '@angular/common'
+
 
 const illustration1 = 'assets/images/extra/ill-1.png'
 const illustration2 = 'assets/images/extra/ill-2.png'
@@ -23,9 +23,10 @@ const illustration2 = 'assets/images/extra/ill-2.png'
   imports: [
     NgbDropdownModule,
     KanbanCardComponent,
-    CommonModule,
-    CdkDropListGroup, CdkDropList, CdkDrag,
-  ],
+    CdkDropListGroup,
+    CdkDropList,
+    CdkDrag
+],
   templateUrl: './kanban-tasks.component.html',
   styles: ``,
 })

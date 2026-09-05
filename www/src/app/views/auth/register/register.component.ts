@@ -16,7 +16,7 @@ import { Router, RouterLink } from '@angular/router';
   standalone: true,
   imports: [RouterLink, FormsModule, ReactiveFormsModule, CommonModule],
   templateUrl: './register.component.html',
-  styles: ``,
+  styleUrl: './register.component.scss',
 })
 export class RegisterComponent {
   fieldTextType = false;

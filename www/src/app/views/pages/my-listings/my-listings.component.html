@@ -1,0 +1,98 @@
+<div class="ml-page">
+
+  <div class="ml-page-header">
+    <div class="ml-page-header__inner">
+      <div>
+        <h1 class="ml-title">{{ 'my-listings.title' | i18n }}</h1>
+        <p class="ml-subtitle">{{ 'my-listings.subtitle' | i18n }}</p>
+      </div>
+      <a routerLink="/forms" class="ml-btn ml-btn--primary">
+        <i class="fas fa-plus me-2"></i>{{ 'nav.publish.full' | i18n }}
+      </a>
+    </div>
+  </div>
+
+  <div class="ml-body">
+
+    <!-- Loading -->
+    @if (loading) {
+      <div class="ml-loading">
+        <div class="ml-skeleton" style="height:120px"></div>
+        <div class="ml-skeleton" style="height:120px;margin-top:1rem"></div>
+      </div>
+    }
+
+    <!-- Error -->
+    @if (error && !loading) {
+      <div class="ml-error">
+        <i class="fas fa-exclamation-triangle ml-error__icon"></i>
+        <p>{{ error }}</p>
+      </div>
+    }
+
+    <!-- Empty -->
+    @if (!loading && !error && listings.length === 0) {
+      <div class="ml-empty">
+        <i class="fas fa-inbox ml-empty__icon"></i>
+        <p>{{ 'my-listings.empty' | i18n }}</p>
+        <a routerLink="/forms" class="ml-btn ml-btn--primary mt-3">
+          <i class="fas fa-plus me-2"></i>{{ 'nav.publish.full' | i18n }}
+        </a>
+      </div>
+    }
+
+    <!-- List -->
+    @if (!loading && !error) {
+      <div class="ml-list">
+        @for (listing of listings; track listing) {
+          <div class="ml-card">
+            <div class="ml-card__row">
+              <div class="ml-info-route">
+                <span class="ml-info-route__badge"
+                  [class.ml-info-route__badge--traveler]="listing.need?.key === NeedEnumDto.Traveler"
+                  [class.ml-info-route__badge--sender]="listing.need?.key === NeedEnumDto.Sender">
+                  <i [class]="listing.need?.key === NeedEnumDto.Traveler ? 'fas fa-plane me-1' : 'fas fa-box me-1'"></i>
+                  {{ listing.need?.key === NeedEnumDto.Traveler ? ('need.traveler' | i18n) : ('need.sender' | i18n) }}
+                </span>
+                <div class="ml-info-route__path">
+                  <strong>{{ listing.departureCity || '—' }}{{ listing.departureCountry?.name ? ', ' + listing.departureCountry!.name : '' }}</strong>
+                  <i class="fas fa-long-arrow-alt-right mx-2 text-muted"></i>
+                  <strong>{{ listing.arrivalCity || '—' }}{{ listing.arrivalCountry?.name ? ', ' + listing.arrivalCountry!.name : '' }}</strong>
+                </div>
+              </div>
+              <div class="ml-status-badge"
+                [class.ml-status-badge--active]="listing.isActive"
+                [class.ml-status-badge--inactive]="!listing.isActive">
+                <span class="ml-status-badge__dot"></span>
+                {{ listing.isActive ? ('manage.status.active' | i18n) : ('manage.status.inactive' | i18n) }}
+              </div>
+            </div>
+            <div class="ml-meta-row">
+              <span class="ml-meta-item">
+                <i class="fas fa-weight-hanging"></i>{{ weightKg(listing) | number:'1.0-1' }} kg
+              </span>
+              <span class="ml-meta-item">
+                <i class="fas fa-tag"></i>{{ listing.pricePerKg ?? 0 | number:'1.0-2' }} {{ listing.currency?.symbol || listing.currency?.code || '' }}/kg
+              </span>
+              @if (listingDate(listing)) {
+                <span class="ml-meta-item">
+                  <i class="fas fa-calendar-alt"></i>
+                  {{ listingDate(listing) | date:'dd/MM/yyyy' }}
+                </span>
+              }
+              <span class="ml-meta-item">
+                <i class="fas fa-users"></i>{{ listing.applicationsNumber ?? 0 }} candidature(s)
+              </span>
+            </div>
+            <div class="ml-actions-row">
+              <a class="ml-btn ml-btn--outline" [routerLink]="['/listings/manage', listing.accessToken]">
+                <i class="fas fa-cog me-2"></i>{{ 'my-listings.manage' | i18n }}
+              </a>
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+  </div>
+</div>

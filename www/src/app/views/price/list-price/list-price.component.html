@@ -27,55 +27,55 @@
               </tr>
             </thead>
             <tbody>
-              <ng-container *ngIf="subscriptions !== []">
-                <tr *ngFor="let subscription of subscriptions">
-                  <td>
-                    {{ subscription.name }}
-                  </td>
-                  <td>
-                    {{ subscription.amount }}
-                  </td>
-                  <td>
-                    {{ subscription.frequency }}
-                  </td>
-                  <td>
-                    {{ subscription.currency }}
-                  </td>
-                  <td>
-                    @for (service of subscription.services; track service; let last = $last) {
-                    <span>{{ service.name }}{{ !last ? ', ' : '' }}</span>
-                    }
-                  </td>
-
-
-                  <td class="text-end">
-                    <a href="javascript:void(0);" (click)="openEditModal(subscription)" class="me-0.5"><i
-                        class="las la-pen text-secondary font-16"></i></a>
-                    @if (subscription.isEnabled) {
-                    <a href="javascript:void(0);"><i class="las la-lock text-secondary font-16"></i></a>
-                    }
-                    @if (!subscription.isEnabled) {
-                    <a href="javascript:void(0);"><i class="las la-unlock text-secondary font-16"></i></a>
-                    }
-                    <a href="javascript:void(0);" (click)="deleteService(subscription)"><i
-                        class="las la-trash-alt text-secondary font-16"></i></a>
-                    <!-- <ng-container *ngIf="(loading && currentService!==null && currentService.name === service.serviceName)">
+              @if (subscriptions !== []) {
+                @for (subscription of subscriptions; track subscription) {
+                  <tr>
+                    <td>
+                      {{ subscription.name }}
+                    </td>
+                    <td>
+                      {{ subscription.amount }}
+                    </td>
+                    <td>
+                      {{ subscription.frequency }}
+                    </td>
+                    <td>
+                      {{ subscription.currency }}
+                    </td>
+                    <td>
+                      @for (service of subscription.services; track service; let last = $last) {
+                        <span>{{ service.name }}{{ !last ? ', ' : '' }}</span>
+                      }
+                    </td>
+                    <td class="text-end">
+                      <a href="javascript:void(0);" (click)="openEditModal(subscription)" class="me-0.5"><i
+                      class="las la-pen text-secondary font-16"></i></a>
+                      @if (subscription.isEnabled) {
+                        <a href="javascript:void(0);"><i class="las la-lock text-secondary font-16"></i></a>
+                      }
+                      @if (!subscription.isEnabled) {
+                        <a href="javascript:void(0);"><i class="las la-unlock text-secondary font-16"></i></a>
+                      }
+                      <a href="javascript:void(0);" (click)="deleteService(subscription)"><i
+                      class="las la-trash-alt text-secondary font-16"></i></a>
+                      <!-- <ng-container *ngIf="(loading && currentService!==null && currentService.name === service.serviceName)">
                       <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
                     </ng-container> -->
                   </td>
                 </tr>
-              </ng-container>
-            </tbody>
-          </table>
-          <!--end /table-->
-        </div>
-        <!--end /tableresponsive-->
+              }
+            }
+          </tbody>
+        </table>
+        <!--end /table-->
       </div>
-      <!--end card-body-->
+      <!--end /tableresponsive-->
     </div>
-    <!--end card-->
+    <!--end card-body-->
   </div>
-  <!--end col-->
+  <!--end card-->
+</div>
+<!--end col-->
 </div>
 <!--end row-->
 
@@ -104,14 +104,18 @@
           <div class="mb-3">
             <label class="form-label">{{ 'PRICE.ADD.FORM.SERVICES_LABEL' | trl }}</label>
             <select class="form-select" formControlName="serviceIds" multiple>
-              <option *ngFor="let service of services" [value]="service.id">{{ service.name }}</option>
+              @for (service of services; track service) {
+                <option [value]="service.id">{{ service.name }}</option>
+              }
             </select>
           </div>
           <div class="mb-3">
             <label class="form-label">{{ 'PRICE.ADD.FORM.FREQUENCY_LABEL' | trl }}</label>
             <select class="form-select" formControlName="frequency">
               <option value="" disabled selected>{{ 'PRICE.ADD.FORM.FREQUENCY_PLACEHOLDER' | trl }}</option>
-              <option *ngFor="let item of frequencies" [value]="item.frequency">{{ item.label }}</option>
+              @for (item of frequencies; track item) {
+                <option [value]="item.frequency">{{ item.label }}</option>
+              }
             </select>
           </div>
         </div>
