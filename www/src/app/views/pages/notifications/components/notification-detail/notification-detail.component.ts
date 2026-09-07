@@ -1,11 +1,12 @@
 import { Component } from '@angular/core'
+import { NgClass } from '@angular/common'
 import { notificationDetail } from '../../data'
-import { CommonModule } from '@angular/common'
+
 
 @Component({
   selector: 'app-notification-detail',
   standalone: true,
-  imports: [CommonModule],
+  imports: [NgClass],
   templateUrl: './notification-detail.component.html',
   styles: ``,
 })

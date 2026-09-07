@@ -52,6 +52,12 @@ export const VIEW_ROUTES: Route[] = [
       import('./admin/listings.route').then((mod) => mod.LISTINGS_ROUTES),
   },
   {
+    path: 'feedback',
+    canActivate: [authGuard],
+    loadChildren: () =>
+      import('./feedback/feedback.route').then((mod) => mod.FEEDBACK_ROUTES),
+  },
+  {
     path: '**',
     redirectTo: 'dashboard',
     pathMatch: "full"

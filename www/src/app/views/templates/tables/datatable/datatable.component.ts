@@ -13,7 +13,7 @@ import { DataTableItems, paginateData, type DataTableItemsType } from './data'
 import type { Observable } from 'rxjs'
 import { NgbdSortableHeader } from '@/app/core/directive/sortable.directive'
 import { TableService } from '@/app/core/service/table.service'
-import { AsyncPipe, CommonModule, DecimalPipe } from '@angular/common'
+import { AsyncPipe, CommonModule, DecimalPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms'
 import { NgbHighlight, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap'
 

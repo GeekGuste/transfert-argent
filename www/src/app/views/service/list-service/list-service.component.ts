@@ -1,5 +1,5 @@
 import { ServiceService } from '@/app/core/service/ws/service/service.service';
-import { CommonModule } from '@angular/common';
+
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { mergeMap } from 'rxjs';
@@ -9,7 +9,7 @@ declare var bootstrap: any; // Pour contrôler le modal Bootstrap
 
 @Component({
   selector: 'app-list-service',
-  imports: [CommonModule, ReactiveFormsModule, TrlPipe],
+  imports: [ReactiveFormsModule, TrlPipe],
   templateUrl: './list-service.component.html',
   styleUrl: './list-service.component.scss',
 })

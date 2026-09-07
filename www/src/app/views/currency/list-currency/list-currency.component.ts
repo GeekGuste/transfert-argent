@@ -1,5 +1,5 @@
 import { CurrencyService } from '@/app/core/service/ws/currency/currency.service';
-import { CommonModule } from '@angular/common';
+
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { mergeMap } from 'rxjs';
@@ -10,7 +10,7 @@ declare var bootstrap: any;
 
 @Component({
   selector: 'app-list-currency',
-  imports: [CommonModule, ReactiveFormsModule, TrlPipe],
+  imports: [ReactiveFormsModule, TrlPipe],
   templateUrl: './list-currency.component.html',
   styleUrl: './list-currency.component.scss',
 })

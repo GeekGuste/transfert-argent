@@ -10,9 +10,7 @@ import { CountryDto, ListingDto, NeedEnumDto } from '../../../api/webapiservice'
 
 interface Step { titleKey: string; descKey: string; icon: string; }
 interface Value { titleKey: string; descKey: string; iconPath: string; statKey: string; }
-interface Testimonial { name: string; location: string; avatar: string; text: string; type: string; }
 interface FAQ { questionKey: string; answerKey: string; open: boolean; }
-interface Stats { users: string; transferred: string; parcels: string; satisfaction: string; }
 interface Language { code: string; name: string; }
 
 @Component({
@@ -59,31 +57,6 @@ export class HomeComponent implements OnInit {
       iconPath: 'M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0zM12 7a3 3 0 1 0 0 6 3 3 0 0 0 0-6z',
     },
   ];
-
-  testimonials: Testimonial[] = [
-    {
-      name: 'Sophie Martin', location: 'Paris → Montréal',
-      avatar: 'https://i.pravatar.cc/150?img=1',
-      text: "J'envoie régulièrement des colis à ma famille au Canada. GlobRel est rapide, les frais sont transparents et le service vraiment fiable. Je recommande !",
-      type: 'Envoi de colis',
-    },
-    {
-      name: 'Omar Al-Rashid', location: 'Dubaï → Paris',
-      avatar: 'https://i.pravatar.cc/150?img=12',
-      text: "J'ai trouvé un voyageur en moins d'une heure pour transporter un cadeau à ma sœur. Tout s'est parfaitement déroulé, je suis bluffé par la simplicité.",
-      type: 'Voyageur',
-    },
-    {
-      name: 'Luisa Ferreira', location: 'Lisbonne → São Paulo',
-      avatar: 'https://i.pravatar.cc/150?img=5',
-      text: "Interface simple et intuitive. En quelques clics j'ai trouvé quelqu'un de confiance pour envoyer un colis à ma famille au Brésil. Service excellent.",
-      type: 'Expéditeur',
-    },
-  ];
-
-  stats: Stats = {
-    users: '10 000+', transferred: '€2M+', parcels: '15 000+', satisfaction: '98%',
-  };
 
   faqs: FAQ[] = [
     { questionKey: 'home.faq1.q', answerKey: 'home.faq1.a', open: false },
@@ -147,7 +120,7 @@ export class HomeComponent implements OnInit {
         { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
       );
       setTimeout(() => {
-        document.querySelectorAll('.step-card, .value-card, .testimonial-card, .listing-card')
+        document.querySelectorAll('.step-card, .value-card, .listing-card')
           .forEach(el => observer.observe(el));
       }, 100);
     }

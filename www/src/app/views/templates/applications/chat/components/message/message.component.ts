@@ -1,6 +1,6 @@
 import { Component, inject, Input, ViewChild } from '@angular/core'
 import { MessageData, type ContactType } from '../../data'
-import { CommonModule, DatePipe } from '@angular/common'
+import { DatePipe } from '@angular/common';
 import {
   SimplebarAngularModule,
   type SimplebarAngularComponent,
@@ -18,12 +18,11 @@ import {
   selector: 'chat-message',
   standalone: true,
   imports: [
-    CommonModule,
     SimplebarAngularModule,
     NgbTooltipModule,
     FormsModule,
-    ReactiveFormsModule,
-  ],
+    ReactiveFormsModule
+],
   templateUrl: './message.component.html',
   styles: ``,
 })

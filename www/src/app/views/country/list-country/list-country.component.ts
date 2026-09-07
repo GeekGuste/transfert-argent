@@ -1,7 +1,7 @@
 import { CountryService } from '@/app/core/service/ws/country/country.service';
 import { GlobalErrorService } from '@/app/core/service/global-error.service';
 import { CountryDto } from '@/app/api/webapiservice';
-import { CommonModule } from '@angular/common';
+
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TrlPipe } from '@alrevele/translator';
@@ -10,7 +10,7 @@ declare var bootstrap: any;
 
 @Component({
   selector: 'app-list-country',
-  imports: [CommonModule, ReactiveFormsModule, TrlPipe],
+  imports: [ReactiveFormsModule, TrlPipe],
   templateUrl: './list-country.component.html',
   styleUrl: './list-country.component.scss',
 })

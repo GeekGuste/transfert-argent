@@ -16,27 +16,31 @@
   <div class="mg-body">
 
     <!-- Loading -->
-    <div *ngIf="loading" class="mg-loading">
-      <div class="mg-skeleton" style="height:80px"></div>
-      <div class="mg-skeleton" style="height:200px;margin-top:1rem"></div>
-    </div>
+    @if (loading) {
+      <div class="mg-loading">
+        <div class="mg-skeleton" style="height:80px"></div>
+        <div class="mg-skeleton" style="height:200px;margin-top:1rem"></div>
+      </div>
+    }
 
     <!-- Error -->
-    <div *ngIf="error && !loading" class="mg-error">
-      <i class="fas fa-exclamation-triangle mg-error__icon"></i>
-      <h4>{{ 'manage.error.invalid' | i18n }}</h4>
-      <p>{{ error }}</p>
-      <a routerLink="/forms/list" class="mg-btn mg-btn--outline mt-3">{{ 'manage.see_listings' | i18n }}</a>
-    </div>
+    @if (error && !loading) {
+      <div class="mg-error">
+        <i class="fas fa-exclamation-triangle mg-error__icon"></i>
+        <h4>{{ 'manage.error.invalid' | i18n }}</h4>
+        <p>{{ error }}</p>
+        <a routerLink="/forms/list" class="mg-btn mg-btn--outline mt-3">{{ 'manage.see_listings' | i18n }}</a>
+      </div>
+    }
 
     <!-- Content -->
-    <ng-container *ngIf="!loading && listing">
-
+    @if (!loading && listing) {
       <!-- Success banner -->
-      <div *ngIf="actionSuccess" class="mg-success-banner">
-        <i class="fas fa-check-circle me-2"></i>{{ actionSuccess }}
-      </div>
-
+      @if (actionSuccess) {
+        <div class="mg-success-banner">
+          <i class="fas fa-check-circle me-2"></i>{{ actionSuccess }}
+        </div>
+      }
       <!-- Status + info card -->
       <div class="mg-card mg-card--info">
         <div class="mg-card__row">
@@ -53,7 +57,6 @@
               <strong>{{ listing.arrivalCity || '—' }}{{ listing.arrivalCountry?.name ? ', ' + listing.arrivalCountry!.name : '' }}</strong>
             </div>
           </div>
-
           <div class="mg-status-badge"
             [class.mg-status-badge--active]="listing.isActive"
             [class.mg-status-badge--inactive]="!listing.isActive">
@@ -61,7 +64,6 @@
             {{ listing.isActive ? ('manage.status.active' | i18n) : ('manage.status.inactive' | i18n) }}
           </div>
         </div>
-
         <div class="mg-meta-row">
           <span class="mg-meta-item">
             <i class="fas fa-weight-hanging"></i>{{ weightKg | number:'1.0-1' }} kg
@@ -69,22 +71,27 @@
           <span class="mg-meta-item">
             <i class="fas fa-tag"></i>{{ pricePerKg | number:'1.0-2' }} {{ listing.currency?.symbol || listing.currency?.code || '' }}/kg
           </span>
-          <span class="mg-meta-item" *ngIf="listing.departureDate || listing.maxTravelDate">
-            <i class="fas fa-calendar-alt"></i>
-            {{ (listing.departureDate || listing.maxTravelDate) | date:'dd/MM/yyyy' }}
-          </span>
+          @if (listing.departureDate || listing.maxTravelDate) {
+            <span class="mg-meta-item">
+              <i class="fas fa-calendar-alt"></i>
+              {{ (listing.departureDate || listing.maxTravelDate) | date:'dd/MM/yyyy' }}
+            </span>
+          }
           <span class="mg-meta-item">
             <i class="fas fa-users"></i>{{ listing.applicationsNumber ?? 0 }} candidature(s)
           </span>
         </div>
-
         <!-- Actions -->
         <div class="mg-actions-row">
           <button class="mg-btn mg-btn--success"
             (click)="confirmActive()"
             [disabled]="actionLoading || listing.isActive === true">
-            <span *ngIf="actionLoading && !validatingApplicationId" class="spinner-border spinner-border-sm me-2"></span>
-            <i *ngIf="!(actionLoading && !validatingApplicationId)" class="fas fa-check-circle me-2"></i>
+            @if (actionLoading && !validatingApplicationId) {
+              <span class="spinner-border spinner-border-sm me-2"></span>
+            }
+            @if (!(actionLoading && !validatingApplicationId)) {
+              <i class="fas fa-check-circle me-2"></i>
+            }
             {{ 'manage.confirm_active' | i18n }}
           </button>
           <button class="mg-btn mg-btn--danger-outline"
@@ -94,7 +101,6 @@
           </button>
         </div>
       </div>
-
       <!-- Applications card -->
       <div class="mg-card">
         <div class="mg-card__header">
@@ -103,51 +109,58 @@
           </h5>
           <span class="mg-badge-count">{{ listing.applicationsNumber ?? 0 }}</span>
         </div>
-
         <!-- Empty -->
-        <div *ngIf="!listing.applications || listing.applications.length === 0" class="mg-empty">
-          <i class="fas fa-inbox mg-empty__icon"></i>
-          <p>{{ 'manage.empty' | i18n }}</p>
-          <small>{{ 'manage.empty.sub' | i18n }}</small>
-        </div>
-
+        @if (!listing.applications || listing.applications.length === 0) {
+          <div class="mg-empty">
+            <i class="fas fa-inbox mg-empty__icon"></i>
+            <p>{{ 'manage.empty' | i18n }}</p>
+            <small>{{ 'manage.empty.sub' | i18n }}</small>
+          </div>
+        }
         <!-- Application list -->
-        <div *ngFor="let app of listing.applications; let last = last"
-          class="mg-app-item" [class.mg-app-item--last]="last">
-          <div class="mg-app-item__avatar">
-            {{ (app.firstName?.charAt(0) ?? '') + (app.lastName?.charAt(0) ?? '') }}
+        @for (app of listing.applications; track app; let last = $last) {
+          <div
+            class="mg-app-item" [class.mg-app-item--last]="last">
+            <div class="mg-app-item__avatar">
+              {{ (app.firstName?.charAt(0) ?? '') + (app.lastName?.charAt(0) ?? '') }}
+            </div>
+            <div class="mg-app-item__body">
+              <div class="mg-app-item__name">{{ app.firstName }} {{ app.lastName }}</div>
+              <div class="mg-app-item__contact">
+                <span><i class="fas fa-envelope me-1"></i>{{ app.email }}</span>
+                <span><i class="fas fa-phone me-1"></i>{{ app.phone }}</span>
+              </div>
+              @if (app.description) {
+                <div class="mg-app-item__msg">
+                  <i class="fas fa-comment me-1"></i>{{ app.description }}
+                </div>
+              }
+              @if (app.dateCreation) {
+                <div class="mg-app-item__date">
+                  <i class="fas fa-clock me-1"></i>{{ app.dateCreation | date:'dd/MM/yyyy à HH:mm' }}
+                </div>
+              }
+            </div>
+            <button class="mg-btn mg-btn--primary mg-app-item__validate"
+              (click)="validateApplication(app)"
+              [disabled]="actionLoading || !listing.isActive">
+              @if (actionLoading && validatingApplicationId === app.id) {
+                <span
+                class="spinner-border spinner-border-sm me-2"></span>
+              }
+              @if (!(actionLoading && validatingApplicationId === app.id)) {
+                <i class="fas fa-handshake me-2"></i>
+              }
+              {{ 'manage.validate' | i18n }}
+            </button>
           </div>
-          <div class="mg-app-item__body">
-            <div class="mg-app-item__name">{{ app.firstName }} {{ app.lastName }}</div>
-            <div class="mg-app-item__contact">
-              <span><i class="fas fa-envelope me-1"></i>{{ app.email }}</span>
-              <span><i class="fas fa-phone me-1"></i>{{ app.phone }}</span>
-            </div>
-            <div *ngIf="app.description" class="mg-app-item__msg">
-              <i class="fas fa-comment me-1"></i>{{ app.description }}
-            </div>
-            <div class="mg-app-item__date" *ngIf="app.dateCreation">
-              <i class="fas fa-clock me-1"></i>{{ app.dateCreation | date:'dd/MM/yyyy à HH:mm' }}
-            </div>
-          </div>
-          <button class="mg-btn mg-btn--primary mg-app-item__validate"
-            (click)="validateApplication(app)"
-            [disabled]="actionLoading || !listing.isActive">
-            <span *ngIf="actionLoading && validatingApplicationId === app.id"
-              class="spinner-border spinner-border-sm me-2"></span>
-            <i *ngIf="!(actionLoading && validatingApplicationId === app.id)" class="fas fa-handshake me-2"></i>
-            {{ 'manage.validate' | i18n }}
-          </button>
-        </div>
-
+        }
       </div>
-
       <!-- Info note -->
       <div class="mg-info-note">
         <i class="fas fa-info-circle me-2"></i>
         {{ 'manage.info_note' | i18n }}
       </div>
-
-    </ng-container>
+    }
   </div>
 </div>

@@ -9,7 +9,7 @@ import { TabItems } from './data'
 import { environment } from '@/environments/environment'
 import { AuthService } from '@/app/core/service/ws/auth/auth.service'
 import { LanguageService } from '@/app/core/service/language.service'
-import { CommonModule } from '@angular/common'
+
 import { AlreveleTranslatorModule } from '@alrevele/translator'
 
 @Component({
@@ -20,9 +20,8 @@ import { AlreveleTranslatorModule } from '@alrevele/translator'
     SimplebarAngularModule,
     NgbNavModule,
     RouterModule,
-    CommonModule,
     AlreveleTranslatorModule
-  ],
+],
   templateUrl: './topbar.component.html',
   styles: ``,
 })

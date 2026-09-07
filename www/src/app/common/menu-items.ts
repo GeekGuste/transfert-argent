@@ -113,7 +113,6 @@ export const MENU_ITEMS: MenuItem[] = [
   },
   {
     key: 'Listings',
-    // icon: 'iconoir-home-simple',
     icon: 'iconoir-money-square',
     label: 'MENUITEMS.LISTINGS',
     collapsed: false,
@@ -123,6 +122,20 @@ export const MENU_ITEMS: MenuItem[] = [
         label: 'MENUITEMS.LISTINGS.LIST',
         url: '/views/listings/list',
         parentKey: 'listing list',
+      }
+    ],
+  },
+  {
+    key: 'Feedback',
+    icon: 'iconoir-message-text',
+    label: 'MENUITEMS.FEEDBACK',
+    collapsed: false,
+    subMenu: [
+      {
+        key: 'feedback-list',
+        label: 'MENUITEMS.FEEDBACK.LIST',
+        url: '/views/feedback/list',
+        parentKey: 'feedback list',
       }
     ],
   },

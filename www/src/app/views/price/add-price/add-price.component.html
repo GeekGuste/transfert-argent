@@ -26,89 +26,93 @@
                         'is-invalid': submitted && form['name'].errors,
                       }" class="form-control" id="name" name="name"
                       [placeholder]="'PRICE.ADD.FORM.NAME_PLACEHOLDER' | trl" />
-                    <div class="invalid-feedback">{{ 'PRICE.ADD.FORM.NAME_ERROR' | trl }}</div>
-                  </div>
-                  <!--end form-group-->
+                      <div class="invalid-feedback">{{ 'PRICE.ADD.FORM.NAME_ERROR' | trl }}</div>
+                    </div>
+                    <!--end form-group-->
 
-                  <div class="form-group mb-2">
-                    <label class="form-label" for="amount">{{ 'PRICE.ADD.FORM.AMOUNT_LABEL' | trl }}</label>
+                    <div class="form-group mb-2">
+                      <label class="form-label" for="amount">{{ 'PRICE.ADD.FORM.AMOUNT_LABEL' | trl }}</label>
                     <input type="number" formControlName="amount" [ngClass]="{
                         'is-invalid': submitted && form['amount'].errors,
                       }" class="form-control" id="amount" name="amount"
-                      [placeholder]="'PRICE.ADD.FORM.AMOUNT_PLACEHOLDER' | trl" />
-                    <div class="invalid-feedback">
-                      {{ 'PRICE.ADD.FORM.AMOUNT_ERROR' | trl }}
-                    </div>
-                  </div>
+                        [placeholder]="'PRICE.ADD.FORM.AMOUNT_PLACEHOLDER' | trl" />
+                        <div class="invalid-feedback">
+                          {{ 'PRICE.ADD.FORM.AMOUNT_ERROR' | trl }}
+                        </div>
+                      </div>
 
-                  <div class="form-group mb-2">
-                    <label class="form-label" for="frequency">{{ 'PRICE.ADD.FORM.FREQUENCY_LABEL' | trl }}</label>
+                      <div class="form-group mb-2">
+                        <label class="form-label" for="frequency">{{ 'PRICE.ADD.FORM.FREQUENCY_LABEL' | trl }}</label>
                     <select formControlName="frequency" [ngClass]="{
                         'is-invalid': submitted && form['frequency'].errors,
                       }" class="form-control" id="frequency" name="frequency">
-                      <option value="" disabled selected>{{ 'PRICE.ADD.FORM.FREQUENCY_PLACEHOLDER' | trl }}</option>
-                      <option *ngFor="let item of frequencies" [value]="item.frequency">{{ item.label }}</option>
-                    </select>
-                    <div class="invalid-feedback">
-                      {{ 'PRICE.ADD.FORM.FREQUENCY_ERROR' | trl }}
-                    </div>
-                  </div>
+                          <option value="" disabled selected>{{ 'PRICE.ADD.FORM.FREQUENCY_PLACEHOLDER' | trl }}</option>
+                          @for (item of frequencies; track item) {
+                            <option [value]="item.frequency">{{ item.label }}</option>
+                          }
+                        </select>
+                        <div class="invalid-feedback">
+                          {{ 'PRICE.ADD.FORM.FREQUENCY_ERROR' | trl }}
+                        </div>
+                      </div>
 
-                  <div class="form-group mb-2">
-                    <label class="form-label" for="currency">{{ 'PRICE.ADD.FORM.CURRENCY_LABEL' | trl }}</label>
+                      <div class="form-group mb-2">
+                        <label class="form-label" for="currency">{{ 'PRICE.ADD.FORM.CURRENCY_LABEL' | trl }}</label>
                     <input type="text" formControlName="currency" [ngClass]="{
                         'is-invalid': submitted && form['currency'].errors,
                       }" class="form-control" id="currency" name="currency"
-                      [placeholder]="'PRICE.ADD.FORM.CURRENCY_PLACEHOLDER' | trl" />
-                    <div class="invalid-feedback">
-                      {{ 'PRICE.ADD.FORM.CURRENCY_ERROR' | trl }}
-                    </div>
-                  </div>
-                  <!--end form-group-->
+                          [placeholder]="'PRICE.ADD.FORM.CURRENCY_PLACEHOLDER' | trl" />
+                          <div class="invalid-feedback">
+                            {{ 'PRICE.ADD.FORM.CURRENCY_ERROR' | trl }}
+                          </div>
+                        </div>
+                        <!--end form-group-->
 
-                  <div class="form-group mb-2">
-                    <label class="form-label" for="countries">{{ 'PRICE.ADD.FORM.SERVICES_LABEL' | trl }}</label>
+                        <div class="form-group mb-2">
+                          <label class="form-label" for="countries">{{ 'PRICE.ADD.FORM.SERVICES_LABEL' | trl }}</label>
                     <select id="serviceIds" formControlName="serviceIds" class="form-control" multiple [ngClass]="{
                         'is-invalid': submitted && form['serviceIds'].errors,
                       }">
-                      <option *ngFor="let service of services" [value]="service.id">
-                        {{ service.name }}
-                      </option>
-                    </select>
+                            @for (service of services; track service) {
+                              <option [value]="service.id">
+                                {{ service.name }}
+                              </option>
+                            }
+                          </select>
 
-                    <div class="invalid-feedback">
-                      {{ 'PRICE.ADD.FORM.SERVICES_ERROR' | trl }}
+                          <div class="invalid-feedback">
+                            {{ 'PRICE.ADD.FORM.SERVICES_ERROR' | trl }}
+                          </div>
+                        </div>
+
+                        <!--end form-group-->
+
+                        <div class="form-group mb-0 row">
+                          <div class="col-12">
+                            <div class="d-grid mt-3">
+                              <button class="btn btn-primary" type="submit">
+                                {{ 'PRICE.ADD.FORM.SUBMIT_BUTTON' | trl }}
+                                <i class="fas fa-sign-in-alt ms-1"></i>
+                              </button>
+                            </div>
+                          </div>
+                          <!--end col-->
+                        </div>
+                        <!--end form-group-->
+                      </form>
+                      <!--end form-->
                     </div>
+                    <!--end card-body-->
                   </div>
-
-                  <!--end form-group-->
-
-                  <div class="form-group mb-0 row">
-                    <div class="col-12">
-                      <div class="d-grid mt-3">
-                        <button class="btn btn-primary" type="submit">
-                          {{ 'PRICE.ADD.FORM.SUBMIT_BUTTON' | trl }}
-                          <i class="fas fa-sign-in-alt ms-1"></i>
-                        </button>
-                      </div>
-                    </div>
-                    <!--end col-->
-                  </div>
-                  <!--end form-group-->
-                </form>
-                <!--end form-->
+                  <!--end card-->
+                </div>
+                <!--end col-->
               </div>
-              <!--end card-body-->
+              <!--end row-->
             </div>
-            <!--end card-->
+            <!--end card-body-->
           </div>
           <!--end col-->
         </div>
         <!--end row-->
       </div>
-      <!--end card-body-->
-    </div>
-    <!--end col-->
-  </div>
-  <!--end row-->
-</div>

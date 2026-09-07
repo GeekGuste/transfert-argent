@@ -1,14 +1,14 @@
 import { Component, inject, Input } from '@angular/core'
 import type { ProjectType } from '../../data'
 import { NgbProgressbarModule } from '@ng-bootstrap/ng-bootstrap'
-import { CommonModule } from '@angular/common'
+
 import { UtilsService } from '@/app/core/service/utils.service'
 import { currency } from '@/app/common/constants'
 
 @Component({
   selector: 'project-card',
   standalone: true,
-  imports: [NgbProgressbarModule, CommonModule],
+  imports: [NgbProgressbarModule],
   templateUrl: './project-card.component.html',
   styles: ``,
 })

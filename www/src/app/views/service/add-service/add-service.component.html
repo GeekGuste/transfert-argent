@@ -26,65 +26,67 @@
                         'is-invalid': submitted && form['name'].errors,
                       }" class="form-control" id="name" name="name"
                       [placeholder]="'SERVICE.ADD.FORM.NAME_PLACEHOLDER' | trl" />
-                    <div class="invalid-feedback">{{ 'SERVICE.ADD.FORM.NAME_ERROR' | trl }}</div>
-                  </div>
-                  <!--end form-group-->
+                      <div class="invalid-feedback">{{ 'SERVICE.ADD.FORM.NAME_ERROR' | trl }}</div>
+                    </div>
+                    <!--end form-group-->
 
-                  <div class="form-group mb-2">
-                    <label class="form-label" for="description">{{ 'SERVICE.ADD.FORM.DESCRIPTION_LABEL' | trl }}</label>
+                    <div class="form-group mb-2">
+                      <label class="form-label" for="description">{{ 'SERVICE.ADD.FORM.DESCRIPTION_LABEL' | trl }}</label>
                     <input type="description" formControlName="description" [ngClass]="{
                         'is-invalid': submitted && form['description'].errors,
                       }" class="form-control" id="description" name="user description"
-                      [placeholder]="'SERVICE.ADD.FORM.DESCRIPTION_PLACEHOLDER' | trl" />
-                    <div class="invalid-feedback">
-                      {{ 'SERVICE.ADD.FORM.DESCRIPTION_ERROR' | trl }}
-                    </div>
-                  </div>
-                  <!--end form-group-->
+                        [placeholder]="'SERVICE.ADD.FORM.DESCRIPTION_PLACEHOLDER' | trl" />
+                        <div class="invalid-feedback">
+                          {{ 'SERVICE.ADD.FORM.DESCRIPTION_ERROR' | trl }}
+                        </div>
+                      </div>
+                      <!--end form-group-->
 
-                  <div class="form-group mb-2">
-                    <label class="form-label" for="countries">{{ 'SERVICE.ADD.FORM.COUNTRIES_LABEL' | trl }}</label>
+                      <div class="form-group mb-2">
+                        <label class="form-label" for="countries">{{ 'SERVICE.ADD.FORM.COUNTRIES_LABEL' | trl }}</label>
                     <select id="countries" formControlName="countries" class="form-control" multiple [ngClass]="{
                         'is-invalid': submitted && form['countries'].errors,
                       }">
-                      <option *ngFor="let country of countries" [value]="country">
-                        {{ country.name }}
-                      </option>
-                    </select>
+                          @for (country of countries; track country) {
+                            <option [value]="country">
+                              {{ country.name }}
+                            </option>
+                          }
+                        </select>
 
-                    <div class="invalid-feedback">
-                      {{ 'SERVICE.ADD.FORM.COUNTRIES_ERROR' | trl }}
-                    </div>
-                  </div>
-
-                  <!--end form-group-->
-
-                  <div class="form-group mb-0 row">
-                    <div class="col-12">
-                      <div class="d-grid mt-3">
-                        <button class="btn btn-primary" type="submit">
-                          {{ 'SERVICE.ADD.FORM.SUBMIT_BUTTON' | trl }}
-                          <i class="fas fa-sign-in-alt ms-1"></i>
-                        </button>
+                        <div class="invalid-feedback">
+                          {{ 'SERVICE.ADD.FORM.COUNTRIES_ERROR' | trl }}
+                        </div>
                       </div>
-                    </div>
-                    <!--end col-->
+
+                      <!--end form-group-->
+
+                      <div class="form-group mb-0 row">
+                        <div class="col-12">
+                          <div class="d-grid mt-3">
+                            <button class="btn btn-primary" type="submit">
+                              {{ 'SERVICE.ADD.FORM.SUBMIT_BUTTON' | trl }}
+                              <i class="fas fa-sign-in-alt ms-1"></i>
+                            </button>
+                          </div>
+                        </div>
+                        <!--end col-->
+                      </div>
+                      <!--end form-group-->
+                    </form>
+                    <!--end form-->
                   </div>
-                  <!--end form-group-->
-                </form>
-                <!--end form-->
+                  <!--end card-body-->
+                </div>
+                <!--end card-->
               </div>
-              <!--end card-body-->
+              <!--end col-->
             </div>
-            <!--end card-->
+            <!--end row-->
           </div>
-          <!--end col-->
+          <!--end card-body-->
         </div>
-        <!--end row-->
+        <!--end col-->
       </div>
-      <!--end card-body-->
+      <!--end row-->
     </div>
-    <!--end col-->
-  </div>
-  <!--end row-->
-</div>

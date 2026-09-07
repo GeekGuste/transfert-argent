@@ -12,22 +12,22 @@ export const AUTH_ROUTES: Route[] = [
     path: 'log-in',
     canActivate: [connectedGuard],
     component: LoginComponent,
-    data: { title: 'Login' },
+    data: { title: 'Connexion' },
   },
   {
     path: 'register',
     component: RegisterComponent,
-    data: { title: 'Register' },
+    data: { title: 'Créer un compte' },
   },
   {
     path: 'recover-pw',
     component: RecoverPwComponent,
-    data: { title: 'Recover Password' },
+    data: { title: 'Mot de passe oublié' },
   },
   {
     path: 'new-pw',
     component: NewPwComponent,
-    data: { title: 'New Password' },
+    data: { title: 'Nouveau mot de passe' },
   },
   {
     path: 'lock-screen',

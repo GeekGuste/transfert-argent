@@ -1,7 +1,7 @@
 # Commande nswag (localhost:32768 l'url back)
 nswag openapi2tsclient /input:http://localhost:32768/swagger/v1/swagger.json /output:src/app/api-client.ts
 
-# Rizz
+# Globrel
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.0.7.
 

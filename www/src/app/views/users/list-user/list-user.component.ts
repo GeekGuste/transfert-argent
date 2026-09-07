@@ -1,6 +1,6 @@
 import { UserService } from '@/app/core/service/ws/user/user.service';
 import { TrlPipe } from '@alrevele/translator';
-import { CommonModule } from '@angular/common';
+
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { forkJoin, mergeMap } from 'rxjs';
@@ -9,7 +9,7 @@ declare var bootstrap: any;
 
 @Component({
   selector: 'app-list-user',
-  imports: [CommonModule, ReactiveFormsModule, TrlPipe],
+  imports: [ReactiveFormsModule, TrlPipe],
   templateUrl: './list-user.component.html',
   styleUrl: './list-user.component.scss',
 })

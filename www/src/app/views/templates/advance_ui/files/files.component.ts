@@ -5,17 +5,16 @@ import {
   NgbNavModule,
   NgbProgressbarModule,
 } from '@ng-bootstrap/ng-bootstrap'
-import { CommonModule } from '@angular/common'
+
 
 @Component({
   selector: 'app-files',
   standalone: true,
   imports: [
     NgbProgressbarModule,
-    CommonModule,
     NgbNavModule,
-    NgbDropdownModule,
-  ],
+    NgbDropdownModule
+],
   templateUrl: './files.component.html',
   styles: ``,
 })

@@ -1,111 +1,73 @@
-<div class="container-xxl">
-  <div class="row vh-100 d-flex justify-content-center">
-    <div class="col-12 align-self-center">
-      <div class="card-body">
-        <div class="row">
-          <div class="col-lg-4 mx-auto">
-            <div class="card">
-              <!-- Form -->
-              <div class="card-body pt-0">
-                <form
-                  [formGroup]="signInForm"
-                  (ngSubmit)="login()"
-                  class="my-4"
-                >
-                  <div class="form-group mb-2">
-                    <label class="form-label" for="username">Username</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="username"
-                      formControlName="email"
-                      name="username"
-                      placeholder="Enter username"
-                      [disabled]="loading"
-                    />
-                  </div>
-
-                  <div class="form-group">
-                    <label class="form-label" for="userpassword">Password</label>
-                    <input
-                      type="password"
-                      class="form-control"
-                      name="password"
-                      formControlName="password"
-                      id="userpassword"
-                      placeholder="Enter password"
-                      [disabled]="loading"
-                    />
-                  </div>
-
-                  <div class="form-group row mt-3">
-                    <div class="col-sm-6">
-                      <div class="form-check form-switch form-switch-success">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          id="customSwitchSuccess"
-                          [disabled]="loading"
-                        />
-                        <label
-                          class="form-check-label"
-                          for="customSwitchSuccess"
-                          >Remember me</label
-                        >
-                      </div>
-                    </div>
-                    <div class="col-sm-6 text-end">
-                      <a
-                        [routerLink]="'/auth/recover-pw'"
-                        class="text-muted font-13"
-                        ><i class="dripicons-lock"></i> Forgot password?</a
-                      >
-                    </div>
-                  </div>
-
-                  <div class="form-group mb-0 row">
-                    <div class="col-12">
-                      <div class="d-grid mt-3">
-                        <button class="btn btn-primary" type="submit" [disabled]="loading">
-                          <ng-container *ngIf="!loading">
-                            Log In <i class="fas fa-sign-in-alt ms-1"></i>
-                          </ng-container>
-                          <ng-container *ngIf="loading">
-                            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                            Logging in...
-                          </ng-container>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div *ngIf="hasWrongCredentials" class="text-danger text-center mt-3">
-                    Invalid email or password.
-                  </div>
-                </form>
-
-                <!-- Sign up + Social -->
-                <div class="text-center mb-2">
-                  <p class="text-muted">
-                    Don't have an account?
-                    <a [routerLink]="'/auth/register'" class="text-primary ms-2">
-                      Free Register
-                    </a>
-                  </p>
-                  <h6 class="px-3 d-inline-block">Or Login With</h6>
-                </div>
-              </div>
-              <!--end card-body-->
-            </div>
-            <!--end card-->
-          </div>
-          <!--end col-->
-        </div>
-        <!--end row-->
-      </div>
-      <!--end card-body-->
+<section class="auth-page">
+  <div class="auth-card">
+    <div class="auth-card__header">
+      <div class="auth-card__logo">GR</div>
+      <h1 class="auth-card__title">Bon retour</h1>
+      <p class="auth-card__subtitle">Connectez-vous pour gérer vos annonces</p>
     </div>
-    <!--end col-->
-  </div>
-  <!--end row-->
-</div>
+
+    <form class="auth-card__body" [formGroup]="signInForm" (ngSubmit)="login()" novalidate>
+      <div class="auth-field" [class.auth-field--error]="submitted && formValues['email'].invalid">
+        <label for="username">Email</label>
+        <input
+          type="email"
+          id="username"
+          formControlName="email"
+          name="username"
+          autocomplete="email"
+          placeholder="vous@email.com"
+          [disabled]="loading"
+          />
+          @if (submitted && formValues['email'].invalid) {
+            <div class="auth-field__error">
+              Veuillez entrer une adresse email valide.
+            </div>
+          }
+        </div>
+
+        <div class="auth-field" [class.auth-field--error]="submitted && formValues['password'].invalid">
+          <label for="userpassword">Mot de passe</label>
+          <input
+            type="password"
+            name="password"
+            formControlName="password"
+            id="userpassword"
+            autocomplete="current-password"
+            placeholder="••••••••"
+            [disabled]="loading"
+            />
+            @if (submitted && formValues['password'].invalid) {
+              <div class="auth-field__error">
+                Veuillez entrer votre mot de passe.
+              </div>
+            }
+          </div>
+
+          <div class="auth-row">
+            <label class="auth-checkbox">
+              <input type="checkbox" [disabled]="loading" />
+              <span>Se souvenir de moi</span>
+            </label>
+            <a routerLink="/auth/recover-pw" class="auth-link">Mot de passe oublié ?</a>
+          </div>
+
+          @if (hasWrongCredentials) {
+            <div class="auth-error">
+              <i class="fas fa-exclamation-circle me-1"></i>Email ou mot de passe incorrect.
+            </div>
+          }
+
+          <button class="auth-submit" type="submit" [disabled]="loading">
+            @if (loading) {
+              <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            }
+            {{ loading ? 'Connexion...' : 'Se connecter' }}
+          </button>
+        </form>
+
+        <div class="auth-card__footer">
+          Pas encore de compte ?
+          <a routerLink="/auth/register">Créer un compte</a>
+        </div>
+      </div>
+    </section>

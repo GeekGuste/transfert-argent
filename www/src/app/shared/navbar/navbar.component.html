@@ -2,11 +2,10 @@
   <div class="gr-nav__inner">
 
     <!-- Brand -->
-    <a routerLink="/" class="gr-nav__brand" (click)="closeMobile()">
+    <a routerLink="/" class="gr-nav__brand">
       <div class="gr-nav__logo">GR</div>
       <div class="gr-nav__brand-info">
         <span class="gr-nav__brand-name">GlobRel</span>
-        <span class="gr-nav__brand-sub">Connect. Trust. Grow.</span>
       </div>
     </a>
 
@@ -36,42 +35,124 @@
       </button>
     </div>
 
-    <!-- Auth -->
-    <div class="gr-nav__auth">
-      <a routerLink="/auth/log-in" class="gr-nav__link">{{ 'nav.login' | i18n }}</a>
-      <a routerLink="/auth/register" class="gr-nav__btn-register">{{ 'nav.register' | i18n }}</a>
-    </div>
+    <!-- Auth (desktop) -->
+    @if (!isLoggedIn) {
+      <div class="gr-nav__auth">
+        <a routerLink="/auth/log-in" class="gr-nav__link">{{ 'nav.login' | i18n }}</a>
+        <a routerLink="/auth/register" class="gr-nav__btn-register">{{ 'nav.register' | i18n }}</a>
+      </div>
+    }
+    @if (isLoggedIn) {
+      <div class="gr-nav__auth">
+        <a routerLink="/my-listings" routerLinkActive="gr-nav__link--active" class="gr-nav__link">
+          <i class="fas fa-user me-1"></i>{{ 'nav.my_listings' | i18n }}
+        </a>
+        <a (click)="logout()" class="gr-nav__btn-register" role="button">{{ 'nav.logout' | i18n }}</a>
+      </div>
+    }
 
-    <!-- Mobile toggle -->
-    <button class="gr-nav__burger" (click)="toggleMobile()" [class.gr-nav__burger--open]="mobileOpen"
-      aria-label="Menu">
-      <span></span><span></span><span></span>
-    </button>
-
-  </div>
-
-  <!-- Mobile drawer -->
-  <div class="gr-nav__mobile" [class.gr-nav__mobile--open]="mobileOpen">
-    <a routerLink="/" class="gr-nav__mobile-link" (click)="closeMobile()">
-      <i class="fas fa-home me-2"></i>{{ 'nav.home' | i18n }}
-    </a>
-    <a routerLink="/forms/list" class="gr-nav__mobile-link" (click)="closeMobile()">
-      <i class="fas fa-list me-2"></i>{{ 'nav.listings' | i18n }}
-    </a>
-    <a routerLink="/forms" class="gr-nav__mobile-link" (click)="closeMobile()">
-      <i class="fas fa-plus me-2"></i>{{ 'nav.publish.full' | i18n }}
-    </a>
-    <div class="gr-nav__mobile-divider"></div>
-    <a routerLink="/auth/log-in" class="gr-nav__mobile-link" (click)="closeMobile()">{{ 'nav.login' | i18n }}</a>
-    <a routerLink="/auth/register" class="gr-nav__mobile-btn" (click)="closeMobile()">{{ 'nav.register' | i18n }}</a>
-    <div class="gr-nav__mobile-divider"></div>
-    <div class="gr-nav__mobile-lang">
-      <button class="gr-nav__lang-btn" [class.gr-nav__lang-btn--active]="currentLang === 'fr'" (click)="setLang('fr'); closeMobile()">
-        🇫🇷 FR
+    <!-- Logout (mobile, icon only — primary nav lives in the bottom bar) -->
+    @if (isLoggedIn) {
+      <button class="gr-nav__logout-mobile" (click)="logout()" aria-label="Déconnexion">
+        <i class="fas fa-sign-out-alt"></i>
       </button>
-      <button class="gr-nav__lang-btn" [class.gr-nav__lang-btn--active]="currentLang === 'en'" (click)="setLang('en'); closeMobile()">
-        🇬🇧 EN
-      </button>
-    </div>
+    }
+
   </div>
 </nav>
+
+<!-- Mobile bottom navigation -->
+<nav class="gr-bottom-nav" aria-label="Navigation principale">
+  <div class="gr-bottom-nav__side gr-bottom-nav__side--left">
+    <a routerLink="/" routerLinkActive="gr-bottom-nav__item--active" [routerLinkActiveOptions]="{exact:true}"
+      class="gr-bottom-nav__item">
+      <i class="fas fa-home"></i>
+      <span>{{ 'nav.home' | i18n }}</span>
+    </a>
+    <a routerLink="/forms/list" routerLinkActive="gr-bottom-nav__item--active" class="gr-bottom-nav__item">
+      <i class="fas fa-list"></i>
+      <span>{{ 'nav.listings' | i18n }}</span>
+    </a>
+  </div>
+
+  <!-- Publish: always visually centered on the bar, regardless of how many tabs sit on each side -->
+  <a routerLink="/forms" routerLinkActive="gr-bottom-nav__item--active" [routerLinkActiveOptions]="{exact:true}"
+    class="gr-bottom-nav__fab-link">
+    <span class="gr-bottom-nav__fab"><i class="fas fa-plus"></i></span>
+    <span>{{ 'nav.publish' | i18n }}</span>
+  </a>
+
+  <div class="gr-bottom-nav__side gr-bottom-nav__side--right">
+    @if (!isLoggedIn) {
+      <a routerLink="/auth/log-in" routerLinkActive="gr-bottom-nav__item--active" class="gr-bottom-nav__item">
+        <i class="fas fa-user"></i>
+        <span>{{ 'nav.login' | i18n }}</span>
+      </a>
+    }
+    @if (isLoggedIn) {
+      <a routerLink="/my-listings" routerLinkActive="gr-bottom-nav__item--active" class="gr-bottom-nav__item">
+        <i class="fas fa-user"></i>
+        <span>{{ 'nav.my_listings' | i18n }}</span>
+      </a>
+    }
+  </div>
+</nav>
+
+<!-- Floating feedback button -->
+<button class="gr-feedback-btn" (click)="openFeedback()" [title]="'feedback.btn' | i18n" aria-label="Feedback">
+  <i class="fas fa-comment-dots"></i>
+</button>
+
+<!-- Feedback overlay -->
+@if (feedbackOpen) {
+  <div class="gr-feedback-overlay" (click)="closeFeedback()"></div>
+}
+@if (feedbackOpen) {
+  <div class="gr-feedback-panel">
+    <div class="gr-feedback-panel__header">
+      <span><i class="fas fa-comment-dots me-2"></i>{{ 'feedback.title' | i18n }}</span>
+      <button class="gr-feedback-panel__close" (click)="closeFeedback()"><i class="fas fa-times"></i></button>
+    </div>
+    @if (feedbackSuccess) {
+      <div class="gr-feedback-panel__success">
+        <i class="fas fa-check-circle gr-feedback-panel__success-icon"></i>
+        <p>{{ 'feedback.success' | i18n }}</p>
+      </div>
+    }
+    @if (!feedbackSuccess) {
+      <div class="gr-feedback-panel__body">
+        <p class="gr-feedback-panel__sub">{{ 'feedback.sub' | i18n }}</p>
+        <div class="gr-feedback-field">
+          <label class="gr-feedback-label">{{ 'feedback.message' | i18n }} <span class="text-danger">*</span></label>
+          <textarea class="gr-feedback-textarea" [(ngModel)]="feedbackMessage" rows="4"
+          [placeholder]="'feedback.message.placeholder' | i18n"></textarea>
+        </div>
+        <div class="gr-feedback-field">
+          <label class="gr-feedback-label">{{ 'feedback.email' | i18n }} <span class="gr-feedback-optional">({{ 'feedback.optional' | i18n }})</span></label>
+          <input type="email" class="gr-feedback-input" [(ngModel)]="feedbackEmail"
+            [placeholder]="'feedback.email.placeholder' | i18n" />
+          </div>
+          @if (feedbackError) {
+            <div class="gr-feedback-error">
+              <i class="fas fa-exclamation-circle me-1"></i>{{ feedbackError }}
+            </div>
+          }
+          <div class="gr-feedback-panel__actions">
+            <button class="gr-feedback-cancel" type="button" (click)="closeFeedback()" [disabled]="feedbackLoading">
+              {{ 'feedback.cancel' | i18n }}
+            </button>
+            <button class="gr-feedback-submit" type="button" (click)="submitFeedback()"
+              [disabled]="feedbackLoading || !feedbackMessage.trim()">
+              @if (feedbackLoading) {
+                <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+              }
+              @if (!feedbackLoading) {
+                <i class="fas fa-paper-plane me-2"></i>
+              }
+              {{ 'feedback.send' | i18n }}
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  }

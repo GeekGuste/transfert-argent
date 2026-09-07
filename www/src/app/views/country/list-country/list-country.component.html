@@ -26,85 +26,92 @@
               </tr>
             </thead>
             <tbody>
-              <ng-container *ngIf="countries !== []">
-                <tr *ngFor="let country of countries">
-                  <td>
+              @if (countries !== []) {
+                @for (country of countries; track country) {
+                  <tr>
+                    <td>
                     <img src="http://purecatamphetamine.github.io/country-flag-icons/3x2/{{
                         country.code
                       }}.svg" alt="Flag of {{ country.name }}" class="rounded-circle thumb-md me-1 d-inline" />
-                    {{ country.name }}
-                  </td>
-                  <td>
-                    {{ country.name }}
-                  </td>
-                  <td>
-                    {{ country.code }}
-                  </td>
-                  <td>
-                    <span *ngIf="country.isEnabled" class="badge bg-success">{{ 'COUNTRY.LIST.TABLE.STATUS_ACTIVE' | trl
-                      }}</span>
-                    <span *ngIf="!country.isEnabled" class="badge bg-secondary">{{ 'COUNTRY.LIST.TABLE.STATUS_INACTIVE'
-                      | trl }}</span>
-                  </td>
-
-                  <td class="text-end">
-                    <a href="javascript:void(0);" (click)="openEditModal(country)" class="me-1"><i
+                        {{ country.name }}
+                      </td>
+                      <td>
+                        {{ country.name }}
+                      </td>
+                      <td>
+                        {{ country.code }}
+                      </td>
+                      <td>
+                        @if (country.isEnabled) {
+                          <span class="badge bg-success">{{ 'COUNTRY.LIST.TABLE.STATUS_ACTIVE' | trl
+                          }}</span>
+                        }
+                        @if (!country.isEnabled) {
+                          <span class="badge bg-secondary">{{ 'COUNTRY.LIST.TABLE.STATUS_INACTIVE'
+                          | trl }}</span>
+                        }
+                      </td>
+                      <td class="text-end">
+                        <a href="javascript:void(0);" (click)="openEditModal(country)" class="me-1"><i
                         class="las la-pen text-secondary font-16"></i></a>
-                    <a href="javascript:void(0);" (click)="deleteCountry(country)"><i
+                        <a href="javascript:void(0);" (click)="deleteCountry(country)"><i
                         class="las la-trash-alt text-secondary font-16"></i></a>
-                  </td>
-                </tr>
-              </ng-container>
-            </tbody>
-          </table>
-          <!--end /table-->
+                      </td>
+                    </tr>
+                  }
+                }
+              </tbody>
+            </table>
+            <!--end /table-->
+          </div>
+          <!--end /tableresponsive-->
         </div>
-        <!--end /tableresponsive-->
+        <!--end card-body-->
       </div>
-      <!--end card-body-->
+      <!--end card-->
     </div>
-    <!--end card-->
+    <!--end col-->
   </div>
-  <!--end col-->
-</div>
-<!--end row-->
+  <!--end row-->
 
-<!-- MODAL -->
-<div class="modal fade" id="editCountryModal" tabindex="-1" aria-labelledby="editCountryModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">{{ 'COUNTRY.LIST.MODAL.TITLE' | trl }}</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+  <!-- MODAL -->
+  <div class="modal fade" id="editCountryModal" tabindex="-1" aria-labelledby="editCountryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{ 'COUNTRY.LIST.MODAL.TITLE' | trl }}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <form [formGroup]="editForm">
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label">{{ 'COUNTRY.LIST.MODAL.NAME_LABEL' | trl }}</label>
+              <input type="text" class="form-control" formControlName="name" />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">{{ 'COUNTRY.LIST.MODAL.CODE_LABEL' | trl }}</label>
+              <input type="text" class="form-control" formControlName="code" />
+            </div>
+            <div class="mb-3">
+              <label class="form-label">{{ 'COUNTRY.LIST.MODAL.ACTIVE_LABEL' | trl }}</label>
+              <select class="form-select" formControlName="isEnabled">
+                <option [ngValue]="true">{{ 'COUNTRY.LIST.MODAL.ACTIVE_YES' | trl }}</option>
+                <option [ngValue]="false">{{ 'COUNTRY.LIST.MODAL.ACTIVE_NO' | trl }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+              {{ 'COUNTRY.LIST.MODAL.CANCEL_BUTTON' | trl }}
+            </button>
+            <button type="button" class="btn btn-primary" (click)="updateCountry()" [disabled]="updateLoading">
+              @if (updateLoading) {
+                <span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+              }
+              {{ 'COUNTRY.LIST.MODAL.UPDATE_BUTTON' | trl }}
+            </button>
+          </div>
+        </form>
       </div>
-      <form [formGroup]="editForm">
-        <div class="modal-body">
-          <div class="mb-3">
-            <label class="form-label">{{ 'COUNTRY.LIST.MODAL.NAME_LABEL' | trl }}</label>
-            <input type="text" class="form-control" formControlName="name" />
-          </div>
-          <div class="mb-3">
-            <label class="form-label">{{ 'COUNTRY.LIST.MODAL.CODE_LABEL' | trl }}</label>
-            <input type="text" class="form-control" formControlName="code" />
-          </div>
-          <div class="mb-3">
-            <label class="form-label">{{ 'COUNTRY.LIST.MODAL.ACTIVE_LABEL' | trl }}</label>
-            <select class="form-select" formControlName="isEnabled">
-              <option [ngValue]="true">{{ 'COUNTRY.LIST.MODAL.ACTIVE_YES' | trl }}</option>
-              <option [ngValue]="false">{{ 'COUNTRY.LIST.MODAL.ACTIVE_NO' | trl }}</option>
-            </select>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-            {{ 'COUNTRY.LIST.MODAL.CANCEL_BUTTON' | trl }}
-          </button>
-          <button type="button" class="btn btn-primary" (click)="updateCountry()" [disabled]="updateLoading">
-            <span *ngIf="updateLoading" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
-            {{ 'COUNTRY.LIST.MODAL.UPDATE_BUTTON' | trl }}
-          </button>
-        </div>
-      </form>
     </div>
   </div>
-</div>

@@ -4,7 +4,7 @@ import {
   NgbdSortableHeader,
   type SortEvent,
 } from '@/app/core/directive/sortable.directive'
-import { AsyncPipe, CommonModule } from '@angular/common'
+import { AsyncPipe, CommonModule } from '@angular/common';
 import { Component, ViewChildren, type QueryList } from '@angular/core'
 import type { Observable } from 'rxjs'
 import { ProductData, type ProductType } from '../../data'

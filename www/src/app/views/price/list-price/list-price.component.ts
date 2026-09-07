@@ -1,6 +1,6 @@
 import { PriceService } from '@/app/core/service/ws/price/price.service';
 import { ServiceService } from '@/app/core/service/ws/service/service.service';
-import { CommonModule } from '@angular/common';
+
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { mergeMap } from 'rxjs';
@@ -10,7 +10,7 @@ declare var bootstrap: any; // Pour contrôler le modal Bootstrap
 
 @Component({
   selector: 'app-list-service',
-  imports: [CommonModule, ReactiveFormsModule, TrlPipe],
+  imports: [ReactiveFormsModule, TrlPipe],
   templateUrl: './list-price.component.html',
   styleUrl: './list-price.component.scss',
 })
