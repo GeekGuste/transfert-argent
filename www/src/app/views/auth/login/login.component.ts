@@ -58,7 +58,7 @@ login(): void {
   this.authService.login(this.signInForm.value).subscribe({
     next: (response) => {
       // Redirection après login réussi
-      this.router.navigateByUrl('views/users')
+      this.router.navigateByUrl('/my-listings')
     },
     error: (err) => {
       this.loading = false
