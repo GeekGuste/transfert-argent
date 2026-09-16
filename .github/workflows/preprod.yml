@@ -27,7 +27,7 @@ jobs:
 
       - name: Build project
         working-directory: ./www
-        run: npm run build
+        run: npm run build:preprod
 
       - name: Copy .htaccess
         working-directory: ./www
